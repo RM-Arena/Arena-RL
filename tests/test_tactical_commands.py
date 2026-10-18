@@ -159,3 +159,12 @@ def test_successive_planner_updates_use_their_observation_order(observation):
         seen=tick(observation,.1*k)
         executor.submit({'id':f'order-{k}','skill':'navigate','point':[7.8,5.15],'basis_tick':seen['tick']},tick(seen,.5))
     assert executor.revision==3 and executor.command.id=='order-2'
+
+
+def test_far_attack_uses_navigation_policy_before_local_combat(observation):
+    executor=TacticalExecutor();executor.submit({'id':'post','skill':'attack_structure','target_id':'blue_outpost'},observation)
+    assert executor.execution_family=='navigation'
+    features=encode(executor,observation,policy_family=executor.execution_family)
+    assert features[0]==1 and features[1]==0  # Navigation goal encoding during approach.
+    action=decode(executor,observation,np.array([1,3,1,1,1,1,0]),policy_family=executor.execution_family)
+    assert not action['3']['fire']

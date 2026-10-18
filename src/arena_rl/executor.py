@@ -186,13 +186,21 @@ class TacticalExecutor:
             self.events.append(self.feedback());self.events=self.events[-128:]
         return self.plan
 
+    @property
+    def execution_family(self):
+        if self.command is None:return 'navigation'
+        family=self.command.policy_family
+        if family!='navigation' and self.plan and self.plan['distance']>1.2 and self.plan['phase'] in ('approach','search','hold'):
+            return 'navigation'
+        return family
+
     def feedback(self):
         plan=self.plan or {}
         distance=float(plan.get('distance',0.))
         return {'command_id':self.command.id if self.command else None,'revision':self.revision,
                 'status':self.status,'reason':self.reason,'tick':self.tick,'time':self.time,
                 'elapsed_s':max(0.,(self.completed_at if self.completed_at is not None else self.time)-self.started),'skill':self.command.skill if self.command else None,
-                'phase':plan.get('phase','idle'),'target_id':self.target_id,
+                'phase':plan.get('phase','idle'),'execution_family':self.execution_family,'target_id':self.target_id,
                 'target_visible':bool(plan.get('visible',False)),'last_seen_age_s':float(plan.get('age',0.)),
                 'distance_m':distance,'observed_target_hp_loss':self.damage,
                 'progress_m':(self.initial_distance-distance) if self.initial_distance is not None else 0.}

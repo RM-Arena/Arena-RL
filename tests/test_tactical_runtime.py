@@ -86,3 +86,18 @@ def test_runtime_scene_does_not_expose_opponent_own_state():
         hidden['x']=7.7;hidden['hp']=17
         assert session.observe()==before
     finally:session.close()
+
+
+def test_one_attack_command_composes_navigation_and_combat():
+    session=TacticalSession(POLICIES,arena_root=ROOT)
+    try:
+        session.reset([4000000],[{'robots':{'red-3':{'x':4.5,'y':5.15,'heading':0.,'aim':0.,'ammo':200}}}])
+        session.command({'id':'attack','skill':'attack_structure','target_id':'blue_outpost','damage_goal':60.,'timeout_s':90.})
+        families=set()
+        for _ in range(900):
+            families.add(session.batch.executors[0].execution_family)
+            if session.batch.executors[0].status!='running':break
+            session.advance()
+        assert session.batch.executors[0].status=='succeeded'
+        assert families=={'navigation','combat'}
+    finally:session.close()

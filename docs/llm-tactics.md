@@ -96,12 +96,16 @@ executor = TacticalExecutor(slot="3")
 executor.submit(command_from_llm, legal_red_observation)
 # Every 100 ms of simulated time:
 executor.update(legal_red_observation)
-features = encode(executor, legal_red_observation)
+family = executor.execution_family
+matching_tactical_policy = policies[family]
+features = encode(executor, legal_red_observation, policy_family=family)
 action, _ = matching_tactical_policy.predict(features, deterministic=True)
-robot_actions = decode(executor, legal_red_observation, action)  # only slot 3
+robot_actions = decode(executor, legal_red_observation, action, policy_family=family)  # only slot 3
 feedback_to_llm = executor.feedback()
 ```
 
-The host loads the policy family named by `executor.command.policy_family`, merges this slot's action with any teammate controllers, and supplies fresh observations. It retains responsibility for scheduling inference, applying new commands and keeping the simulator alive. The pure executor filters enemies by slot 3's own FPV list even if a whole-team observation contains other cameras.
+The host loads the policy family named by `executor.execution_family`, merges this slot's action with any teammate controllers, and supplies fresh observations. It retains responsibility for scheduling inference, applying new commands and keeping the simulator alive. The pure executor filters enemies by slot 3's own FPV list even if a whole-team observation contains other cameras.
 
 Live service reset preserves normal game initial resources. In the 2027 rules W3 starts with zero ammunition; attack commands then report `out_of_ammo`. For an unranked training demonstration, explicitly reset with `scenarios: [{"robots": {"red-3": {"ammo": 200}}}]`, or run the recorded mission, which declares its ammunition in the initial scenario. The current adapter does not learn an ammunition acquisition policy yet. Without `--opponent`, live enemies are stationary; the ready response states the opponent mode. With a custom roster, the scene also includes legal allied telemetry, while enemy visual data remains restricted to slot 3's camera. `capabilities.trained_profiles` lists the ranges and enemy models used in the combat curriculum; accepted parameter bounds are broader than demonstrated coverage.
+
+Long approaches/searches automatically use the navigation policy with a projected local-waypoint observation. The runtime switches to the requested combat/defense policy near the target/region, retaining the same command ID. For example, one `attack_structure` command can navigate from the home half and then shoot. Navigation-mode firing is suppressed; family switching is visible in `feedback.execution_family`. The LLM does not need to issue each route waypoint.

@@ -103,7 +103,7 @@ class TacticalBatch:
         if not any(d.get('slot')==3 and d.get('model')==3 for d in lineups.get('red',[])):
             raise ValueError('Tactical policies require red slot 3 using W3 model 3')
         self.engine=VectorArena(num_envs,season='2027',duration=420,lineups=lineups,compact=True,record=record,opponent=opponent)
-        self.opponent=opponent
+        self.opponent=opponent;self.runtime_control=False
 
     def reset(self,env_ids=None,seeds=None,episodes=None):
         ids=list(range(self.num_envs)) if env_ids is None else list(env_ids)
@@ -140,7 +140,8 @@ class TacticalBatch:
         if training and any(self.finished[i] for i in ids):raise RuntimeError('Reset terminated training episodes before step')
         commands=[]
         for i,action in zip(ids,actions):
-            commands.append({'red':decode(self.executors[i],self.states[i]['observations']['red'],action),
+            commands.append({'red':decode(self.executors[i],self.states[i]['observations']['red'],action,
+                                          policy_family=self.executors[i].execution_family if self.runtime_control else None),
                              'blue':{} if self.opponent else scripted_actions(self.episodes[i],self.states[i])})
         states=self.engine.step(commands,env_ids=ids)
         observations=[];rewards=[];terms=[];truncs=[];infos=[]

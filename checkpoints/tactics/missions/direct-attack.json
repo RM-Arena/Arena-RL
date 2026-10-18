@@ -1,0 +1,26 @@
+{
+  "command": {
+    "id": "direct",
+    "skill": "attack_structure",
+    "target_id": "blue_outpost",
+    "radius_m": 0.4,
+    "preferred_range_m": 2.5,
+    "region_radius_m": 3.0,
+    "leash_radius_m": 8.0,
+    "timeout_s": 90.0,
+    "target_lost_timeout_s": 2.0,
+    "low_hp_fraction": 0.15,
+    "damage_goal": 60.0,
+    "max_staleness_s": 3.0
+  },
+  "success": true,
+  "simulated_seconds": 22.7,
+  "ticks": 454,
+  "target_hp_loss": 80.0,
+  "policy_families": [
+    "navigation",
+    "combat"
+  ],
+  "replay": "runs/tactics-v0.2/validation/direct-attack.json",
+  "issuer": "one scripted command; no LLM API invoked"
+}

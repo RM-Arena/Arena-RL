@@ -30,9 +30,9 @@ class PolicyBank:
     def predict(self,batch,ids):
         result=np.tile([0,0,1,1,0,1,0],(len(ids),1))
         for family,model in self.models.items():
-            positions=[k for k,i in enumerate(ids) if batch.executors[i].status=='running' and batch.executors[i].command.policy_family==family]
+            positions=[k for k,i in enumerate(ids) if batch.executors[i].status=='running' and batch.executors[i].execution_family==family]
             if positions:
-                obs=np.stack([encode(batch.executors[ids[k]],batch.states[ids[k]]['observations']['red']) for k in positions])
+                obs=np.stack([encode(batch.executors[ids[k]],batch.states[ids[k]]['observations']['red'],policy_family=family) for k in positions])
                 result[positions]=model.predict(obs,deterministic=True)[0]
         return result
 
@@ -41,6 +41,7 @@ class TacticalSession:
     def __init__(self,policies,envs=1,seed=207,arena_root=None,record=False,opponent=None,lineups=None):
         root=configure(arena_root);seed_everything(seed)
         self.bank=PolicyBank(policies,root);self.batch=TacticalBatch(envs,seed=seed,arena_root=root,record=record,opponent=opponent,lineups=lineups)
+        self.batch.runtime_control=True
         self.envs=envs;self.seed=seed;self.logs=[[] for _ in range(envs)]
 
     def reset(self,seeds=None,scenarios=None,behaviors=None):
