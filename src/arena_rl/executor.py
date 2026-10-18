@@ -108,7 +108,6 @@ class TacticalExecutor:
         c=self.command
         if not robot['alive'] or not robot['powered'] or robot['upright']<.3:self._end('failed','robot_unavailable')
         elif robot['hp']/max(1,robot['max_hp'])<c.low_hp_fraction:self._end('failed','low_hp')
-        elif c.skill!='navigate' and robot['ammo']==0:self._end('failed','out_of_ammo')
         elapsed=now-self.started
         if elapsed>=c.timeout_s:
             defended=c.skill=='defend_region' and c.damage_goal is None
@@ -169,6 +168,7 @@ class TacticalExecutor:
             if c.skill=='defend_region' and np.linalg.norm(goal-self.anchor)>c.region_radius_m:
                 delta=goal-self.anchor;goal=self.anchor+delta/np.linalg.norm(delta)*c.region_radius_m
         elif c.skill!='navigate':phase='hold' if c.skill=='defend_region' else 'search'
+        if c.skill!='navigate' and robot['ammo']==0:self._end('failed','out_of_ammo')
         goal=np.clip(goal,[robot['radius'],robot['radius']],[self.arena['width']-robot['radius'],self.arena['height']-robot['radius']])
         distance=float(np.linalg.norm(goal-position))
         if c.skill=='navigate' and distance<=c.radius_m and math.hypot(robot['vx'],robot['vy'])<.8:self._end('succeeded','arrived')

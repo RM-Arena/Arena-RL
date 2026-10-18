@@ -168,3 +168,12 @@ def test_far_attack_uses_navigation_policy_before_local_combat(observation):
     assert features[0]==1 and features[1]==0  # Navigation goal encoding during approach.
     action=decode(executor,observation,np.array([1,3,1,1,1,1,0]),policy_family=executor.execution_family)
     assert not action['3']['fire']
+
+
+def test_last_ammunition_can_still_complete_the_damage_goal(observation):
+    executor=TacticalExecutor();executor.submit({'id':'hero','skill':'engage_target','target_id':'blue-1','damage_goal':60.},observation)
+    value=tick(observation);value['robots'][0]['ammo']=0
+    for e in value['enemies']:
+        if e['id']=='blue-1':e['hp']-=60
+    executor.update(value)
+    assert executor.status=='succeeded' and executor.reason=='damage_goal_reached'
