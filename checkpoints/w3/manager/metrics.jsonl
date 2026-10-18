@@ -1,0 +1,16 @@
+{"timesteps": 256, "wall_seconds": 5.142566499998793, "tasks": {"manager": {"episodes": 64, "success_rate": 0.5}}}
+{"timesteps": 512, "wall_seconds": 10.547875040909275, "tasks": {"manager": {"episodes": 100, "success_rate": 0.62}}}
+{"timesteps": 768, "wall_seconds": 15.644121874822304, "tasks": {"manager": {"episodes": 100, "success_rate": 0.81}}}
+{"timesteps": 1024, "wall_seconds": 20.9341088749934, "tasks": {"manager": {"episodes": 100, "success_rate": 0.71}}}
+{"timesteps": 1280, "wall_seconds": 26.02342512481846, "tasks": {"manager": {"episodes": 100, "success_rate": 0.8}}}
+{"timesteps": 1536, "wall_seconds": 30.73246308299713, "tasks": {"manager": {"episodes": 100, "success_rate": 0.93}}}
+{"timesteps": 1792, "wall_seconds": 35.561261374969035, "tasks": {"manager": {"episodes": 100, "success_rate": 0.84}}}
+{"timesteps": 2048, "wall_seconds": 39.94154274999164, "tasks": {"manager": {"episodes": 100, "success_rate": 0.93}}}
+{"timesteps": 2304, "wall_seconds": 44.34859495796263, "tasks": {"manager": {"episodes": 100, "success_rate": 0.98}}}
+{"timesteps": 2560, "wall_seconds": 48.76410129084252, "tasks": {"manager": {"episodes": 100, "success_rate": 0.99}}}
+{"timesteps": 2816, "wall_seconds": 53.29237504093908, "tasks": {"manager": {"episodes": 100, "success_rate": 0.97}}}
+{"timesteps": 3072, "wall_seconds": 57.55441604088992, "tasks": {"manager": {"episodes": 100, "success_rate": 0.92}}}
+{"timesteps": 3328, "wall_seconds": 61.787142832996324, "tasks": {"manager": {"episodes": 100, "success_rate": 0.96}}}
+{"timesteps": 3584, "wall_seconds": 66.33266883296892, "tasks": {"manager": {"episodes": 100, "success_rate": 0.97}}}
+{"timesteps": 3840, "wall_seconds": 70.44525079079904, "tasks": {"manager": {"episodes": 100, "success_rate": 0.95}}}
+{"timesteps": 4096, "wall_seconds": 74.50316883297637, "tasks": {"manager": {"episodes": 100, "success_rate": 0.98}}}

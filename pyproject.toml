@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "arena-rl"
+version = "0.1.0"
+description = "Single-robot skill and hierarchical reinforcement learning for Arena-1"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+authors = [{name = "RM-Arena"}]
+dependencies = ["numpy>=2,<3", "gymnasium>=1.2,<2", "stable-baselines3>=2.7,<3", "torch>=2.5,<3"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10"]
+
+[project.scripts]
+arena-rl = "arena_rl.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

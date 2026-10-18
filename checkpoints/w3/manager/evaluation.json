@@ -1,0 +1,534 @@
+{
+  "schema": "w3-manager-v1",
+  "episodes": 32,
+  "seed_range": [
+    2000000,
+    2000031
+  ],
+  "success_rate": 0.96875,
+  "decision_accuracy": 1.0,
+  "scenarios": {
+    "outpost": {
+      "episodes": 20,
+      "successes": 20
+    },
+    "defend": {
+      "episodes": 12,
+      "successes": 11
+    }
+  },
+  "results": [
+    {
+      "task": "manager",
+      "scenario": "outpost",
+      "option": "outpost",
+      "is_success": true,
+      "target_damage": 60.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 4,
+      "seed": 2000000,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 15.159406661987305,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000000.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "outpost",
+      "option": "outpost",
+      "is_success": true,
+      "target_damage": 40.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 5,
+      "seed": 2000001,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 12.749261856079102,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000001.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "outpost",
+      "option": "outpost",
+      "is_success": true,
+      "target_damage": 40.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 5,
+      "seed": 2000002,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 12.749282836914062,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000002.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "outpost",
+      "option": "outpost",
+      "is_success": true,
+      "target_damage": 40.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 4,
+      "seed": 2000003,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 12.759411811828613,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000003.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "outpost",
+      "option": "outpost",
+      "is_success": true,
+      "target_damage": 40.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 6,
+      "seed": 2000004,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 12.739113807678223,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000004.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "outpost",
+      "option": "outpost",
+      "is_success": true,
+      "target_damage": 60.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 6,
+      "seed": 2000005,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 15.139107704162598,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000005.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "outpost",
+      "option": "outpost",
+      "is_success": true,
+      "target_damage": 40.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 5,
+      "seed": 2000006,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 12.749250411987305,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000006.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "outpost",
+      "option": "outpost",
+      "is_success": true,
+      "target_damage": 40.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 4,
+      "seed": 2000007,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 12.759414672851562,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000007.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "defend",
+      "option": "defend",
+      "is_success": true,
+      "target_damage": 40.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 3,
+      "seed": 2000008,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 12.769655227661133,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000008.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "outpost",
+      "option": "outpost",
+      "is_success": true,
+      "target_damage": 40.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 5,
+      "seed": 2000009,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 12.749246597290039,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000009.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "defend",
+      "option": "defend",
+      "is_success": true,
+      "target_damage": 40.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 3,
+      "seed": 2000010,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 12.769672393798828,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000010.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "outpost",
+      "option": "outpost",
+      "is_success": true,
+      "target_damage": 60.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 4,
+      "seed": 2000011,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 15.159406661987305,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000011.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "defend",
+      "option": "defend",
+      "is_success": true,
+      "target_damage": 40.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 3,
+      "seed": 2000012,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 12.769728660583496,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000012.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "defend",
+      "option": "defend",
+      "is_success": true,
+      "target_damage": 40.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 2,
+      "seed": 2000013,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 12.779820442199707,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000013.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "outpost",
+      "option": "outpost",
+      "is_success": true,
+      "target_damage": 40.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 4,
+      "seed": 2000014,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 12.759404182434082,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000014.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "defend",
+      "option": "defend",
+      "is_success": true,
+      "target_damage": 40.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 3,
+      "seed": 2000015,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 12.769651412963867,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000015.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "outpost",
+      "option": "outpost",
+      "is_success": true,
+      "target_damage": 40.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 5,
+      "seed": 2000016,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 12.749252319335938,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000016.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "defend",
+      "option": "defend",
+      "is_success": true,
+      "target_damage": 40.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 3,
+      "seed": 2000017,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 12.769662857055664,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000017.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "defend",
+      "option": "defend",
+      "is_success": false,
+      "target_damage": 20.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 3,
+      "seed": 2000018,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": -1.9327903240919113,
+        "l": 4
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000018.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "defend",
+      "option": "defend",
+      "is_success": true,
+      "target_damage": 40.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 4,
+      "seed": 2000019,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 12.759523391723633,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000019.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "outpost",
+      "option": "outpost",
+      "is_success": true,
+      "target_damage": 40.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 6,
+      "seed": 2000020,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 12.739116668701172,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000020.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "defend",
+      "option": "defend",
+      "is_success": true,
+      "target_damage": 40.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 2,
+      "seed": 2000021,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 12.779818534851074,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000021.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "outpost",
+      "option": "outpost",
+      "is_success": true,
+      "target_damage": 40.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 4,
+      "seed": 2000022,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 12.759418487548828,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000022.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "defend",
+      "option": "defend",
+      "is_success": true,
+      "target_damage": 60.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 3,
+      "seed": 2000023,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 15.169659614562988,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000023.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "outpost",
+      "option": "outpost",
+      "is_success": true,
+      "target_damage": 60.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 4,
+      "seed": 2000024,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 15.15941047668457,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000024.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "outpost",
+      "option": "outpost",
+      "is_success": true,
+      "target_damage": 40.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 4,
+      "seed": 2000025,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 12.759410858154297,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000025.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "outpost",
+      "option": "outpost",
+      "is_success": true,
+      "target_damage": 40.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 5,
+      "seed": 2000026,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 12.749248504638672,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000026.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "outpost",
+      "option": "outpost",
+      "is_success": true,
+      "target_damage": 40.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 4,
+      "seed": 2000027,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 12.759408950805664,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000027.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "defend",
+      "option": "defend",
+      "is_success": true,
+      "target_damage": 60.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 3,
+      "seed": 2000028,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 15.16966438293457,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000028.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "outpost",
+      "option": "outpost",
+      "is_success": true,
+      "target_damage": 40.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 5,
+      "seed": 2000029,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 12.749255180358887,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000029.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "outpost",
+      "option": "outpost",
+      "is_success": true,
+      "target_damage": 40.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 5,
+      "seed": 2000030,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 12.749275207519531,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000030.json"
+    },
+    {
+      "task": "manager",
+      "scenario": "defend",
+      "option": "defend",
+      "is_success": true,
+      "target_damage": 40.0,
+      "decision_accuracy": 1.0,
+      "low_steps": 3,
+      "seed": 2000031,
+      "TimeLimit.truncated": false,
+      "episode": {
+        "r": 12.769668579101562,
+        "l": 1
+      },
+      "replay": "checkpoints/w3/manager/replays/manager-2000031.json"
+    }
+  ]
+}

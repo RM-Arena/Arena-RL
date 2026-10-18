@@ -1,0 +1,44 @@
+{
+  "skills": {
+    "move": {
+      "random_success_rate": 0.34375,
+      "trained_success_rate": 1.0,
+      "episodes": 32
+    },
+    "ramp": {
+      "random_success_rate": 0.0,
+      "trained_success_rate": 1.0,
+      "episodes": 32
+    },
+    "outpost": {
+      "random_success_rate": 0.96875,
+      "trained_success_rate": 1.0,
+      "episodes": 32
+    },
+    "defend": {
+      "random_success_rate": 1.0,
+      "trained_success_rate": 1.0,
+      "episodes": 32
+    }
+  },
+  "manager": {
+    "schema": "w3-manager-v1",
+    "episodes": 32,
+    "seed_range": [
+      2000000,
+      2000031
+    ],
+    "success_rate": 0.96875,
+    "decision_accuracy": 1.0,
+    "scenarios": {
+      "outpost": {
+        "episodes": 20,
+        "successes": 20
+      },
+      "defend": {
+        "episodes": 12,
+        "successes": 11
+      }
+    }
+  }
+}

@@ -1,0 +1,46 @@
+name: Training contracts
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      arena_ref:
+        description: Arena-1 ref with parallel environments and training scenarios
+        required: true
+        default: main
+permissions:
+  contents: read
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: '3.12'
+      - run: uv sync --locked --extra dev
+      - run: uv run pytest -q tests/test_contracts.py
+      - run: uv run arena-rl --help
+  simulator-integration:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: Arena-RL
+      - uses: actions/checkout@v4
+        with:
+          repository: RM-Arena/Arena-1
+          ref: ${{ inputs.arena_ref }}
+          path: RMUC-Arena
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: '3.12'
+      - run: cargo build --release --manifest-path RMUC-Arena/simulation/Cargo.toml
+      - run: uv sync --locked --extra dev
+        working-directory: Arena-RL
+      - run: uv run pytest -q
+        working-directory: Arena-RL
+        env:
+          ARENA_ROOT: ${{ github.workspace }}/RMUC-Arena
