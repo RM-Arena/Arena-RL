@@ -22,6 +22,18 @@ def main(argv=None):
     he=sub.add_parser('evaluate-high');he.add_argument('--checkpoint',required=True);he.add_argument('--episodes',type=int,default=16)
     he.add_argument('--envs',type=int,default=4);he.add_argument('--seed',type=int,default=2000000);he.add_argument('--output');he.add_argument('--replays')
     suite=sub.add_parser('suite');suite.add_argument('--config',default='configs/w3.json');suite.add_argument('--output',required=True)
+    tactical=sub.add_parser('train-tactics');tactical.add_argument('--family',choices=['navigation','combat','defense'],required=True)
+    tactical.add_argument('--steps',type=int,default=32768);tactical.add_argument('--envs',type=int,default=4)
+    tactical.add_argument('--seed',type=int,default=107);tactical.add_argument('--output',required=True);tactical.add_argument('--resume')
+    tev=sub.add_parser('evaluate-tactics');tev.add_argument('--checkpoint');tev.add_argument('--family',choices=['navigation','combat','defense'])
+    tev.add_argument('--baseline',choices=['random','idle','heuristic']);tev.add_argument('--episodes',type=int,default=32)
+    tev.add_argument('--envs',type=int,default=4);tev.add_argument('--seed',type=int,default=3000000)
+    tev.add_argument('--output');tev.add_argument('--replays')
+    live=sub.add_parser('serve-tactics');live.add_argument('--policies',required=True);live.add_argument('--envs',type=int,default=1)
+    live.add_argument('--seed',type=int,default=207);live.add_argument('--realtime',action='store_true');live.add_argument('--speed',type=float,default=1.)
+    live.add_argument('--record',action='store_true');live.add_argument('--opponent');live.add_argument('--lineups')
+    demo=sub.add_parser('mission');demo.add_argument('--policies',required=True);demo.add_argument('--seed',type=int,default=4000000)
+    demo.add_argument('--output',required=True)
     args=vars(p.parse_args(argv));command=args.pop('command')
     try:
         if command=='doctor':
@@ -38,6 +50,18 @@ def main(argv=None):
         elif command=='evaluate-high':
             from .hierarchy import evaluate_high
             evaluate_high(**args)
+        elif command=='train-tactics':
+            from .tactical_learning import train_tactics
+            train_tactics(**args)
+        elif command=='evaluate-tactics':
+            from .tactical_learning import evaluate_tactics
+            evaluate_tactics(**args)
+        elif command=='serve-tactics':
+            from .tactical_runtime import serve_tactics
+            serve_tactics(**args)
+        elif command=='mission':
+            from .tactical_runtime import run_mission
+            return 0 if run_mission(**args)['success'] else 1
         elif command=='suite':
             from .suite import run_suite
             run_suite(**args)

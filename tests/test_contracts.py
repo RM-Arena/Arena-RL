@@ -27,3 +27,16 @@ def test_goal_and_spawn_are_distinct_for_navigation():
 
 def test_unknown_task_rejected():
     with pytest.raises(ValueError):sample('unknown',17)
+
+
+def test_tactical_command_roundtrip_and_strict_validation():
+    from arena_rl.commands import Command,capabilities
+    command=Command.parse({'id':'pursue','skill':'pursue_target','target_id':'blue-1'})
+    assert Command.parse(command.json())==command
+    assert 'pursue_target' in capabilities()['skills']
+    for invalid in ({'id':'x','skill':'pursue_target'},
+                    {'id':'x','skill':'navigate','point':[True,5]},
+                    {'id':'x','skill':'navigate','point':[float('nan'),5]},
+                    {'id':'x','skill':'navigate','point':[5,5],'timeout_s':True},
+                    {'id':'x','skill':'navigate','point':[5,5],'debug':True}):
+        with pytest.raises(ValueError):Command.parse(invalid)

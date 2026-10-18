@@ -94,3 +94,14 @@ uv run pytest -q
 ## 已跑通的参考模型
 
 见 [第一轮训练记录](docs/first-training.md) 和 [参考检查点](checkpoints/w3)。四项低层技能各 32 个独立场景均完成；高层为 31/32。记录同时公布随机基线：短距离、辅助瞄准的射击课程本来就很容易，暂不能据此宣称训练出了更强的实战射击能力。
+
+## LLM 顶层指令与 RL 执行
+
+新增[战术接口](docs/llm-tactics.md)：支持导航、指定建筑攻击、指定机器人接战/追击、区域防守。顶层 LLM 通过带参数的 JSON 指令调度，低层 PPO 按 10 Hz 持续执行；换令保留同一模拟进程、位置和弹量。支持显式目标锁定、短时目标记忆、追击边界、指令时效校验和执行反馈。
+
+```bash
+uv run arena-rl serve-tactics --policies checkpoints/tactics --realtime --record
+uv run arena-rl mission --policies checkpoints/tactics --output runs/continuous-mission
+```
+
+LLM 推理发生在外部客户端。仓库提供接口、JSON Schema 和异步客户端示例，不绑定模型或调用付费推理服务。旧版二选一 PPO 高层仍可作为对照。

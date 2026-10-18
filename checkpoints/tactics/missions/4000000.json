@@ -1,0 +1,160 @@
+{
+  "seed": 4000000,
+  "execution_source_sha256": {
+    "envs.py": "43d8940acb4f359c3e54335717ace19722de6637cdf320602c366a7ad4a12c42",
+    "tactical_runtime.py": "0acac423c80305f2443175aa9a1cea3f92771e954c9b674f53fd883b8cb4e4fe",
+    "tasks.py": "aa51de3458a94b08bee282e64fece0f98235c51bb9f91bf831004f81a08c03b6",
+    "encoding.py": "e90fb06d38217126bb144c35d796ca78beb05fb18d2aef566fec43212c2fd765",
+    "suite.py": "7e9ac78a0f41df39d227ba51a5e7c4d9278585ba8ae6a914df291a01180a30fe",
+    "bridge.py": "542e385b34f9503f8e842795cd711b12fb1ba5c114c37d6dbac3ec7a44315f57",
+    "tactical_learning.py": "67ad14c92610cc886931e7a96199109bb59fed163292301e181ae7b21b9e10b2",
+    "__init__.py": "3fb4aeeada828ab59a5e2758d03eb3b2e6a3bc2b9f764c2b6b7a4e021c1e100a",
+    "hierarchy.py": "efc59aaf008fede9f65b79b31f707650500c73c2a6e24c2e389c54f425e83463",
+    "tactical_encoding.py": "b97d4f9cd4fabbb5e39fd1fbd28d8d3d2a8ea8c99040b497186d42fe8e4a205c",
+    "tactical_envs.py": "92d2c46da41d1d44e0393c8c597e9e7dc7f929bda03ce995dea72ca0d89e60cb",
+    "cli.py": "c6c395943e9274831f8fb15b4e7e2a8538fd66e9ff1dc13a934152434451cac4",
+    "navigation.py": "c753e09188a35a42fd989a57f2aff5ae10fd79b2725261969138ec6fafae41f2",
+    "learning.py": "8310f0bb35d3a25f4549796a0d303cb7750f6bab5373fc632c0861a560b85a61",
+    "commands.py": "b6e2cfaeab8bebcd1e58c7442706b84019111a8e141c035a81159a8feea648e4",
+    "__main__.py": "28de248c91c00642578a541827361af9b0e5e049e4c61dd6ec1f9dc78580c24e",
+    "executor.py": "3ed46c46a3e0163a0ada6241246b0fc746b181858ba47fa3848a6bc4d5b6b190"
+  },
+  "stages": [
+    {
+      "command_id": "approach",
+      "revision": 1,
+      "status": "succeeded",
+      "reason": "arrived",
+      "tick": 552,
+      "time": 27.6,
+      "elapsed_s": 27.6,
+      "skill": "navigate",
+      "phase": "navigate",
+      "target_id": null,
+      "target_visible": false,
+      "last_seen_age_s": 0.0,
+      "distance_m": 0.33716944792604525,
+      "observed_target_hp_loss": 0.0,
+      "progress_m": 14.56492771992251
+    },
+    {
+      "command_id": "outpost",
+      "revision": 2,
+      "status": "succeeded",
+      "reason": "damage_goal_reached",
+      "tick": 576,
+      "time": 28.8,
+      "elapsed_s": 1.1999999999999993,
+      "skill": "attack_structure",
+      "phase": "engage",
+      "target_id": "blue_outpost",
+      "target_visible": true,
+      "last_seen_age_s": 0.0,
+      "distance_m": 0.0,
+      "observed_target_hp_loss": 60.0,
+      "progress_m": 0.0
+    },
+    {
+      "command_id": "return-home",
+      "revision": 3,
+      "status": "succeeded",
+      "reason": "arrived",
+      "tick": 1160,
+      "time": 58.0,
+      "elapsed_s": 29.2,
+      "skill": "navigate",
+      "phase": "navigate",
+      "target_id": null,
+      "target_visible": false,
+      "last_seen_age_s": 0.0,
+      "distance_m": 0.31809955206167406,
+      "observed_target_hp_loss": 0.0,
+      "progress_m": 13.371393601061028
+    },
+    {
+      "command_id": "guard",
+      "revision": 4,
+      "status": "succeeded",
+      "reason": "damage_goal_reached",
+      "tick": 1338,
+      "time": 66.9,
+      "elapsed_s": 8.900000000000006,
+      "skill": "defend_region",
+      "phase": "engage",
+      "target_id": "blue-1",
+      "target_visible": true,
+      "last_seen_age_s": 0.0,
+      "distance_m": 0.0,
+      "observed_target_hp_loss": 60.0,
+      "progress_m": 0.31809955206167406
+    },
+    {
+      "command_id": "pursue-heavy",
+      "revision": 5,
+      "status": "succeeded",
+      "reason": "damage_goal_reached",
+      "tick": 1536,
+      "time": 76.8,
+      "elapsed_s": 9.899999999999991,
+      "skill": "pursue_target",
+      "phase": "engage",
+      "target_id": "blue-1",
+      "target_visible": true,
+      "last_seen_age_s": 0.0,
+      "distance_m": 0.0,
+      "observed_target_hp_loss": 60.0,
+      "progress_m": 0.0
+    }
+  ],
+  "continuity": [
+    {
+      "id": "approach",
+      "before_tick": 0,
+      "after_tick": 0,
+      "before_ammo": 300,
+      "after_ammo": 300,
+      "same_simulator": true
+    },
+    {
+      "id": "outpost",
+      "before_tick": 552,
+      "after_tick": 552,
+      "before_ammo": 300,
+      "after_ammo": 300,
+      "same_simulator": true
+    },
+    {
+      "id": "return-home",
+      "before_tick": 576,
+      "after_tick": 576,
+      "before_ammo": 295,
+      "after_ammo": 295,
+      "same_simulator": true
+    },
+    {
+      "id": "guard",
+      "before_tick": 1160,
+      "after_tick": 1160,
+      "before_ammo": 295,
+      "after_ammo": 295,
+      "same_simulator": true
+    },
+    {
+      "id": "pursue-heavy",
+      "before_tick": 1338,
+      "after_tick": 1338,
+      "before_ammo": 280,
+      "after_ammo": 280,
+      "same_simulator": true
+    }
+  ],
+  "success": true,
+  "final_tick": 1536,
+  "policy_sha256": {
+    "navigation": "00457946b8d77578c3e68449938966348785f7b642ea62a1d2fb4bf1d3019233",
+    "combat": "0e8dca6bbd43da86b96e9063128ab1215991b6548311b30927d9ac589f3231f8",
+    "defense": "563508b7126b24b38c3a2308f3030fb7f757ed4f230f32074646c056f50eba6d"
+  },
+  "issuer": "scripted commands; no LLM API invoked",
+  "replay": "runs/tactics-v0.2/validation/mission-4000000/mission.json"
+}
