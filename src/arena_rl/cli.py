@@ -32,6 +32,14 @@ def main(argv=None):
     live=sub.add_parser('serve-tactics');live.add_argument('--policies',required=True);live.add_argument('--envs',type=int,default=1)
     live.add_argument('--seed',type=int,default=207);live.add_argument('--realtime',action='store_true');live.add_argument('--speed',type=float,default=1.)
     live.add_argument('--record',action='store_true');live.add_argument('--opponent');live.add_argument('--lineups');live.add_argument('--season',choices=['2026','2027'],default='2027')
+    llm=sub.add_parser('llm-matches');llm.add_argument('--policies',required=True);llm.add_argument('--output',required=True)
+    llm.add_argument('--matches',type=int,default=3);llm.add_argument('--seed',type=int,default=9000000)
+    llm.add_argument('--model',default='deepseek-flash');llm.add_argument('--base-url',default='https://api.deepseek.com')
+    llm.add_argument('--api-key-env',default='DEEPSEEK_API_KEY');llm.add_argument('--timeout',type=float,default=8.)
+    llm.add_argument('--plan-interval',type=float,default=5.);llm.add_argument('--max-age',type=float,default=5.)
+    llm.add_argument('--max-calls',type=int,default=120);llm.add_argument('--speed',type=float,default=1.)
+    llm.add_argument('--opponent-profiles',nargs='+',choices=['siege','raid','hunt'])
+    llm.add_argument('--no-verify',action='store_false',dest='verify',default=True)
     demo=sub.add_parser('mission');demo.add_argument('--policies',required=True);demo.add_argument('--seed',type=int,default=4000000)
     demo.add_argument('--output',required=True)
     args=vars(p.parse_args(argv));command=args.pop('command')
@@ -59,6 +67,9 @@ def main(argv=None):
         elif command=='serve-tactics':
             from .tactical_runtime import serve_tactics
             serve_tactics(**args)
+        elif command=='llm-matches':
+            from .llm_matches import run_llm_matches
+            return 0 if run_llm_matches(**args)['healthy_control'] else 1
         elif command=='mission':
             from .tactical_runtime import run_mission
             return 0 if run_mission(**args)['success'] else 1

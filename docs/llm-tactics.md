@@ -96,3 +96,8 @@ Support uses ordinary PPO from random weights. Flight defaults to 64 attempted s
 Public SDK route hints and ballistic aiming are explicit assistance. W3 navigation now maintains nominal leg clearance and clears a bump along its existing axle before turning; physics/map geometry are unchanged. The network chooses local motion/speed/gait/fire/jump decisions, not motor current, joint torque or raw-image perception.
 
 Native v4 replays preserve ordinary actions including injury/forward-crossing preparation. `.commands.json` sidecars record runtime command IDs and policy digests. The validation script checks command tick/ammo/process continuity and deterministically replays representative support/flight episodes through Arena's verifier. See [expansion results](extended-results.md) for exact seeds, baselines and limitations, and [earlier tactical results](tactical-results.md) for the original five-skill benchmarks.
+
+
+## API-backed top-level planner
+
+`arena-rl llm-matches` now connects a real DeepSeek V4.1 Flash planner to this interface, using asynchronous tool calls while the frozen policies continue at 10 Hz. See [planner setup](llm-agent.md) and [full-match results](llm-match-results.md). The generic `serve-tactics` interface and scripted examples remain available; they do not invoke paid inference by themselves.

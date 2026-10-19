@@ -110,7 +110,7 @@ class TacticalBatch:
         if not any(d.get('slot')==3 and d.get('model')==3 for d in lineups.get('red',[])):
             raise ValueError('Tactical policies require red slot 3 using W3 model 3')
         self.engine=VectorArena(num_envs,season=self.season,duration=420,lineups=lineups,compact=True,record=record,opponent=opponent)
-        self.opponent=opponent;self.runtime_control=False
+        self.opponent=opponent;self.runtime_control=False;self.opponent_controller=None
 
     def reset(self,env_ids=None,seeds=None,episodes=None):
         ids=list(range(self.num_envs)) if env_ids is None else list(env_ids)
@@ -154,9 +154,13 @@ class TacticalBatch:
         for i,action in zip(ids,actions):
             family=self.executors[i].execution_family if self.runtime_control else self.family
             red=decode_action(self.executors[i],self.states[i]['observations']['red'],action,family)
+            if set(red)!={'3'}:raise ValueError('Learned controller must own only red slot 3')
             red.update({slot:a for slot,a in scripted_actions(self.episodes[i],self.states[i],team='red').items() if slot!='3'})
-            commands.append({'red':red,
-                             'blue':{} if self.opponent else scripted_actions(self.episodes[i],self.states[i])})
+            blue={} if self.opponent else scripted_actions(self.episodes[i],self.states[i])
+            if self.opponent_controller is not None:
+                if self.opponent:raise ValueError('Cannot override a saved opponent')
+                blue=self.opponent_controller(i,self.states[i]['observations']['blue'],self.executors[i].arena)
+            commands.append({'red':red,'blue':blue})
         states=self.engine.step(commands,env_ids=ids)
         observations=[];rewards=[];terms=[];truncs=[];infos=[]
         for i,state in zip(ids,states):
@@ -173,7 +177,7 @@ class TacticalBatch:
                 reward+=.15*float(ex.plan['phase']=='flight_air')+.1*max(0,r['upright']-.8)
             reward-=.015*max(0.,m['heat']-r.get('max_heat',40)*.85)
             success=ex.status=='succeeded';term=ex.status in ('succeeded','failed','cancelled') or state['terminated']
-            trunc=bool(not term and (self.steps[i]>=self.episodes[i].max_steps or state['truncated']))
+            trunc=bool(not term and ((not self.runtime_control and self.steps[i]>=self.episodes[i].max_steps) or state['truncated']))
             if success:reward+=8.
             elif term:reward-=4.
             if trunc and ex.status=='running':ex._end('failed','training_time_limit')

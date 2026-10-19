@@ -118,3 +118,13 @@ uv run arena-rl serve-tactics --policies checkpoints/tactics --season 2026 --rea
 ```
 
 补给使用真实购买、扣款和补给区回血；护送只控制本机，目标队友由比赛宿主控制；巡逻按顺序完成全部点位和停留时间。飞坡先用成功示范初始化，再做 PPO 更新，部署时不使用示范脚本替代策略。具体命令、适用范围和训练记录见[战术接口](docs/llm-tactics.md)与[扩展评测](docs/extended-results.md)。原来失败的两个导航场景也已修复，完整导航回归为 32/32。
+
+## 接入顶层 LLM
+
+现提供真实的 DeepSeek V4.1 Flash 顶层调度：函数调用选择技能，冻结的 PPO 策略只执行红方槽位 3。LLM 请求异步运行，等待期间继续当前技能；超时或非法输出会保留当前执行并记录错误。使用现有 shell 中的 `DEEPSEEK_API_KEY`（也兼容 `DeepSeek_API_Key`）：
+
+```bash
+uv run arena-rl llm-matches --policies checkpoints/tactics --matches 3 --max-calls 150 --output runs/deepseek-full
+```
+
+默认并行运行三场正常 420 秒的 2027 对局，对手为明确标记的脚本英雄和步兵，红方只有一台 W3。它验证真实 LLM 调度、技能切换与完整对局链路；这不是标准满编队伍比赛。决策日志、推理延迟、失败原因、比赛结果和原生回放均保存。参数、权限边界和记录解释见 [LLM 接入说明](docs/llm-agent.md)与[三场真实 API 对局结果](docs/llm-match-results.md)。

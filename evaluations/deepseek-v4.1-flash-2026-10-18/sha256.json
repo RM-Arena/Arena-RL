@@ -1,0 +1,29 @@
+{
+  "files": {
+    "decisions.jsonl": "50c2046c69ed73ddf1629241cf65e250b82e94a123cd7876ee1e57bb0230c90e",
+    "execution-source-at-start.json": "8f3a5e2a914d13cce13263951f3d657f72d09084e73ad336d93bb91a27e50bb3",
+    "match-9000000.commands.json": "c9157641531d7dbf4d95fe2546680edbccc7e98f01b670d8654aca3673a8e0c7",
+    "match-9000001.commands.json": "bd2aa8806a757e1b83783fbb3a4f42903c08efcf917d8ed2b2b105b12e958d9c",
+    "match-9000002.commands.json": "d653cd7cff08ee7d28b6edfadeb219cc248f36de4657db4a37283274868a4479",
+    "report.json": "c35b59993dfc2d23a68a34462c5caeed209080c7fd54bc1282cbdb91c91b5e3f",
+    "telemetry.jsonl": "8840ad01e47e8441cb730aa923763a738a13154c0db5433c84b1ffd10640d86c",
+    "README.md": "b6c86241c516d07e3cd359ee64aaea1e4bd61385511abcafe75ee55730e7299a"
+  },
+  "native_replays": {
+    "match-9000000.json": {
+      "sha256": "66dbfede4a86340643acd64c80b9b3774580c88d40299974a6fddc0c86f9dc47",
+      "verified_ticks": 8400,
+      "local_path": "runs/deepseek-v4.1-flash-full/match-9000000.json"
+    },
+    "match-9000001.json": {
+      "sha256": "f5c237d82eb81beabe41b3efb50baaa33062c7703680068378cdfa051ca21daf",
+      "verified_ticks": 8400,
+      "local_path": "runs/deepseek-v4.1-flash-full/match-9000001.json"
+    },
+    "match-9000002.json": {
+      "sha256": "60e68a2c8ee7360c738d6874fc085d43fd353e93b1c00747f3ca0febfc66a4a0",
+      "verified_ticks": 8400,
+      "local_path": "runs/deepseek-v4.1-flash-full/match-9000002.json"
+    }
+  }
+}
