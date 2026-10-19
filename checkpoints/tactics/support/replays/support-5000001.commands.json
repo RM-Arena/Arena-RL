@@ -1,0 +1,79 @@
+{
+  "protocol": "arena-tactics-v1",
+  "commands": [
+    {
+      "op": "reset",
+      "seed": 5000001,
+      "scenario": {
+        "robots": {
+          "red-3": {
+            "x": 4.2766600152489245,
+            "y": 10.504188063463408,
+            "heading": 2.5,
+            "aim": 0.0,
+            "ammo": 0
+          },
+          "blue-1": {
+            "x": 25.0,
+            "y": 9.5,
+            "heading": 3.141592653589793,
+            "ammo": 0
+          },
+          "blue-3": {
+            "x": 7.3,
+            "y": 10.6,
+            "heading": 3.141592653589793,
+            "ammo": 100
+          },
+          "blue-4": {
+            "x": 23.5,
+            "y": 9.5,
+            "heading": 3.141592653589793,
+            "ammo": 0
+          },
+          "red-4": {
+            "x": 2.8,
+            "y": 5.1,
+            "heading": 0.0,
+            "ammo": 0
+          }
+        }
+      }
+    },
+    {
+      "op": "command",
+      "tick": 90,
+      "command": {
+        "id": "runtime-supply-5000001",
+        "skill": "resupply",
+        "radius_m": 0.4,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 60.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.15,
+        "max_staleness_s": 3.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 150.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    }
+  ],
+  "policies": {
+    "navigation": "00457946b8d77578c3e68449938966348785f7b642ea62a1d2fb4bf1d3019233",
+    "combat": "0e8dca6bbd43da86b96e9063128ab1215991b6548311b30927d9ac589f3231f8",
+    "defense": "563508b7126b24b38c3a2308f3030fb7f757ed4f230f32074646c056f50eba6d",
+    "support": "1b9dc4f15d866ad7c93e9fb30f94b0307164f5bc9450a7be00aaa243110c31a7",
+    "flight": "77aeac58121b2950ed06bc6d8f20951bff3575c453b02b8d755f008069544f00"
+  }
+}

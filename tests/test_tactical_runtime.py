@@ -88,6 +88,31 @@ def test_runtime_scene_does_not_expose_opponent_own_state():
     finally:session.close()
 
 
+def test_capabilities_filter_map_and_loaded_models():
+    for season in ('2026','2027'):
+        session=TacticalSession(POLICIES,arena_root=ROOT,season=season)
+        try:
+            session.reset();cap=session.capabilities()
+            assert len(cap['skills'])==9 and 'navigate' in cap['available_skills']
+            assert ('fly_slope' in cap['available_skills'])==(season=='2026')
+            assert ('resupply' in cap['available_skills'])==(season=='2027')
+            assert 'resources' in session.observe()['economy']
+        finally:session.close()
+
+
+def test_runtime_support_commands_keep_ammo_and_are_idempotent():
+    session=TacticalSession(POLICIES,arena_root=ROOT)
+    try:
+        session.reset();scene=session.observe()
+        command={'id':'supply','skill':'resupply','ammo_target':100}
+        session.command(command);assert session.command(command)['duplicate']
+        assert session.observe()['tick']==scene['tick'] and session.observe()['robot']['ammo']==scene['robot']['ammo']
+        before=session.observe()['feedback']
+        with pytest.raises(ValueError):session.command({'id':'wrong-map','skill':'fly_slope'})
+        assert session.observe()['feedback']==before
+    finally:session.close()
+
+
 def test_one_attack_command_composes_navigation_and_combat():
     session=TacticalSession(POLICIES,arena_root=ROOT)
     try:

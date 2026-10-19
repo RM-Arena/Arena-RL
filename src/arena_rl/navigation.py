@@ -43,3 +43,31 @@ def safe_hold_point(robot,center,radius,arena):
             angle=k*math.tau/16;candidates.append((center[0]+radius*scale*math.cos(angle),center[1]+radius*scale*math.sin(angle)))
     feasible=[p for p in candidates if clear(p)]
     return min(feasible,key=lambda p:(p[0]-robot['x'])**2+(p[1]-robot['y'])**2) if feasible else None
+
+
+def clearance_hint(robot,hint,arena):
+    """Keep a two-wheel chassis square until both wheels clear a road-bump edge.
+
+    A center just outside the footprint can still have a wheel on the first hump.
+    Turning there pins the axle. Back/drive along its existing heading to a free
+    end before resuming the route; physics and legal speed/power remain unchanged.
+    """
+    import math
+    if robot.get('chassis_type')!='wheel_legged' or math.hypot(*hint)<.001:return tuple(hint),None
+    heading=robot['heading'];forward=(math.cos(heading),math.sin(heading))
+    error=abs((math.atan2(hint[1],hint[0])-heading+math.pi)%math.tau-math.pi)
+    error=min(error,math.pi-error)
+    if error<math.radians(25):return tuple(hint),None
+    for t in arena['terrain']:
+        if t['kind']!='bumps':continue
+        x0,y0,x1,y1=t['x'],t['y'],t['x']+t['w'],t['y']+t['h']
+        x,y=robot['x'],robot['y'];margin=robot.get('radius',.3)+.12
+        if not x0-margin<x<x1+margin or not y0-margin<y<y1+margin:continue
+        if abs(forward[0])>.7:
+            direction=-1 if x-x0<x1-x else 1
+            sign=1 if forward[0]*direction>0 else -1
+        else:
+            direction=-1 if y-y0<y1-y else 1
+            sign=1 if forward[1]*direction>0 else -1
+        return (forward[0]*sign,forward[1]*sign),heading
+    return tuple(hint),None

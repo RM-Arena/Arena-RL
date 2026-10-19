@@ -97,7 +97,7 @@ uv run pytest -q
 
 ## LLM 顶层指令与 RL 执行
 
-新增[战术接口](docs/llm-tactics.md)：支持导航、指定建筑攻击、指定机器人接战/追击、区域防守。顶层 LLM 通过带参数的 JSON 指令调度，低层 PPO 按 10 Hz 持续执行；换令保留同一模拟进程、位置和弹量。支持显式目标锁定、短时目标记忆、追击边界、指令时效校验和执行反馈。
+新增[战术接口](docs/llm-tactics.md)：支持导航、指定建筑攻击、指定机器人接战/追击、区域防守，以及补给、护送、巡逻和专用飞坡。顶层 LLM 通过带参数的 JSON 指令调度，低层 PPO 按 10 Hz 持续执行；换令保留同一模拟进程、位置和弹量。支持显式目标锁定、短时目标记忆、追击边界、指令时效校验和执行反馈。
 
 ```bash
 uv run arena-rl serve-tactics --policies checkpoints/tactics --realtime --record
@@ -105,3 +105,16 @@ uv run arena-rl mission --policies checkpoints/tactics --output runs/continuous-
 ```
 
 LLM 推理发生在外部客户端。仓库提供接口、JSON Schema 和异步客户端示例，不绑定模型或调用付费推理服务。旧版二选一 PPO 高层仍可作为对照。
+
+
+## 新增补给、护送、巡逻和飞坡
+
+`checkpoints/tactics` 现含五组策略。补给、护送、巡逻共用 2027 `support` 策略；专用飞坡使用 2026 `flight` 策略，包含真实 650 mm 间隙的正向跨越、返程跳跃和落地稳定。2027 地图没有这个专用飞坡，服务通过 `--season 2026` 选择对应地图。
+
+```bash
+uv run arena-rl train-tactics --family support --steps 32768 --envs 4 --output runs/support
+uv run arena-rl train-tactics --family flight --steps 16384 --envs 4 --output runs/flight
+uv run arena-rl serve-tactics --policies checkpoints/tactics --season 2026 --realtime --record
+```
+
+补给使用真实购买、扣款和补给区回血；护送只控制本机，目标队友由比赛宿主控制；巡逻按顺序完成全部点位和停留时间。飞坡先用成功示范初始化，再做 PPO 更新，部署时不使用示范脚本替代策略。具体命令、适用范围和训练记录见[战术接口](docs/llm-tactics.md)与[扩展评测](docs/extended-results.md)。原来失败的两个导航场景也已修复，完整导航回归为 32/32。

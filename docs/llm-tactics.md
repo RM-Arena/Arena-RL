@@ -1,111 +1,98 @@
 # LLM tactical commands and learned execution
 
-The LLM chooses the current single-robot objective. Arena-RL executes it with three goal-conditioned PPO policies: navigation, combat, and defense. The existing two-choice PPO manager remains a baseline; it is not required for this interface. This version does not call an LLM API or choose a model/provider.
+The LLM chooses a single robot's objective. Five PPO policies execute nine parameterized commands at 10 Hz. The service is provider independent; it does not call an LLM API. Only W3 model 3 in red slot 3 is trained. The earlier two-choice PPO manager remains a baseline.
 
-## Available commands
+## Commands and supported maps
 
-| Skill | Required target | Execution |
+| Skill | Parameters | Completion / execution |
 | --- | --- | --- |
-| `navigate` | `point: [x,y]` | Public-map routing plus learned local motion and gait |
-| `attack_structure` | `target_id: blue_outpost` or `blue_base` | Approach a shooting position and attack that structure |
-| `engage_target` | Robot ID such as `blue-1` | Engage that robot at the requested range |
-| `pursue_target` | Robot ID such as `blue-1` | Approach a short predicted intercept position, retain explicit target identity |
-| `defend_region` | `center: [x,y]` | Return/hold within the region, select visible threats using ordered priorities |
+| `navigate` | `point: [x,y]` | Arrive within `radius_m` at low speed; public routing plus learned local control |
+| `attack_structure` | `target_id: blue_outpost` / `blue_base` | Attack the selected structure, respecting base protection |
+| `engage_target` | Enemy robot ID | Approach and engage that identity at `preferred_range_m` |
+| `pursue_target` | Enemy robot ID | Follow a short predicted intercept, preserving target identity and leash |
+| `defend_region` | `center`, optional ordered `priority_ids` | Hold/intercept inside the region for the interval, or meet `damage_goal` |
+| `resupply` | `ammo_target`, `hp_target_fraction`, `budget_limit`, optional `point` | Reach own supply zone, buy local ammunition and wait for real passive healing |
+| `escort` | Allied `target_id`, optional destination `point` | Follow the moving ally; satisfy proximity coverage and destination/duration |
+| `patrol` | Ordered `waypoints`, `patrol_loops`, `dwell_s` | Visit every waypoint in order, dwell at low speed, complete every loop |
+| `fly_slope` | `lane_team`, `flight_direction`, `landing_hold_s` | Cross the actual 650 mm gap, record airborne time, land upright and settle |
 
-Only W3 model 3 in red slot 3 is trained. The 2027 heavy uses slot 1, so a command intended to pursue that robot must use its actual ID `blue-1`, rather than an ambiguous role name. Other enemy infantry appear in training as both targets and closer distractors. The learned agent never commands their actions.
+The first eight commands are trained/evaluated on 2027. Dedicated fly-slope geometry exists on **2026**, so use `--season 2026` for this skill. The 2027 road ramps are ground navigation terrain, not a dedicated airborne crossing. Season selection is an episode property: a command cannot change maps. `navigate` is also accepted on 2026 for staging; its full-map held-out benchmark is on 2027. Aerial control, arbitrary terrain jumps, other controlled robot models and full-match wins are outside the recorded coverage.
 
-Example command:
+`ready` and `capabilities` include `available_skills`, filtered by loaded weights and the current season. Protocol-wide `skills`/`command_json_schema` describe all nine commands. An unavailable command is rejected before replacing the current objective.
 
-```json
-{
-  "id": "pursue-hero-17",
-  "skill": "pursue_target",
-  "target_id": "blue-1",
-  "preferred_range_m": 2.5,
-  "leash_radius_m": 8,
-  "timeout_s": 15,
-  "target_lost_timeout_s": 2,
-  "low_hp_fraction": 0.2,
-  "basis_tick": 200,
-  "max_staleness_s": 3
-}
+## JSON examples
+
+```jsonl
+{"id":"supply-1","skill":"resupply","ammo_target":100,"hp_target_fraction":0.9,"budget_limit":150,"timeout_s":60}
+{"id":"protect-1","skill":"escort","target_id":"red-4","point":[7.5,5.35],"follow_distance_m":1.2,"required_coverage":0.6,"timeout_s":30}
+{"id":"route-1","skill":"patrol","waypoints":[[6.8,5.15],[6.8,5.7],[4.8,5.5]],"patrol_loops":2,"dwell_s":0.4,"timeout_s":60}
+{"id":"fly-1","skill":"fly_slope","lane_team":"red","flight_direction":"forward","timeout_s":18}
+{"id":"return-1","skill":"fly_slope","lane_team":"red","flight_direction":"reverse","timeout_s":18}
 ```
 
-`id` makes identical retries idempotent (a bounded 1,024-command cache). Reusing an ID with different content is rejected. Valid new commands cancel the previous goal without resetting the simulator, robot pose, health or ammo. Invalid commands leave the current goal intact. Optional `basis_tick` rejects a decision based on stale/future information, which is useful for overlapping LLM inference calls.
+These are command objects; wrap each in `{"op":"command","command": ...}` for the transport. Reverse flight is accepted only after that executor completed the same lane's forward crossing in the **same physical episode**. Reset clears this permission. The reverse curriculum first drives a genuine forward crossing; it never injects a referee pass. Flight is evaluated from lane staging positions, on both mirror lanes and in both directions, with no hostile fire. Arbitrary distant approaches and disturbed landings need additional courses.
 
-`defend_region` additionally accepts `region_radius_m` and ordered `priority_ids`. Its intercept destination stays inside the defense region. Robot pursuit has a leash anchored to the command's starting position. Combat may use an optional positive `damage_goal`; otherwise the explicit target's destruction completes it. Without a damage goal, defense runs for its requested interval or until cancelled/failed. `cancel` is a protocol operation, not a learned skill.
+Resupply sends ordinary `buy_ammo` actions only while on the actual own supply card. The simulator applies batch size, prices, team purchase cap, resource deductions and healing. No HP, ammunition or currency is patched during execution. `budget_limit` conservatively counts the own team's local 17 mm purchase ledger increase while this goal runs; simultaneous teammate purchases also consume this allowance. Insufficient funds/budget, team cap, timeout or robot loss produce explicit failure. A wounded robot can seek supply despite the usual low-HP stop. This skill currently covers local ammunition and passive supply healing, not remote purchases/paid remote healing. Normal 2027 starting ammunition remains zero: issue `resupply` before combat.
 
-The executor validates friendly targets, public rosters, field bounds, robot availability, ammo, low-health limits and protected bases. Target visibility comes from the controlled robot's legal observation. Short searches extrapolate only the last observed velocity; they never consult the other team's live state. Shooting stops during occlusion and the command fails as `target_lost` after the configured grace time. Firing and damage credit retain the specified target even when another enemy is closer.
+Escort uses legal allied telemetry and never takes control of the protected ally. With `point`, the ally must reach that destination; without it, use `escort_duration_s`. `required_coverage` is the fraction of elapsed goal time spent between 0.45 m and `follow_distance_m + 1.1 m` from the ally. Excessive separation (`leash_radius_m`) or ally destruction fails the command. The supplied escort course uses a slow scripted moving ally. It does not prove protection under hostile fire.
 
-## Feedback and supervision
+Patrol requires at least two points. Dwell resets when the robot leaves a waypoint or moves too fast. Zero ammunition does not prevent patrol/escort. Both accept `engage_on_contact: true` and ordered enemy `priority_ids` for optional firing while following their route/formation; only slot 3's own visible enemies are eligible. The current held-out support courses have no such combat interference, so this option needs separate combat evaluation.
 
-Each state includes the current command ID/revision, `idle/running/succeeded/failed/cancelled`, phase, reason, elapsed simulated time, target identity/visibility, last-seen age, distance and observed target HP loss. Reasons include arrival, damage target reached, target destruction, target lost, blocked, timeout, leash exceeded, low HP, no ammo and a protected structure. HP loss is observed target progress, not an attribution claim when other friendly robots are present.
+## Command supervision
 
-The LLM receives only the controlled team's legal observation: its own state, visible enemies, explicitly age-marked last-seen information, public structures and control positions. The ready response includes public map geometry and the roster. No live hidden enemy state is included. Opponent-own observations are used only by scripted curriculum controllers on the training host.
+IDs make identical retries idempotent within a 1,024-command cache. Reusing an ID with changed content is rejected. A valid replacement preserves simulator process, tick, pose, health and ammunition. Invalid/stale/future/out-of-order commands leave the running goal intact. Optional `basis_tick` plus `max_staleness_s` limits delayed LLM replies. `cancel` stops execution; it is not a learned skill.
 
-A blocked route is reported after six seconds without significant robot displacement or target damage. A timeout stops the command. A new tactical command can then select another point, target or defense region without resetting the episode. Automatic resupply and retreat policies are not implemented yet; low HP/no ammo is returned to the LLM for a new decision.
+Robot attacks retain explicit target identity. Only slot 3's legal FPV enemies enter target memory; occluded targets are extrapolated from their last observed velocity for a bounded time, with no firing. Friendly attacks, absent roster IDs and protected structures are rejected/stopped. Attack completion uses target destruction or an optional positive `damage_goal`. HP loss is observed progress, not guaranteed shooter attribution when teammates also attack.
 
-## JSONL service
+Feedback includes status (`idle/running/succeeded/failed/cancelled`), reason, phase, elapsed simulated time, distance, target identity/visibility and `execution_family`. `details` adds supply contact/ammo/HP/spending, escort separation/coverage, patrol waypoint progress, or flight airborne/landing time. Failure reasons include blocked, timeout, lost target, leash exceeded, unavailable robot, low HP, no ammo, budget exhaustion and team purchase cap. Ordinary routes report blocked after six seconds without significant motion/damage; support/flight movement uses eight seconds. Terminal feedback retains the completion duration.
+
+The LLM scene exposes own robot and allied telemetry, own resources/purchase counters, own card contacts, visible enemies, age-marked last-seen enemies, public structures and control positions. Public map/roster arrive in `ready`. No opponent-own live observation is sent to the LLM or learned controller. Curriculum host controllers may use their own team's observations to move/shoot their scripted actors.
+
+## Service and host integration
 
 ```bash
 uv run arena-rl serve-tactics --policies checkpoints/tactics --realtime --record
+uv run arena-rl serve-tactics --policies checkpoints/tactics --season 2026 --realtime --record
 ```
 
-The default clock executes one low-level action every 100 ms of wall time, advancing 100 ms in the simulator. `--speed` changes this relation for testing. LLM inference occurs in a separate client; while it waits, the current goal keeps executing. State updates are emitted approximately once per wall second. The JSONL interface also works in manual stepping mode by omitting `--realtime`.
+Default real-time control advances 100 ms of simulation per 100 ms wall time; `--speed` changes this ratio. External LLM inference can proceed while RL continues the current objective. Periodic state messages arrive approximately once a wall second. Without `--realtime`, manual `{"op":"step","steps":10}` advances the simulation.
 
-Requests:
+Other operations are `observe`, `cancel`, `capabilities`, `reset`, `save_replay` and `close`. `env_id` selects one parallel actor. `reset` accepts per-actor seeds and optional declared initial training scenarios; only reset changes the episode. EOF/close/termination clean up simulator processes. Malformed or oversized (>64 KiB) messages return framed errors. `examples/tactical_client.py` illustrates a slow scripted planner, without paid inference.
 
-```jsonl
-{"id":"order-1","op":"command","command":{"id":"attack-1","skill":"attack_structure","target_id":"blue_outpost","timeout_s":40}}
-{"id":"status","op":"observe"}
-{"id":"change","op":"command","command":{"id":"guard-1","skill":"defend_region","center":[4.5,5.15],"region_radius_m":3,"priority_ids":["blue-1"],"timeout_s":30}}
-{"id":"stop","op":"cancel"}
-{"id":"replay","op":"save_replay","path":"runs/live.json"}
-{"op":"close"}
-```
+`--lineups path.json` accepts the Arena roster format, retaining red slot 3 as W3 model 3. The default 2027 roster includes red slot 4 for escort. Teammates stay idle in the service unless the match host supplies controllers; the library never silently drives an escort target. `--opponent` selects an existing whole-team Arena submission through Arena's sandbox. Without it, live enemies remain stationary and `ready` declares this mode.
 
-Manual mode additionally accepts `{"op":"step","steps":10}`. `reset` accepts per-actor `seeds` and optional training `scenarios`; it is the only operation that resets an episode. `env_id` selects one actor for commands/observations/replays. EOF, close and termination clean up actor/simulator processes. Malformed or oversized (>64 KiB) requests return a framed error. Messages contain numeric/string request IDs and finite JSON values.
-
-`capabilities` returns the supported skill set, limitations and a JSON Schema suitable for an LLM tool call. See `examples/tactical_client.py` for an asynchronous client skeleton with a simulated slow planner. That example issues scripted choices and does not invoke or benchmark an LLM.
-
-## Training and evaluation
-
-```bash
-uv run arena-rl train-tactics --family navigation --steps 32768 --envs 4 --output runs/tactics/navigation
-uv run arena-rl train-tactics --family combat --steps 65536 --envs 4 --output runs/tactics/combat
-uv run arena-rl train-tactics --family defense --steps 32768 --envs 4 --output runs/tactics/defense
-uv run arena-rl evaluate-tactics --checkpoint runs/tactics/combat --episodes 32 --replays runs/combat-replays
-uv run arena-rl mission --policies runs/tactics --output runs/mission
-```
-
-Tactical checkpoints have their own versioned observation/action schema; the four earlier local-skill checkpoints are not silently substituted. Navigation uses a bounded local waypoint, while the executor retains the global destination. This separates the controller's input scale from command travel distance. Public SDK routing conservatively avoids the assembly plinth for W3; it does not change physical map geometry or collisions. The policy chooses motion mode, speed, ballistic aim residuals, firing, leg height and jump. Public ballistic aiming remains assisted. This is not raw motor/torque learning or learned path planning.
-
-The mission issues navigation → outpost attack → return home → regional defense → specified heavy pursuit in one continuous episode. Its issuer is a deterministic script to test command composition, not an LLM. A failing stage returns a nonzero CLI exit code and preserves its replay/report. The report includes tick/ammo continuity, simulator identity, each stage outcome and policy digests. The native replay has a `.commands.json` sidecar recording the command timeline and weights used.
-
-Coverage is limited to these five commands and the recorded curricula. Patrol, escort, resupply, aerial control, and a dedicated airborne fly-slope skill are unsupported. Full-map navigation and longer attack chains must be judged using the mission results and held-out route tests, separately from short-course success rates.
-
-For a different legal match roster, `serve-tactics --lineups path/to/lineups.json` accepts the Arena deployment format. Red slot 3 must remain W3 model 3. Only that slot is controlled by the learner; other red robots remain idle unless the surrounding host supplies controllers. `--opponent` can select an existing 2027 whole-team opponent submission (using Arena's default Docker sandbox). New enemy models/roles beyond the training distribution need their own held-out evaluation. The pure executor/encoding modules can also be called from an existing match host that already has teammate/opponent controllers.
-
-Inside an existing host, the interface can be called without the JSONL process:
+Within an existing match host:
 
 ```python
 from arena_rl.executor import TacticalExecutor
-from arena_rl.tactical_encoding import encode, decode
+from arena_rl.tactical_envs import encode_observation, decode_action
 
 executor = TacticalExecutor(slot="3")
 executor.submit(command_from_llm, legal_red_observation)
-# Every 100 ms of simulated time:
+# Every 100 ms simulated time:
 executor.update(legal_red_observation)
 family = executor.execution_family
-matching_tactical_policy = policies[family]
-features = encode(executor, legal_red_observation, policy_family=family)
-action, _ = matching_tactical_policy.predict(features, deterministic=True)
-robot_actions = decode(executor, legal_red_observation, action, policy_family=family)  # only slot 3
+features = encode_observation(executor, legal_red_observation, family)
+action, _ = policies[family].predict(features, deterministic=True)
+robot_actions = decode_action(executor, legal_red_observation, action, family)
 feedback_to_llm = executor.feedback()
 ```
 
-The host loads the policy family named by `executor.execution_family`, merges this slot's action with any teammate controllers, and supplies fresh observations. It retains responsibility for scheduling inference, applying new commands and keeping the simulator alive. The pure executor filters enemies by slot 3's own FPV list even if a whole-team observation contains other cameras.
+Merge only this slot's returned action with teammate controllers. Long ground approaches can use the navigation policy before switching to the local support/combat/defense policy, retaining the command ID; firing is suppressed in navigation mode. The host owns observation delivery, inference scheduling and episode lifetime.
 
-Live service reset preserves normal game initial resources. In the 2027 rules W3 starts with zero ammunition; attack commands then report `out_of_ammo`. For an unranked training demonstration, explicitly reset with `scenarios: [{"robots": {"red-3": {"ammo": 200}}}]`, or run the recorded mission, which declares its ammunition in the initial scenario. The current adapter does not learn an ammunition acquisition policy yet. Without `--opponent`, live enemies are stationary; the ready response states the opponent mode. With a custom roster, the scene also includes legal allied telemetry, while enemy visual data remains restricted to slot 3's camera. `capabilities.trained_profiles` lists the ranges and enemy models used in the combat curriculum; accepted parameter bounds are broader than demonstrated coverage.
+## Training contracts and reproducibility
 
-Long approaches/searches automatically use the navigation policy with a projected local-waypoint observation. The runtime switches to the requested combat/defense policy near the target/region, retaining the same command ID. For example, one `attack_structure` command can navigate from the home half and then shoot. Navigation-mode firing is suppressed; family switching is visible in `feedback.execution_family`. The LLM does not need to issue each route waypoint.
+```bash
+uv run arena-rl train-tactics --family support --steps 32768 --envs 4 --output runs/support
+uv run arena-rl train-tactics --family flight --steps 16384 --envs 4 --output runs/flight
+uv run arena-rl evaluate-tactics --checkpoint runs/flight --episodes 40 --seed 6000000 --replays runs/flight/replays
+uv run python examples/validate_extensions.py --policies checkpoints/tactics --output runs/runtime
+```
+
+Old navigation/combat/defense retain `w3-tactics-v3` (52 observations). New support and flight use separate `w3-support-v1` / `w3-flight-v1` contracts (74 observations). All use `MultiDiscrete([5,4,3,3,2,3,2])`. The new weights cannot be silently substituted for the old policy families. Checkpoint digests and simulator source/embedded rule-engine provenance are checked on loading.
+
+Support uses ordinary PPO from random weights. Flight defaults to 64 attempted scripted demonstration episodes, retains only successful trajectories, fits the policy by behavior cloning, then runs PPO on fresh episodes. Its metadata records accepted/rejected seeds, dataset SHA256, imitation fit, PPO steps/updates and changed weight hashes. `--expert-episodes 0` disables initialization; a resumed policy is not initialized again. Demonstrations are training data, not a runtime fallback. The deployed flight actions come from the trained network plus the documented geometric heading/gap/landing contract. From-scratch flight PPO did not succeed in the initial 32,768-step trial.
+
+Public SDK route hints and ballistic aiming are explicit assistance. W3 navigation now maintains nominal leg clearance and clears a bump along its existing axle before turning; physics/map geometry are unchanged. The network chooses local motion/speed/gait/fire/jump decisions, not motor current, joint torque or raw-image perception.
+
+Native v4 replays preserve ordinary actions including injury/forward-crossing preparation. `.commands.json` sidecars record runtime command IDs and policy digests. The validation script checks command tick/ammo/process continuity and deterministically replays representative support/flight episodes through Arena's verifier. See [expansion results](extended-results.md) for exact seeds, baselines and limitations, and [earlier tactical results](tactical-results.md) for the original five-skill benchmarks.

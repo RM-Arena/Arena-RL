@@ -33,6 +33,7 @@ class TacticalExecutor:
         self.memory={};self.identities=OrderedDict();self.revision=0;self.last_basis_tick=-1
         self.tick=-1;self.time=0.;self.started=0.;self.completed_at=None;self.plan=None;self.target_id=None
         self.damage=0.;self.last_hp={};self.events=[];self.arena=None
+        self.flight_authorized=set();self.extra={};self.skill_state={}
         self.last_position=None;self.last_motion=0.;self.initial_distance=None;self.navigation_arena=None
 
     def _end(self,status,reason):
@@ -59,10 +60,10 @@ class TacticalExecutor:
             age=(observation['tick']-command.basis_tick)*observation['dt']
             if age<0 or age>command.max_staleness_s or command.basis_tick<self.last_basis_tick:
                 raise ValueError('Stale, out-of-order or future command basis_tick')
-        for point in (command.point,command.center):
+        for point in (command.point,command.center,*command.waypoints):
             if point and not (robot['radius']<=point[0]<=arena['width']-robot['radius'] and robot['radius']<=point[1]<=arena['height']-robot['radius']):
                 raise ValueError('Command point is outside the robot field bounds')
-        if command.target_id and command.target_id.startswith(team+('-' if '-' in command.target_id else '_')):
+        if command.skill!='escort' and command.target_id and command.target_id.startswith(team+('-' if '-' in command.target_id else '_')):
             raise ValueError('Cannot attack a friendly target')
         roster=observation['roster']
         if command.target_id and '-' in command.target_id:
@@ -73,6 +74,9 @@ class TacticalExecutor:
             target_team,slot=target.split('-')
             legal=roster.get(target_team,[]) if isinstance(roster,dict) else roster
             if target_team==team or int(slot) not in legal:raise ValueError('Invalid defense priority target')
+        if command.skill in ('resupply','escort','patrol','fly_slope'):
+            from .extended_skills import validate
+            validate(self,command,observation,arena)
         self.cancel('replaced_by_new_command')
         self.last_basis_tick=max(self.last_basis_tick,command.basis_tick if command.basis_tick is not None else observation['tick'])
         self.identities[command.id]=command.json()
@@ -82,6 +86,8 @@ class TacticalExecutor:
         self.anchor=np.array(command.center) if command.center else xy(robot)
         self.target_id=command.target_id;self.damage=0.;self.last_hp={};self.initial_distance=None;self.hold_point=None
         self.tick=-1;self.plan=None
+        from .extended_skills import reset
+        reset(self)
         self.update(observation)
         return {'accepted':True,'duplicate':False,'revision':self.revision,'feedback':self.feedback()}
 
@@ -107,7 +113,10 @@ class TacticalExecutor:
             return self.plan
         c=self.command
         if not robot['alive'] or not robot['powered'] or robot['upright']<.3:self._end('failed','robot_unavailable')
-        elif robot['hp']/max(1,robot['max_hp'])<c.low_hp_fraction:self._end('failed','low_hp')
+        elif c.skill!='resupply' and robot['hp']/max(1,robot['max_hp'])<c.low_hp_fraction:self._end('failed','low_hp')
+        if c.skill in ('resupply','escort','patrol','fly_slope'):
+            from .extended_skills import update
+            return update(self,observation,visible)
         elapsed=now-self.started
         if elapsed>=c.timeout_s:
             defended=c.skill=='defend_region' and c.damage_goal is None
@@ -178,8 +187,10 @@ class TacticalExecutor:
         if phase in ('navigate','approach','search') and distance>c.radius_m and now-self.last_motion>6:
             self._end('failed','blocked')
         planned=sdk.navigate(robot,goal,self.navigation_arena) if distance>c.radius_m else (0.,0.)
-        hint=np.array(planned)
-        held_heading=getattr(planned,'heading',None)
+        from .navigation import clearance_hint
+        corrected,clear_heading=clearance_hint(robot,planned,self.arena)
+        hint=np.array(corrected)
+        held_heading=clear_heading if clear_heading is not None else getattr(planned,'heading',None)
         self.plan={'phase':phase,'goal':goal,'hint':hint,'target':target,'visible':is_visible,'distance':distance,'age':age,'held_heading':held_heading}
         if self.initial_distance is None:self.initial_distance=distance
         if self.status in TERMINAL:
@@ -190,7 +201,7 @@ class TacticalExecutor:
     def execution_family(self):
         if self.command is None:return 'navigation'
         family=self.command.policy_family
-        if family!='navigation' and self.plan and self.plan['distance']>1.2 and self.plan['phase'] in ('approach','search','hold'):
+        if family!='navigation' and self.plan and self.plan['distance']>1.2 and self.plan['phase'] in ('navigate','approach','search','hold','escort_follow','patrol_move','flight_approach','supply_approach'):
             return 'navigation'
         return family
 
@@ -203,4 +214,4 @@ class TacticalExecutor:
                 'phase':plan.get('phase','idle'),'execution_family':self.execution_family,'target_id':self.target_id,
                 'target_visible':bool(plan.get('visible',False)),'last_seen_age_s':float(plan.get('age',0.)),
                 'distance_m':distance,'observed_target_hp_loss':self.damage,
-                'progress_m':(self.initial_distance-distance) if self.initial_distance is not None else 0.}
+                'progress_m':(self.initial_distance-distance) if self.initial_distance is not None else 0.,'details':dict(self.extra)}

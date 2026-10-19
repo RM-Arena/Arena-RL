@@ -2,7 +2,7 @@
 import math
 import numpy as np
 from gymnasium import spaces
-from .commands import SKILLS
+from .commands import BASE_SKILLS as SKILLS
 from .executor import own,xy
 
 SCHEMA='w3-tactics-v3'
@@ -59,6 +59,8 @@ def decode(executor,observation,action,policy_family=None):
     robot=own(observation,executor.slot)
     result={'move':[0.,0.],'heading':robot['heading'],'aim':robot['aim'],'pitch':robot['pitch'],
             'fire':False,'brake':True,'leg_height':[.18,.245,.31][int(a[5])],'jump':0.}
+    if executor.command and (executor.command.skill=='navigate' or policy_family=='navigation'):
+        result['leg_height']=max(.245,result['leg_height'])
     if executor.status!='running':return {executor.slot:result}
     plan=executor.plan;hint=np.array(plan['hint']);length=np.linalg.norm(hint)
     if length<.001 and plan['target'] and plan['visible'] and policy_family!='navigation':

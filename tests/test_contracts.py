@@ -40,3 +40,42 @@ def test_tactical_command_roundtrip_and_strict_validation():
                     {'id':'x','skill':'navigate','point':[5,5],'timeout_s':True},
                     {'id':'x','skill':'navigate','point':[5,5],'debug':True}):
         with pytest.raises(ValueError):Command.parse(invalid)
+
+
+@pytest.mark.parametrize('value',[
+    {'id':'supply','skill':'resupply','ammo_target':100,'budget_limit':150},
+    {'id':'protect','skill':'escort','target_id':'red-4','point':[7.5,5.3]},
+    {'id':'route','skill':'patrol','waypoints':[[4,5],[6,5]],'patrol_loops':2},
+    {'id':'jump','skill':'fly_slope','lane_team':'blue','flight_direction':'reverse'},
+])
+def test_extended_command_roundtrip(value):
+    from arena_rl.commands import Command
+    c=Command.parse(value)
+    assert Command.parse(c.json())==c
+    assert c.policy_family in ('support','flight')
+
+
+@pytest.mark.parametrize('value',[
+    {'id':'x','skill':'navigate','point':None},
+    {'id':'x','skill':'defend_region','center':None},
+    {'id':'x','skill':'patrol','waypoints':[[1,2]]},
+    {'id':'x','skill':'patrol','waypoints':[[1,2],[2,3]],'patrol_loops':True},
+    {'id':'x','skill':'escort','target_id':'red_base'},
+    {'id':'x','skill':'resupply','ammo_target':1.5},
+    {'id':'x','skill':'resupply','engage_on_contact':1},
+    {'id':'x','skill':'fly_slope','lane_team':'green'},
+    {'id':'x','skill':'fly_slope','flight_direction':'sideways'},
+])
+def test_extended_command_validation(value):
+    from arena_rl.commands import Command
+    with pytest.raises(ValueError):Command.parse(value)
+
+
+def test_old_and_extended_schemas_remain_separate():
+    from arena_rl.tactical_encoding import FEATURES as old,OBS_SPACE as old_space
+    from arena_rl.extended_encoding import FEATURES,OBS_SPACE
+    from arena_rl.commands import capabilities
+    assert len(old)==52 and old_space.shape==(52,)
+    assert FEATURES[:52]==old and OBS_SPACE.shape==(74,)
+    assert len(capabilities()['command_json_schema']['oneOf'])==9
+    assert capabilities()['skill_seasons']['fly_slope']==['2026']
