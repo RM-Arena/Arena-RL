@@ -1,3 +1,5 @@
+**English** | [中文](zh/extended-results.md)
+
 # Support, flight and navigation regression results
 
 Measured locally on 2026-10-18 with the Arena-1 checkout and Rust engine pinned by each checkpoint's provenance. Arena-RL was private when this was recorded; it has been public since 2026-10-19. Arena-1's parallel-environment/scenario prerequisite is still local and has not been pushed or released; a fresh public Arena-1 clone is therefore not yet sufficient to reproduce this run. GitHub automatic CI checks the pure contracts; simulator integration needs the matching local prerequisite or a future explicitly selected Arena ref.

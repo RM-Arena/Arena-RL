@@ -1,8 +1,10 @@
+[English](README.en.md) | **中文**
+
 # Arena-RL
 
 基于 [Arena-1](https://github.com/RM-Arena/Arena-1) 的强化学习训练库。复用 Arena 的 Rust 物理、规则、回放，以及 `ArenaEnv` / `VectorArena` 并行环境，不维护另一套模拟器。
 
-**整队版本（0.6）**：顶层 LLM 为 2027 全队每台机器人选择高层目标（打前哨、守家、追击敌方重型/英雄、占堡垒、夺中央卡、推家、补给……），Harness 负责规则状态、可行性过滤和指令编译；低层由一套对 15 个 2027 地面型号通用、按机器人参数条件化的 PPO 策略执行，空中机库使用学习的俯冲时机策略。检查点位于 `checkpoints/ground`，说明、训练命令、Mac/CUDA 资源利用和评测见[整队 LLM + 通用 RL](docs/multi-robot.md)。
+**整队版本（0.6）**：顶层 LLM 为 2027 全队每台机器人选择高层目标（打前哨、守家、追击敌方重型/英雄、占堡垒、夺中央卡、推家、补给……），Harness 负责规则状态、可行性过滤和指令编译；低层由一套对 15 个 2027 地面型号通用、按机器人参数条件化的 PPO 策略执行，空中机库使用学习的俯冲时机策略。检查点位于 `checkpoints/ground`，说明、训练命令、Mac/CUDA 资源利用和评测见[整队 LLM + 通用 RL](docs/zh/multi-robot.md)。
 
 ```bash
 uv run arena-rl team-match --policies checkpoints/ground --commander llm --matches 2 --output runs/team-llm
@@ -10,7 +12,19 @@ uv run arena-rl serve-team --policies checkpoints/ground --realtime   # 外部 L
 sh examples/train_ground_all.sh runs/ground-v1 8 auto                  # 本机重新训练全部地面策略族
 ```
 
-单机器人版本的 LLM 对局使用 **2027 串联腿步兵 305，红方槽位 3**，检查点位于 `checkpoints/serial305`，支持低血量撤退和物理自扶正后的恢复。见[305 训练与接口说明](docs/serial305.md)。旧 W3 检查点保留为复现实验。
+<p align="center"><img src="docs/images/zh/architecture.svg" width="780" alt="系统架构：LLM 指挥官 → Harness → TeamController → RL 策略 → Arena 模拟器"></p>
+
+| 一局完整对局：LLM 指挥 + RL 执行（红方胜） | LLM 对每台红方机器人的指令时间线 |
+| --- | --- |
+| ![对局轨迹](docs/images/zh/match-trajectories.png) | ![LLM 指令时间线](docs/images/zh/llm-timeline.png) |
+| **通用策略 vs 专家 vs 随机（独立种子评测）** | **15 个型号的训练曲线** |
+| ![评测汇总](docs/images/zh/eval-summary.png) | ![训练曲线](docs/images/zh/training-curves.png) |
+| **每型号评测热力图** | **Mac 本机训练吞吐优化** |
+| ![每型号评测](docs/images/zh/eval-heatmap.png) | ![训练吞吐](docs/images/zh/throughput.png) |
+
+图表均由仓库内的检查点、评测报告和对局记录生成（`uv run --with matplotlib python examples/make_figures.py`），解读和限制见[整队文档](docs/zh/multi-robot.md)。
+
+单机器人版本的 LLM 对局使用 **2027 串联腿步兵 305，红方槽位 3**，检查点位于 `checkpoints/serial305`，支持低血量撤退和物理自扶正后的恢复。见[305 训练与接口说明](docs/zh/serial305.md)。旧 W3 检查点保留为复现实验。
 
 第一版选择 **2027 赛季 W3 双轮足步兵，型号 3，槽位 3**。每个进程只训练一台红方机器人；蓝方机器人按场景脚本运行。训练使用真实 PPO 更新网络权重。
 
@@ -103,11 +117,11 @@ uv run pytest -q
 
 ## 已跑通的参考模型
 
-见 [第一轮训练记录](docs/first-training.md) 和 [参考检查点](checkpoints/w3)。四项低层技能各 32 个独立场景均完成；高层为 31/32。记录同时公布随机基线：短距离、辅助瞄准的射击课程本来就很容易，暂不能据此宣称训练出了更强的实战射击能力。
+见 [第一轮训练记录](docs/zh/first-training.md) 和 [参考检查点](checkpoints/w3)。四项低层技能各 32 个独立场景均完成；高层为 31/32。记录同时公布随机基线：短距离、辅助瞄准的射击课程本来就很容易，暂不能据此宣称训练出了更强的实战射击能力。
 
 ## LLM 顶层指令与 RL 执行
 
-新增[战术接口](docs/llm-tactics.md)：支持导航、指定建筑攻击、指定机器人接战/追击、区域防守、补给、护送、巡逻、专用飞坡，以及 305 的撤退和恢复。顶层 LLM 通过带参数的 JSON 指令调度，低层 PPO 按 10 Hz 持续执行；换令保留同一模拟进程、位置和弹量。支持显式目标锁定、短时目标记忆、追击边界、指令时效校验和执行反馈。
+新增[战术接口](docs/zh/llm-tactics.md)：支持导航、指定建筑攻击、指定机器人接战/追击、区域防守、补给、护送、巡逻、专用飞坡，以及 305 的撤退和恢复。顶层 LLM 通过带参数的 JSON 指令调度，低层 PPO 按 10 Hz 持续执行；换令保留同一模拟进程、位置和弹量。支持显式目标锁定、短时目标记忆、追击边界、指令时效校验和执行反馈。
 
 ```bash
 uv run arena-rl serve-tactics --policies checkpoints/tactics --realtime --record
@@ -127,7 +141,7 @@ uv run arena-rl train-tactics --family flight --steps 16384 --envs 4 --output ru
 uv run arena-rl serve-tactics --policies checkpoints/tactics --season 2026 --realtime --record
 ```
 
-补给使用真实购买、扣款和补给区回血；护送只控制本机，目标队友由比赛宿主控制；巡逻按顺序完成全部点位和停留时间。飞坡先用成功示范初始化，再做 PPO 更新，部署时不使用示范脚本替代策略。具体命令、适用范围和训练记录见[战术接口](docs/llm-tactics.md)与[扩展评测](docs/extended-results.md)。原来失败的两个导航场景也已修复，完整导航回归为 32/32。
+补给使用真实购买、扣款和补给区回血；护送只控制本机，目标队友由比赛宿主控制；巡逻按顺序完成全部点位和停留时间。飞坡先用成功示范初始化，再做 PPO 更新，部署时不使用示范脚本替代策略。具体命令、适用范围和训练记录见[战术接口](docs/zh/llm-tactics.md)与[扩展评测](docs/zh/extended-results.md)。原来失败的两个导航场景也已修复，完整导航回归为 32/32。
 
 ## 接入顶层 LLM
 
@@ -137,9 +151,26 @@ uv run arena-rl serve-tactics --policies checkpoints/tactics --season 2026 --rea
 uv run arena-rl llm-matches --policies checkpoints/serial305 --matches 3 --max-calls 150 --output runs/serial305-full
 ```
 
-默认并行运行三场正常 420 秒的 2027 对局，对手为明确标记的脚本英雄和步兵，红方只有一台 305。它验证真实 LLM 调度、技能切换与完整对局链路；这不是标准满编队伍比赛。决策日志、推理延迟、失败原因、比赛结果和原生回放均保存。参数、权限边界和记录解释见 [LLM 接入说明](docs/llm-agent.md)与[早期 W3 对局记录](docs/llm-match-results.md)。
+默认并行运行三场正常 420 秒的 2027 对局，对手为明确标记的脚本英雄和步兵，红方只有一台 305。它验证真实 LLM 调度、技能切换与完整对局链路；这不是标准满编队伍比赛。决策日志、推理延迟、失败原因、比赛结果和原生回放均保存。参数、权限边界和记录解释见 [LLM 接入说明](docs/zh/llm-agent.md)与[早期 W3 对局记录](docs/zh/llm-match-results.md)。
 
 
-当前 305 的权重、撤退/恢复课程、安全坐标接口及完整对局记录见[训练说明](docs/serial305.md)和[评测结果](docs/serial305-results.md)。旧版 W3 的 32/32 导航成绩不适用于 305；当前模型的限制单独报告。
+当前 305 的权重、撤退/恢复课程、安全坐标接口及完整对局记录见[训练说明](docs/zh/serial305.md)和[评测结果](docs/zh/serial305-results.md)。旧版 W3 的 32/32 导航成绩不适用于 305；当前模型的限制单独报告。
 
-0.5.1 修复版的导航/飞坡原始回归均为 32/32，并完成同一进程内的正向、返程和 420 秒 2026 对局验证。扩大扰动测试的限制及新的真实 LLM 对局见[修复评测](docs/serial305-refinement-results.md)。
+0.5.1 修复版的导航/飞坡原始回归均为 32/32，并完成同一进程内的正向、返程和 420 秒 2026 对局验证。扩大扰动测试的限制及新的真实 LLM 对局见[修复评测](docs/zh/serial305-refinement-results.md)。
+
+![串联腿 305 各策略族独立评测成功率](docs/images/zh/serial305-evaluation.png)
+
+## 文档
+
+每篇文档都有中英文两个版本，页首可切换。
+
+| 文档 | 内容 |
+| --- | --- |
+| [整队 LLM + 通用 RL](docs/zh/multi-robot.md) | 0.6：全队 LLM 指挥、Harness、15 个地面型号的通用策略、空中俯冲策略、Mac/CUDA 训练、评测与整队对局 |
+| [305 训练与接口](docs/zh/serial305.md) | 串联腿 305 的撤退、自扶正恢复和安全坐标接口 |
+| [305 修复评测 0.5.1](docs/zh/serial305-refinement-results.md) / [305 评测 0.5.0](docs/zh/serial305-results.md) | 305 的回归、扩大测试和真实 LLM 对局 |
+| [LLM 战术接口](docs/zh/llm-tactics.md) | 单机器人参数化战术指令与 RL 执行 |
+| [LLM 接入说明](docs/zh/llm-agent.md) / [W3 对局记录](docs/zh/llm-match-results.md) | DeepSeek 战术规划器、完整对局运行器和早期结果 |
+| [战术执行验证](docs/zh/tactical-results.md) / [扩展评测](docs/zh/extended-results.md) | W3 战术策略、补给/护送/巡逻/飞坡评测 |
+| [第一轮训练记录](docs/zh/first-training.md) | W3 低层技能和高层管理策略的首次训练 |
+| [边界与扩展点](docs/zh/architecture.md) | 与 Arena 的边界、并行环境和扩展方式 |

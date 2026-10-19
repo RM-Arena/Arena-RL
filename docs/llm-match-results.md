@@ -1,3 +1,5 @@
+**English** | [中文](zh/llm-match-results.md)
+
 # DeepSeek V4.1 Flash full-match validation
 
 On 2026-10-18, the real `deepseek-flash` API supervised three independent 2027 matches. Each match had one learned red W3 (slot 3) against a scripted blue heavy (model 2711, slot 1) and W3 (slot 3). Profiles were siege, raid and hunt. This asymmetric 1-vs-2 setup is a declared evaluation scenario, not a standard full-roster tournament or a test against another LLM.
@@ -42,7 +44,7 @@ uv run arena-rl llm-matches --policies checkpoints/tactics \
 
 Use a new output directory. API sampling and wall-clock arrival make a fresh run nondeterministic even with the same simulator seeds. Native replay verification is deterministic and does not call the API. The checkpoints remain frozen; no RL training or weight update occurred in this evaluation.
 
-The private repository contains the [report, complete decision/telemetry logs, command sidecars and SHA256 manifest](../evaluations/deepseek-v4.1-flash-2026-10-18). Full native replays (about 190 MiB each) are retained locally under `runs/deepseek-v4.1-flash-full/`, excluded from Git to avoid adding hundreds of MiB to every clone. Their hashes and verified digests are in the committed report/manifest. The source hash snapshot records the evaluated controller; only package-version metadata changed afterward for 0.4.0.
+The repository contains the [report, complete decision/telemetry logs, command sidecars and SHA256 manifest](../evaluations/deepseek-v4.1-flash-2026-10-18). Full native replays (about 190 MiB each) are retained locally under `runs/deepseek-v4.1-flash-full/`, excluded from Git to avoid adding hundreds of MiB to every clone. Their hashes and verified digests are in the committed report/manifest. The source hash snapshot records the evaluated controller; only package-version metadata changed afterward for 0.4.0.
 
 All **78 local tests** passed across the pure protocol/provider tests and simulator integration/regressions. The new full-duration test uses an explicitly labeled fake planner, and the authentication-failure test checks that partial runs cannot be reported as full matches. Those tests are not included in the real API performance counts above. Automatic CI runs pure contracts/local mock-provider checks; full simulator integration still needs Arena-1's matching unpublished local prerequisite.
 

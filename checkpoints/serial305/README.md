@@ -1,3 +1,5 @@
+**English** | [中文](README.zh.md)
+
 # Serial-leg 305 reference policies
 
 The current 0.5.1 six-family bank controls only red slot 3, model 305. Policies were trained with successful demonstration initialization followed by real PPO updates. The active mobility policy is the composed fine-tune; its original initialization policy remains in `lineage/mobility-initial`. Navigation was initialized from that original policy, then separately trained. Its 0.5.0 network is retained under `navigation/transit` for goals beyond 4 m; the new local network received another 16,384 PPO steps. Flight was retrained with 84 lane-relative inputs, explicit phase and gap observations, plus 8,192 PPO steps. Archived 74-input 305 flight weights remain in `lineage/flight-v050`.

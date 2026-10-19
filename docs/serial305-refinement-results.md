@@ -1,54 +1,58 @@
-# 305 导航与飞坡修复记录：0.5.1
+**English** | [中文](zh/serial305-refinement-results.md)
 
-本次只控制 red-3 串联腿 305，复用原来的 Rust 模拟器。Arena-RL 记录时为私有仓库（2026-10-19 起公开）；Arena-1 没有提交或推送。本记录接续 [0.5.0 结果](serial305-results.md)。
+# 305 navigation and fly-slope fix record: 0.5.1
 
-## 修复和训练
+This update controls only red-3, the serial-leg 305, and reuses the original Rust simulator. Arena-RL was a private repository when this was recorded (public since 2026-10-19); Arena-1 was not committed or pushed. This record continues the [0.5.0 results](serial305-results.md).
 
-导航补充了短距离减速、道路边缘、转向和原路线混合课程。新局部网络接受 153 条成功示范（8,657 条转移），再做 **16,384 步 PPO**。原有导航网络作为转场策略保留，目标距离超过 4 m 时使用，避免局部补训破坏远距离能力。两者仍使用 64 维输入；实际调用的全部权重摘要写入报告。
+## Fixes and training
 
-飞坡改用 **`serial305-flight-v3`，84 维赛道相对观测**，明确区分接近、对齐、起跑、腾空、落地和恢复阶段。云台、弹量和金币等无关字段被屏蔽，镜像赛道使用相对方向。新策略由 183/192 条成功示范（8,720 条转移）初始化，再做 **8,192 步 PPO**，学习率 5e-6；PPO 前后权重确实变化。旧的 74 维飞坡策略保留兼容评测路径和归档。
+Navigation adds a mixed curriculum of short-range deceleration, road edges, turning and the original routes. The new local network takes 153 successful demonstrations (8,657 transitions), followed by **16,384 PPO steps**. The original navigation network is retained as the transit policy and is used when the goal is more than 4 m away, so that the local supplementary training cannot degrade long-distance capability. Both still use 64 inputs; the digests of all weights actually invoked are written to the reports.
 
-入口要求横向误差小于 25 mm，并满足方向、低速和稳定支撑条件。空中的短暂倾斜不会触发地面自扶正流程；腾空时间在恢复阶段也持续记录，避免真实跨越后被误判为没有腾空。网络请求的正向跳跃使用有限行程；位于间隙底部时允许正常完整行程，并在示范中教授实际起跳脱离平台边缘。模拟器的碰撞、关节模型、功率上限和裁判规则未改动；执行技能时不写入 HP 或坐标，训练出生点由场景声明。
+Flight now uses **`serial305-flight-v3`, with 84 lane-relative observation features**, which explicitly distinguish the approach, alignment, run, air, landing and recovery phases. Irrelevant fields such as gimbal, ammunition and coins are masked, and mirrored lanes use relative directions. The new policy is initialized from 183/192 successful demonstrations (8,720 transitions), followed by **8,192 PPO steps** at learning rate 5e-6; the weights do change between before and after PPO. The old 74-input flight policies keep a compatible evaluation path and are archived.
 
-原有导航 28/75 秒和飞坡 18 秒预算保持不变。恢复阶段也受原指令的绝对时限约束。飞坡成功仍要求真实腾空跨越、直立着地、低速度和落地保持时间，返程权限仍须先通过同一回合的正向跨越获得。
+Entry requires lateral error below 25 mm and satisfaction of orientation, low-speed and stable-support conditions. Brief tilt in the air does not trigger the ground self-righting procedure; air time continues to be recorded during the recovery phase, so that a real crossing is not misjudged as having had no airborne phase. Forward jumps requested by the network use a bounded stroke; on the gap floor the normal full stroke is allowed, and the demonstrations teach actually jumping clear of the platform edge. The simulator's collisions, joint model, power limits and referee rules are unchanged; no HP or coordinates are written while executing a skill, and training spawn points are declared by the scenarios.
 
-## 回归与扩大评测
+The original navigation budgets of 28/75 seconds and the 18-second flight budget are unchanged. The recovery phase is also bounded by the original command's absolute time limit. Flight success still requires a real airborne crossing, an upright landing, low speed and the landing hold time, and permission for the return must still first be earned by a forward crossing in the same episode.
 
-| 测试 | 种子 | 结果 | 解释 |
+## Regression and expanded evaluation
+
+| Test | Seeds | Result | Explanation |
 | --- | --- | --- | --- |
-| 原导航回归 | 3,000,000–3,000,031 | **32/32** | 部署策略库，包含恢复、脱困和转场/局部切换 |
-| 原飞坡回归 | 6,000,000–6,000,031 | **32/32** | 两条镜像赛道，正向和已获得权限的返程 |
-| 扩大导航 | 8,500,000–8,500,063 | **55/64** | 更广的短距离、道路边缘、转弯和参考路线扰动 |
-| 扩大飞坡 | 8,800,000–8,800,063 | **59/64** | 起点和方向扰动、两条赛道及返程 |
-| 撤退/恢复保留回归 | 7,000,200–7,000,263 | **64/64** | 检查共享控制改动没有破坏前一轮能力 |
+| Original navigation regression | 3,000,000–3,000,031 | **32/32** | Deployed policy bank, including recovery, escape and transit/local switching |
+| Original flight regression | 6,000,000–6,000,031 | **32/32** | Two mirrored lanes, forward and earned return |
+| Expanded navigation | 8,500,000–8,500,063 | **55/64** | Wider perturbations of short range, road edges, turns and reference routes |
+| Expanded flight | 8,800,000–8,800,063 | **59/64** | Start-point and heading perturbations, both lanes and return |
+| Withdrawal/recovery held-out regression | 7,000,200–7,000,263 | **64/64** | Checks that the shared control changes did not break the previous round's capabilities |
 
-原来的失败案例属于开发期间反复使用的回归集，不能当作新的泛化证据。扩大测试使用另外的固定种子，仍有超时、阻塞或恢复失败；完整失败 ID 与反馈均保留在 [导航扩大报告](../evaluations/serial305-refinement-2026-10-18/navigation-expanded.json)和[飞坡扩大报告](../evaluations/serial305-refinement-2026-10-18/flight-expanded.json)。这些都是有限模板内的扰动，不代表任意地形、敌方持续干扰或全地图可靠性。
+![Independent evaluation success rates for each serial-leg 305 policy family](images/en/serial305-evaluation.png)
 
-原导航失败 3,000,013 在原 28 秒预算内完成；原飞坡失败 6,000,011、6,000,016、6,000,021，以及排查中发现的 6,000,020 均有实际部署链路和原生回放回归。[物理报告](../evaluations/serial305-refinement-2026-10-18/physical-regressions/report.json)包含校验摘要。
+The original failure cases belong to a regression set used repeatedly during development and cannot be treated as new evidence of generalization. The expanded tests use separate fixed seeds and still contain timeouts, blockages or recovery failures; the complete failure IDs and feedback are retained in the [expanded navigation report](../evaluations/serial305-refinement-2026-10-18/navigation-expanded.json) and the [expanded flight report](../evaluations/serial305-refinement-2026-10-18/flight-expanded.json). These are all perturbations within a limited set of templates and do not represent reliability on arbitrary terrain, under sustained enemy interference, or across the full map.
 
-## 连续 2026 完整对局
+The original navigation failure 3,000,013 now completes within the original 28-second budget; the original flight failures 6,000,011, 6,000,016 and 6,000,021, as well as 6,000,020 found during investigation, all have regressions through the actual deployment pipeline and native replay. The [physical report](../evaluations/serial305-refinement-2026-10-18/physical-regressions/report.json) contains the verification summaries.
 
-同一物理进程内，学习策略先完成正向，再完成返程，然后运行到 **420 秒 / 8400 tick**，原生回放逐帧复算通过。两条技能的用时分别为 3.2 秒、5.6 秒，中间没有重置位置、弹量、HP 或模拟进程。
+## Continuous 2026 full match
 
-这一项的目标发令器是明确标注的脚本，低层动作来自同一部署策略库；红方仍只有一台 305，蓝方使用 2026 合法的型号 1 和 3。它使用声明过的飞坡入口出生点，属于连续技能和完整裁判链路回归，不能与正常出生的 LLM 比赛混为同一胜率测试。完整压缩回放保存在本地 `runs/serial305-refinement/physical-canonical-final/full-2026.json.gz`，仓库保存其 SHA256、指令和校验结果。
+Within a single physical process, the learned policy first completes the forward crossing, then the return, and then runs to **420 seconds / 8400 ticks**; frame-by-frame recomputation of the native replay passes. The two skills take 3.2 s and 5.6 s respectively, with no reset of position, ammunition, HP or the simulation process in between.
 
-## 三场真实 LLM 对局
+In this test the objective issuer is an explicitly labeled script, and low-level actions come from the same deployed policy bank; red still has only one 305, and blue uses 2026-legal models 1 and 3. It uses a declared spawn point at the flight entry and is a regression of continuous skills and the full referee pipeline; it must not be conflated with the normally spawned LLM matches as the same win-rate test. The full compressed replay is stored locally at `runs/serial305-refinement/physical-canonical-final/full-2026.json.gz`; the repository keeps its SHA256, commands and verification results.
 
-顶层仍为 DeepSeek V4.1 Flash（API `deepseek-flash`，关闭 thinking），异步调用技能，RL 按模拟时间 10 Hz 执行。三场均从正常出生点开始，只有 red-3 受学习策略/LLM 控制，蓝方是声明过的脚本重型 2711 和步兵 3。起始弹量、经济、伤害、购买和复活保持正常规则。
+## Three real LLM matches
 
-| 种子 | 对手 | 获胜方 | 秒 / 校验 tick | API 请求 | 延迟中位数 / p95（秒） | 错误 |
+The top level is still DeepSeek V4.1 Flash (API `deepseek-flash`, thinking disabled), which invokes skills asynchronously while RL executes at 10 Hz simulated time. All three matches start from normal spawn points; only red-3 is controlled by the learned policies/LLM, and blue is the declared scripted heavy 2711 and infantry 3. Starting ammunition, economy, damage, purchases and respawns follow the normal rules.
+
+| Seed | Opponent | Winner | Seconds / verified ticks | API requests | Latency median / p95 (s) | Errors |
 | --- | --- | --- | --- | --- | --- | --- |
 | 9000030 | siege | blue | 420 / 8400 | 93 | 1.635 / 2.181 | {} |
 | 9000031 | raid | blue | 420 / 8400 | 92 | 1.585 / 2.163 | {'provider_network_timeout': 1} |
 | 9000032 | hunt | blue | 420 / 8400 | 83 | 1.605 / 2.389 | {} |
 
-结果为 **0 胜 3 负**，共 268 次真实 API 请求。全部通过完整裁判终局、进程/指令连续性和 8,400 tick 原生回放校验。无效坐标指令为 0；发生 1 次 API 网络超时。比赛中的技能和失败原因保留在 [最终报告](../evaluations/serial305-refinement-2026-10-18/llm-final/report.json)、压缩决策日志及遥测中。比赛图为 2027，没有 2026 专用飞坡，因此真实飞坡由上面的独立 2026 连续对局验证。
+The result is **0 wins and 3 losses**, with 268 real API requests in total. All three pass the full referee ending, process/command continuity and 8,400-tick native replay verification. There are zero invalid coordinate commands; one API network timeout occurred. The skills and failure reasons in the matches are retained in the [final report](../evaluations/serial305-refinement-2026-10-18/llm-final/report.json), the compressed decision log and telemetry. The match map is 2027, which has no dedicated 2026 fly-slope, so real flight is verified by the separate continuous 2026 match above.
 
-这些是单机器人与脚本对手的集成验证，不是满编赛事或可靠胜率估计。实际墙钟耗时 494.5 秒，错过 181 个墙钟调度点，包含并行本地验证造成的负载；不能据此承诺硬实时。API 超时期间继续当前技能。
+These are integration checks of a single robot against scripted opponents, not full-roster matches or reliable win-rate estimates. Actual wall-clock time was 494.5 s and 181 wall-clock deadlines were missed, including load caused by concurrent local verification; no hard real-time guarantee can be made on this basis. During an API timeout, the current skill continues.
 
-## 测试与复现
+## Tests and reproduction
 
-本地测试：**97 项通过**。完整原生 LLM 回放位于本地 `runs/serial305-refinement/llm-final/`；短回归回放及全部摘要保存在本仓库。训练记录包含示范接受/拒绝种子、数据哈希、PPO 更新、权重和模拟器指纹。导航元数据明确标出本次训练期间一次恢复时限保护和评测记录代码更新，保留开始时的源文件哈希，不承诺跨平台逐比特复现。
+Local tests: **97 passed**. The full native LLM replays are stored locally under `runs/serial305-refinement/llm-final/`; the short regression replays and all summaries are kept in this repository. Training records include accepted/rejected demonstration seeds, data hashes, PPO updates, weights and simulator fingerprints. Navigation metadata explicitly flags a recovery time-limit guard and an evaluation-recording code update made during this training run, and retains the source file hashes from the start; bit-for-bit reproduction across platforms is not promised.
 
 ```bash
 uv run pytest -q
@@ -56,4 +60,4 @@ uv run python examples/validate_refinement.py --policies checkpoints/serial305 -
 uv run arena-rl llm-matches --policies checkpoints/serial305 --matches 3 --max-calls 150 --seed 9000030 --output runs/new-matches
 ```
 
-加载和评测需要保留 Arena-1 的本地并行环境及训练接口。公开仓库版本暂时不能替代这批未推送的本地依赖；本次没有推送或发布 Arena-1。
+Loading and evaluation require Arena-1's local parallel environments and training interfaces to be retained. The public repository version cannot yet substitute for these unpushed local dependencies; this work did not push or release Arena-1.

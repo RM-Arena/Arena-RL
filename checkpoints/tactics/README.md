@@ -1,3 +1,5 @@
+**English** | [中文](README.zh.md)
+
 # Tactical reference policies
 
 Five policy directories cover nine single-W3 objectives. Read [command contracts](../../docs/llm-tactics.md) and [current results](../../docs/extended-results.md) before interpreting the success counts. These are assisted, local curricula, not a full-match tactical agent.

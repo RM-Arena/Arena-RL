@@ -1,3 +1,5 @@
+**English** | [中文](zh/architecture.md)
+
 # Boundary and extension points
 
 `bridge.py` selects one Arena checkout and sets its resource root before importing it. `SkillBatch` shares Arena's `VectorArena`, which owns isolated persistent Rust processes. The simulator accepts bounded training initial conditions only during initialization. It exposes no mid-episode teleport action to the learned policy.

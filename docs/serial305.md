@@ -1,3 +1,5 @@
+**English** | [中文](zh/serial305.md)
+
 # Serial-leg 305: withdrawal, recovery and safe LLM coordinates
 
 The current single-robot agent controls **red slot 3, model 305**, an existing legal serial-leg infantry design. The earlier W3 model 3 has no complete self-righting mechanism. Following the user's choice, the active policy bank was retrained for 305; the old `checkpoints/tactics` and `checkpoints/w3` banks remain available as historical model-3 references. Arena physics, rules and robot specifications were not changed for this migration.
@@ -71,6 +73,8 @@ Training used the recorded source snapshots/hashes and saved demonstration datas
 See the evaluation reports under `checkpoints/serial305` and [full-match evidence](serial305-results.md). Final held-out mobility testing uses seeds 7,000,200–7,000,263: 27 explicit recovery and 37 withdrawal objectives. Withdrawal includes the recovery-then-retreat composition. Physical regressions also preserve and deterministically verify representative native replays. Idle/random comparisons on the same seeds distinguish the existing firmware contribution from useful learned movement. A completed `recover` command can begin upright; `recoveries_completed` is an execution counter, not a count of real flips. Native `self_righting`/`self_righted` events and pose samples report physical events separately.
 
 The original 32-case navigation and 32-case flight regressions now pass. Wider perturbed courses still contain failures; the [refinement report](serial305-refinement-results.md) gives exact counts separately from these regression sets. A serial chassis can still become mechanically wedged or exhaust its power budget. No global win-rate or universal recovery guarantee follows from a few matches. Flight migration uses its own 2026 curriculum and is unavailable as a dedicated map skill in the 2027 matches.
+
+![Serial-leg 305: held-out success by policy family](images/en/serial305-evaluation.png)
 
 Arena-RL was private when this was recorded; it has been public since 2026-10-19. Arena-1's existing local simulator prerequisite remains unpushed, and this work does not commit, push or release Arena-1.
 

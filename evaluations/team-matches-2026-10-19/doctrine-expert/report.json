@@ -1,0 +1,233 @@
+{
+  "format": "arena-team-matches-v1",
+  "commander": "doctrine",
+  "model": null,
+  "low_level": "expert",
+  "matches": [
+    {
+      "seed": 9300000,
+      "winner": "red",
+      "reason": "timeout",
+      "time_s": 420.0,
+      "score": {
+        "red": {
+          "control": 1.7000000000000008,
+          "attack_damage": 2805.0,
+          "kills": 7,
+          "score": 2805.0
+        },
+        "blue": {
+          "control": 0.0,
+          "attack_damage": 2510.0,
+          "kills": null,
+          "score": 2510.0
+        }
+      },
+      "structures": {
+        "red_outpost": 500.0,
+        "red_base": 10000.0,
+        "blue_outpost": 500.0,
+        "blue_base": 10000.0
+      },
+      "blue_base_armor_open": false,
+      "commander": "doctrine",
+      "low_level": "expert",
+      "planner_calls": 0,
+      "actions": {
+        "commanded": 704
+      },
+      "errors": [],
+      "error_count": 0,
+      "usage": {},
+      "latency_s": {
+        "median": null,
+        "p95": null
+      },
+      "events": {
+        "drone_strike": 10,
+        "outpost_destroyed": 2,
+        "control_changed": 4,
+        "destroy": 10,
+        "outpost_rebuilt": 2,
+        "respawn": 10,
+        "launcher_unlocked": 1
+      },
+      "missed_realtime_deadlines": 0,
+      "wall_seconds": 629.8938177910168,
+      "replay": "match-9300000.json",
+      "replay_sha256": "2d4019c45134cb185b8373dd877270ebba8c380e66419bba1ce326f4f255512f",
+      "replay_verification": {
+        "verified_ticks": 8400,
+        "digest": "1546ed8ead08621342f1f40d9fa1b0571995af4b27477296b9f4d063c61ea0b4",
+        "winner": "red"
+      },
+      "decisions_sha256": "92a4517155c92400b9754f9611a5bfb0a0c93659d1cf44cff5acd1b66c976f93"
+    },
+    {
+      "seed": 9300001,
+      "winner": "red",
+      "reason": "timeout",
+      "time_s": 420.0,
+      "score": {
+        "red": {
+          "control": 253.5500000000234,
+          "attack_damage": 2435.0,
+          "kills": 3,
+          "score": 2435.0
+        },
+        "blue": {
+          "control": 0.0,
+          "attack_damage": 2390.0,
+          "kills": null,
+          "score": 2390.0
+        }
+      },
+      "structures": {
+        "red_outpost": 500.0,
+        "red_base": 10000.0,
+        "blue_outpost": 500.0,
+        "blue_base": 10000.0
+      },
+      "blue_base_armor_open": false,
+      "commander": "doctrine",
+      "low_level": "expert",
+      "planner_calls": 0,
+      "actions": {
+        "commanded": 625
+      },
+      "errors": [],
+      "error_count": 0,
+      "usage": {},
+      "latency_s": {
+        "median": null,
+        "p95": null
+      },
+      "events": {
+        "drone_strike": 10,
+        "outpost_destroyed": 2,
+        "control_changed": 8,
+        "outpost_rebuilt": 2,
+        "destroy": 7,
+        "respawn": 5,
+        "launcher_unlocked": 1
+      },
+      "missed_realtime_deadlines": 0,
+      "wall_seconds": 717.2381001252215,
+      "replay": "match-9300001.json",
+      "replay_sha256": "a4772e08584afc311517034248ec9ec85224dbe6444d04e7dab61b32d567e724",
+      "replay_verification": {
+        "verified_ticks": 8400,
+        "digest": "042b85c9482e628c3edebe5d71576473892d1d53a9498394a2e74b0995ed6535",
+        "winner": "red"
+      },
+      "decisions_sha256": "16792c804e0a812e8adf33e5050c0a6fc0c96bc6a5bb3dfa530d3668132e34f1"
+    },
+    {
+      "seed": 9300002,
+      "winner": "blue",
+      "reason": "timeout",
+      "time_s": 420.0,
+      "score": {
+        "red": {
+          "control": 26.950000000000248,
+          "attack_damage": 1650.0,
+          "kills": 2,
+          "score": 1650.0
+        },
+        "blue": {
+          "control": 33.80000000000022,
+          "attack_damage": 2440.0,
+          "kills": null,
+          "score": 2440.0
+        }
+      },
+      "structures": {
+        "red_outpost": 500.0,
+        "red_base": 10000.0,
+        "blue_outpost": 500.0,
+        "blue_base": 10000.0
+      },
+      "blue_base_armor_open": false,
+      "commander": "doctrine",
+      "low_level": "expert",
+      "planner_calls": 0,
+      "actions": {
+        "commanded": 498
+      },
+      "errors": [],
+      "error_count": 0,
+      "usage": {},
+      "latency_s": {
+        "median": null,
+        "p95": null
+      },
+      "events": {
+        "drone_strike": 10,
+        "outpost_destroyed": 2,
+        "control_changed": 6,
+        "destroy": 7,
+        "outpost_rebuilt": 2,
+        "respawn": 6,
+        "launcher_unlocked": 1
+      },
+      "missed_realtime_deadlines": 0,
+      "wall_seconds": 667.4718364579603,
+      "replay": "match-9300002.json",
+      "replay_sha256": "a75445120ad49a7c088f57e03423163f69456ac9009098201bb9397ffa78ad95",
+      "replay_verification": {
+        "verified_ticks": 8400,
+        "digest": "a9a64c7f95e01ff4291b63363f6b687932b3d4b71d94551c5f4a9e202cd2fe50",
+        "winner": "blue"
+      },
+      "decisions_sha256": "7b627d8acd6f6f7e0cfc427168d61cdff9c353016fb79e56fb2d44911cbec642"
+    }
+  ],
+  "wins": {
+    "red": 2,
+    "blue": 1
+  },
+  "wall_seconds": 724.5267044580542,
+  "arena": {
+    "root": "/Users/sn/draft/RMUC-Arena",
+    "repository": "https://github.com/RM-Arena/Arena-1",
+    "commit": "bbaa885b774e86582e8e537e5e01197f1c2bb1ea",
+    "dirty": true,
+    "files": {
+      "config/rules.json": "e06b299c174e00b507cc7a84af8871f31969cc39fedfa47aa11dc813592c2252",
+      "config/battle_settings.json": "354046c0eb520c44fd3714c40e7b6ad79f481391a15693c9be3247ea0dd37b5d",
+      "rmuc_arena/env.py": "15204442518666b19b2ec0d76390062327c5afd94cb00c2c83d4fdfc5f1c088e",
+      "rmuc_arena/vector_env.py": "6dd7697abb055af351f8e644bf22efe220c5dea42e5af2faeaa98fdae0a6b169",
+      "rmuc_arena/engine.py": "588075eff94c418272182dc8876dad43f5d589bb08ad608f3f643c2822acb002",
+      "rmuc_arena/action_protocol.py": "5ae00b9231340c01e3e476ce2e61b626bba0a9697873d78af9e983926602db6e",
+      "rmuc_arena/communication.py": "aaa96f9fd1ff60a2237fa3efad9663f7c75cde6fa0fec88b5f54bc318f9df46f",
+      "rmuc_arena/replays.py": "69a5bdac6a9d520356395818d78a4ebb148fc15c1f24daa8c694964983d06ebc",
+      "rmuc_arena/sdk.py": "6c7e3d69c4bcedcd98aa20bcdc3a1e19c9cd3e1f8215f9c3125cd9b3151daf3c",
+      "simulation/src/assembly_2027_regression_tests.rs": "f0b54c5e48baefca3380c10c1f777620947227a17ae6341260d5c2a15c5c7fe3",
+      "simulation/src/combat_2027_regression_tests.rs": "21985e7feaa7051b25454dfef7c62cee8949fef13f224d7ac33b7e5c176249a5",
+      "simulation/src/damage_tests.rs": "9460f909161cdc48e6b2fbbcf8688e1d4d2a6207470ac192e5a78157febf5dfa",
+      "simulation/src/deck_tests.rs": "47257e9b1b6e1a7bfc59d1ba1fddc2c18184d17337f669a6e125da8e9dfb35cd",
+      "simulation/src/field_2027_regression_tests.rs": "92b24a8cfce532e706888b7f8960df06d61e15292128862f0fcf5f0b7be7feb8",
+      "simulation/src/lib.rs": "1360fbddd719cc805265ab945bc83809c4f6ebcd5ff0dd2ef3dd57d4b6dac8f3",
+      "simulation/src/main.rs": "9f535f2d6fd15f094af1ec920026218bf4d7eca5629e8b5997d3a20fc47d9cd7",
+      "simulation/src/mechanism_tests.rs": "0e2031327f0d46e3cd603f3b7d18bd8e978e83640d951b1227ff272899b2942b",
+      "simulation/src/model_tests.rs": "b550ed330127bf5320ac1a405342802562589264f0e7f5a126e9919f0d5f3425",
+      "simulation/src/penalties.rs": "fe9d3235b3fb6cffa2326be03f334dc249e8982a348e738a4d4124f4acc5547f",
+      "simulation/src/physics.rs": "e4b05cb3e0af16dca7dc9287fc01af86f7d33ad4cd71f0f189a7d2201ac66d7c",
+      "simulation/src/pickup.rs": "c0c88a1981b5c17a2ac29fbb4102fe8865a47c7b40bb94dfff7c81390385aa29",
+      "simulation/src/realism_tests.rs": "6ba8b88149a7368eb9a795c12ae434fd5454aed2babb6733aec6f4285897fd5a",
+      "simulation/src/rule_audit_tests.rs": "129a42ee983c3a3a3f88d8352da8642f2eec5e3463f7d1cd258037c528a39dbe",
+      "simulation/src/rulebook.rs": "59df61ac77b4fecf0063facd8d751723392290d19eef6339ba46091b47cd9c9f",
+      "simulation/src/season2027.rs": "f85ae8529822b087095e2d3b6207b1a79e7cf3376665f6838ca526ce665a8e1b",
+      "simulation/src/season2027_tests.rs": "5b9addbbfcda0aafde578954b6976197fe7fb396d1d3fc24b9df85791185e07d",
+      "simulation/src/structures.rs": "c335e7b20fcc780f10ca5572b66f83b8086686d75ab3af69aa237cef22f29df8",
+      "simulation/src/tests.rs": "8939953f3c061d776d9361808125c244af8b79d22366e1e5e108ae9e72f1bb64",
+      "simulation/src/training_scenario.rs": "7e2af1a3783e33f8b4a186bfd52930f90763c5c1c7047851168c86c4d576801b",
+      "simulation/src/vision.rs": "ddbdca6cc7c6e77b2e9cbf96e7a6b758bca91b002892e64edfbc46cfa5bc881a",
+      "simulation/src/vision_tests.rs": "7414352c963496f740b1ec07a812d088e5b3fd2cdcb1e3e566780b25a248114f"
+    },
+    "engine_hash": "26730133541904118e36858b2c31e1d42b86ec00a6d65251e7bae9ae018e1045",
+    "rules_hash": "e06b299c174e00b507cc7a84af8871f31969cc39fedfa47aa11dc813592c2252",
+    "binary_sha256": "5f52b6cf9f492addee6219d6f93aa51cfec22de978a6243eb14c719481b0364f"
+  },
+  "scope": "red: commander + universal RL execution (aerial: explicit guidance); blue: declared doctrine with scripted expert controllers; normal 2027 referee"
+}

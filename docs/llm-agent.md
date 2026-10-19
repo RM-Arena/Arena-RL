@@ -1,3 +1,5 @@
+**English** | [中文](zh/llm-agent.md)
+
 # DeepSeek tactical planner and full-match runner
 
 Arena-RL now has a real API-backed tactical planner. DeepSeek chooses a parameterized skill; the existing frozen PPO policies execute only **red slot 3** (current bank: serial-leg model 305; legacy W3 bank: model 3). Inference runs on worker threads while the simulator and low-level controller continue. No scripted tactical policy replaces an API failure.

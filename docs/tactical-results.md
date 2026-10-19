@@ -1,3 +1,5 @@
+**English** | [中文](zh/tactical-results.md)
+
 # Tactical execution validation
 
 The reference policies use schema `w3-tactics-v3` on Arena's existing Rust simulator. Navigation trained for 32,768 initial PPO transitions and 65,536 continuation transitions (98,304 total), combat for 65,536 and defense for 32,768. All use four persistent simulation actors; the weights and optimizer updates are recorded in metadata.

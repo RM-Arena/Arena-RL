@@ -1,3 +1,5 @@
+**English** | [中文](zh/llm-tactics.md)
+
 # LLM tactical commands and learned execution
 
 The LLM chooses a single robot's objective. The current `checkpoints/serial305` bank contains six PPO families for eleven parameterized commands at 10 Hz, controlling serial-leg **model 305 in red slot 3**. The older `checkpoints/tactics` bank retains W3 model 3 and its nine-command benchmark. The service is provider independent; `serve-tactics` does not call an LLM API. The separate `llm-matches` host connects a real planner. The earlier two-choice PPO manager remains a baseline. See [305 training and recovery](serial305.md) for the current model, observations and evaluation limits.
@@ -21,6 +23,8 @@ The LLM chooses a single robot's objective. The current `checkpoints/serial305` 
 The first eight commands are trained/evaluated on 2027. Dedicated fly-slope geometry exists on **2026**, so use `--season 2026` for this skill. The 2027 road ramps are ground navigation terrain, not a dedicated airborne crossing. Season selection is an episode property: a command cannot change maps. `navigate` is also accepted on 2026 for staging; its full-map held-out benchmark is on 2027. `retreat` and `recover` are trained on 2027; `recover` requires model 305. Aerial control, arbitrary terrain jumps and global win-rate claims are outside the recorded coverage.
 
 `ready` and `capabilities` include `available_skills`, filtered by loaded weights and the current season. Protocol-wide `skills`/`command_json_schema` describe all eleven commands. An unavailable command is rejected before replacing the current objective.
+
+![RMUC 2027 field: bases, outposts, fortress and central highland cards, supply zones and road bumps](images/en/field-2027.png)
 
 ## JSON examples
 

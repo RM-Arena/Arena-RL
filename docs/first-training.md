@@ -1,3 +1,5 @@
+**English** | [中文](zh/first-training.md)
+
 # W3 first training run
 
 All policies below were actually optimized with Stable-Baselines3 PPO on the shared Arena Rust simulator. Each skill used four persistent parallel actors. Move/ramp/defend used 32,768 initial transitions; outpost used 16,384. Move/ramp/outpost then continued for 512 transitions after a host JSONL reset-parser change; the metadata records this continuation and the allowed transport change. Rules and the embedded physics engine were identical throughout.

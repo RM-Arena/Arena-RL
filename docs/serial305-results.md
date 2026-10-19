@@ -1,3 +1,5 @@
+**English** | [中文](zh/serial305-results.md)
+
 # Serial-leg 305 evaluation — 2026-10-18
 
 This records version 0.5.0. See [0.5.1 refinement results](serial305-refinement-results.md) for the current policy bank.
@@ -41,4 +43,4 @@ Physical event totals and one-second pose samples are reported separately in [ph
 
 Two preliminary three-match series are retained under `evaluations/serial305-2026-10-18/preliminary-*`. Each gave one red win and two blue wins, zero coordinate errors and only transient API timeouts. They used earlier mobility weights and source snapshots; they are not counted as tests of the final bank. The earlier W3 report is historical and is not a controlled ablation of 305, since prompts, routing and weights also changed. A failed two-tick startup probe is excluded from full-match totals.
 
-Arena-RL remains **private**. Arena-1's local prerequisites are unchanged by this migration and remain uncommitted/unpushed. GitHub's normal contract CI can run independently; simulator CI needs an explicitly available Arena source containing those local environment interfaces.
+Arena-RL was private when this was recorded; it has been public since 2026-10-19. Arena-1's local prerequisites are unchanged by this migration and remain uncommitted/unpushed. GitHub's normal contract CI can run independently; simulator CI needs an explicitly available Arena source containing those local environment interfaces.
