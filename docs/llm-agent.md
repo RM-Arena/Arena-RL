@@ -44,7 +44,7 @@ Usage counters describe successfully parsed responses; they are not a billing le
 
 A successful runner exit means full referee completion with real accepted LLM commands and continuity, rather than a promised win. Read the recorded outcome, invalid-action events, failed skills, deaths and idle periods separately. Deterministic scripted/mock tests verify plumbing only and are labeled as test doubles, not model evaluations.
 
-Arena-RL remains private. The simulator prerequisite in Arena-1 remains local and is not pushed or released by this work.
+Arena-RL was private when this was recorded; it has been public since 2026-10-19. The simulator prerequisite in Arena-1 remains local and is not pushed or released by this work.
 
 
 The current planner can select only prevalidated public waypoint IDs when the runner supplies a catalog. The host resolves IDs to coordinates; manual tactical JSON remains compatible with two-element arrays. Custom hosts without catalogs use bounded scalar x/y objects. See [serial-305 migration, curricula and mechanical assistance](serial305.md). Historical W3 results in the earlier report are retained as a separate model/agent version.

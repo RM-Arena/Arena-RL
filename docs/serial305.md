@@ -72,7 +72,7 @@ See the evaluation reports under `checkpoints/serial305` and [full-match evidenc
 
 The original 32-case navigation and 32-case flight regressions now pass. Wider perturbed courses still contain failures; the [refinement report](serial305-refinement-results.md) gives exact counts separately from these regression sets. A serial chassis can still become mechanically wedged or exhaust its power budget. No global win-rate or universal recovery guarantee follows from a few matches. Flight migration uses its own 2026 curriculum and is unavailable as a dedicated map skill in the 2027 matches.
 
-Arena-RL stays private. Arena-1's existing local simulator prerequisite remains unpushed, and this work does not commit, push or release Arena-1.
+Arena-RL was private when this was recorded; it has been public since 2026-10-19. Arena-1's existing local simulator prerequisite remains unpushed, and this work does not commit, push or release Arena-1.
 
 
 ## Refined fly-slope controller

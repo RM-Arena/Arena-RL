@@ -46,4 +46,4 @@ The private repository contains the [report, complete decision/telemetry logs, c
 
 All **78 local tests** passed across the pure protocol/provider tests and simulator integration/regressions. The new full-duration test uses an explicitly labeled fake planner, and the authentication-failure test checks that partial runs cannot be reported as full matches. Those tests are not included in the real API performance counts above. Automatic CI runs pure contracts/local mock-provider checks; full simulator integration still needs Arena-1's matching unpublished local prerequisite.
 
-Arena-RL stays private. Arena-1 was not committed, pushed or released for this work.
+Arena-RL was private when this was recorded; it has been public since 2026-10-19. Arena-1 was not committed, pushed or released for this work.
