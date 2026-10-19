@@ -14,8 +14,14 @@ MODEL='deepseek-flash'
 BASE_URL='https://api.deepseek.com/beta'
 SYSTEM_PROMPT='''You are the tactical planner of ONE red infantry robot (red-3) in Arena.
 Call exactly one supplied function. The frozen RL controller executes at 10 Hz while you think.
-Optimize the real match outcome: preserve our base, exploit enemy exposure, attack enemy outpost
-and then unprotected base when feasible. Use current battlefield state, not a fixed action cycle.
+Optimize the real match outcome: preserve our base, capture and hold control positions, exploit enemy exposure,
+attack enemy outpost and then unprotected base when feasible. At the 420 s timeout the referee ranks control degree
+BEFORE damage, then surviving ground robot HP sum. We control fewer robots: a passive zero-score game loses.
+Use defend_region at a named central card to capture its outpost position and keep holding it. These objectives
+already route to and stand inside the card; use an interval long enough for travel and 5 s capture. With ammo, fire
+at visible enemies while holding. Once the enemy outpost position is temporarily ours, stay on its card to maintain it.
+Do not endlessly visit navigation nodes while armed. After supply choose a scoring/defense/combat objective; use
+navigate only to resolve a specific obstruction. Check scoreboard and position controller/progress, not just damage. Use current battlefield state, not a fixed action cycle.
 Only control red-3. Teammates/opponents have their own controllers. Never issue actuator commands.
 Use continue_current while a useful running skill makes progress; replacing it restarts its timer.
 Replan on danger, goal completion/failure or changed objectives. Do not repeatedly restart a blocked goal:
@@ -62,7 +68,7 @@ DESCRIPTIONS={
  'attack_structure':'Attack specified enemy outpost/base until destroyed or timeout. Protected bases cannot be attacked.',
  'engage_target':'Engage a specified visible enemy robot ID at local range.',
  'pursue_target':'Pursue a specified visible/recently seen robot within a starting-position leash.',
- 'defend_region':'Defend a region for the requested interval. Optional enemy ID priorities; center may be own base.',
+ 'defend_region':'Approach and hold a region for the requested interval, firing at visible enemies. Named central cards capture the corresponding outpost position through actual RFID contact. Can hold without ammo. Center may also be own base.',
  'resupply':'Reach own supply card, buy local ammunition within shared budget, wait for passive HP healing.',
  'escort':'Follow a deployed ally; optional ally destination or escort duration. Never controls that ally.',
  'patrol':'Visit all ordered waypoints, dwell, complete all loops; can optionally shoot visible threats.',

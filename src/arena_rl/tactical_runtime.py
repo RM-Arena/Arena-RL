@@ -42,7 +42,7 @@ class PolicyBank:
         for family,model in self.models.items():
             positions=[k for k,i in enumerate(ids) if batch.executors[i].status=='running' and batch.executors[i].execution_family==family]
             if positions:
-                transit=[k for k in positions if family=='navigation' and self.transit_model is not None and batch.executors[ids[k]].plan['distance']>4.]
+                transit=[k for k in positions if family=='navigation' and self.transit_model is not None and batch.executors[ids[k]].plan['distance']>4. and not batch.executors[ids[k]].route_state.get('terrain_crossing')]
                 local=[k for k in positions if k not in transit]
                 for selected,policy in [(local,model),(transit,self.transit_model)]:
                     if selected:
@@ -123,6 +123,7 @@ class TacticalSession:
                 'economy':{k:v for k,v in obs['teams']['red'].items() if k in ('resources','purchased_17','purchased_42')},
                 'supply_contacts':[identity for identity,zone in obs['zones'].items() if 'red-3' in zone.get('occupants',[])],
                 'bases':obs['bases'],'outposts':obs['outposts'],'positions':obs.get('positions',{}),
+                'scoreboard':{team:{k:v for k,v in value.items() if k in ('control','attack_damage','score','kills')} for team,value in obs['teams'].items()},
                 'feedback':ex.feedback()}
 
     def save_replay(self,path,env_id=0):

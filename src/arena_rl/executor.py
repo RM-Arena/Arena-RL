@@ -135,11 +135,18 @@ class TacticalExecutor:
             from .extended_skills import update
             return update(self,observation,visible)
         elapsed=now-self.started
+        card=next((z for z in self.arena.get('zones',[]) if c.skill=='defend_region' and z['kind']=='central' and np.linalg.norm(np.asarray(c.center)-[z['x'],z['y']])<.1),None)
+        arrival_radius=.15 if card else c.radius_m
+        if card:
+            contact=f'{observation["team"]}-{self.slot}' in observation['zones'][card['id']]['occupants']
+            self.extra.update(control_card=card['id'],control_contact=contact)
+            self.skill_state['contact_seen']=self.skill_state.get('contact_seen',False) or contact
         if elapsed>=c.timeout_s:
             defended=c.skill=='defend_region' and c.damage_goal is None
             contested=defended and any(e['alive'] and np.linalg.norm(xy(e)-self.anchor)<=c.region_radius_m for e in visible.values())
-            self._end('succeeded' if defended and not contested else 'failed',
-                      'region_contested' if contested else 'defense_interval_complete' if defended else 'timeout')
+            reached=not card or self.skill_state.get('contact_seen',False)
+            self._end('succeeded' if defended and not contested and reached else 'failed',
+                      'control_card_not_reached' if not reached else 'region_contested' if contested else 'defense_interval_complete' if defended else 'timeout')
         target=None;is_visible=False;age=0.;phase='navigate';goal=np.array(c.point or c.center or position)
         if c.skill=='defend_region':
             from .navigation import safe_hold_point
@@ -198,7 +205,8 @@ class TacticalExecutor:
             if c.skill=='defend_region' and np.linalg.norm(goal-self.anchor)>c.region_radius_m:
                 delta=goal-self.anchor;goal=self.anchor+delta/np.linalg.norm(delta)*c.region_radius_m
         elif c.skill!='navigate':phase='hold' if c.skill=='defend_region' else 'search'
-        if c.skill!='navigate' and robot['ammo']==0:self._end('failed','out_of_ammo')
+        if card:goal=np.asarray(self.hold_point);phase='hold' if np.linalg.norm(goal-position)<=arrival_radius else 'approach'
+        if c.skill in ('attack_structure','engage_target','pursue_target') and robot['ammo']==0:self._end('failed','out_of_ammo')
         goal=np.clip(goal,[robot['radius'],robot['radius']],[self.arena['width']-robot['radius'],self.arena['height']-robot['radius']])
         distance=float(np.linalg.norm(goal-position))
         if c.skill=='navigate' and distance<=c.radius_m and math.hypot(robot['vx'],robot['vy'])<.8:self._end('succeeded','arrived')
@@ -207,17 +215,17 @@ class TacticalExecutor:
             self.last_position=position;self.last_motion=now
         if phase in ('navigate','approach','search') and distance>c.radius_m and now-self.last_motion>(25 if self.model_id==305 else 6):
             self._end('failed','blocked')
-        planned=sdk.navigate(robot,goal,self.navigation_arena) if distance>c.radius_m else (0.,0.)
-        if self.model_id==305 and distance>c.radius_m:
+        planned=sdk.navigate(robot,goal,self.navigation_arena) if distance>arrival_radius else (0.,0.)
+        if self.model_id==305 and distance>arrival_radius:
             from .navigation import plan_motion
             motion,held=plan_motion(self,robot,goal,now)
             planned=motion
         else:held=None
         from .navigation import clearance_hint
-        corrected,clear_heading=clearance_hint(robot,planned,self.arena)
+        corrected,clear_heading=(planned,held) if self.route_state.get('terrain_crossing') else clearance_hint(robot,planned,self.arena)
         hint=np.array(corrected)
         held_heading=clear_heading if clear_heading is not None else held if held is not None else getattr(planned,'heading',None)
-        self.plan={'phase':phase,'goal':goal,'hint':hint,'target':target,'visible':is_visible,'distance':distance,'age':age,'held_heading':held_heading}
+        self.plan={'phase':phase,'goal':goal,'hint':hint,'target':target,'visible':is_visible,'distance':distance,'age':age,'held_heading':held_heading,'arrival_radius':arrival_radius}
         if self.initial_distance is None:self.initial_distance=distance
         if self.status in TERMINAL:
             self.events.append(self.feedback());self.events=self.events[-128:]
@@ -229,7 +237,7 @@ class TacticalExecutor:
         if self.model_id==305 and self.route_state.get('escape_until',0)>self.time:return 'mobility'
         if self.model_id==305 and self.plan and (self.plan['phase']=='recover' or self.command.skill in ('retreat','resupply') and self.plan['distance']>1.2):return 'mobility'
         family=self.command.policy_family
-        if family!='navigation' and self.plan and self.plan['distance']>1.2 and self.plan['phase'] in ('navigate','approach','search','hold','escort_follow','patrol_move','flight_approach','supply_approach'):
+        if family not in ('navigation','flight') and self.plan and self.plan['distance']>1.2 and self.plan['phase'] in ('navigate','approach','search','hold','escort_follow','patrol_move','flight_approach','supply_approach'):
             return 'navigation'
         return family
 

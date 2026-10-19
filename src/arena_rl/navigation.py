@@ -51,7 +51,7 @@ def safe_hold_point(robot,center,radius,arena):
         for k in range(16):
             angle=k*math.tau/16;candidates.append((center[0]+radius*scale*math.cos(angle),center[1]+radius*scale*math.sin(angle)))
     feasible=[p for p in candidates if clear(p)]
-    return min(feasible,key=lambda p:(p[0]-robot['x'])**2+(p[1]-robot['y'])**2) if feasible else None
+    return min(feasible,key=lambda p:((p[0]-center[0])**2+(p[1]-center[1])**2,(p[0]-robot['x'])**2+(p[1]-robot['y'])**2)) if feasible else None
 
 
 def clearance_hint(robot,hint,arena):
@@ -111,6 +111,12 @@ def plan_motion(ex,robot,goal,now):
     import numpy as np
     from rmuc_arena import sdk
     p=np.array([robot['x'],robot['y']]);state=ex.route_state
+    from .terrain_routes import road_transfer
+    road=road_transfer(ex,robot,goal)
+    state['terrain_crossing']=road is not None
+    if road is not None:
+        state.setdefault('attempts',0);state['position']=p.copy();state['moved_at']=now
+        return road
     if 'position' not in state:state.update(position=p.copy(),moved_at=now,attempts=0)
     if np.linalg.norm(p-state['position'])>.16:state.update(position=p.copy(),moved_at=now)
     held=None

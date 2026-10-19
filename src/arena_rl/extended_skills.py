@@ -106,11 +106,11 @@ def update(ex,obs,visible):
         entry_delta=p-entry
         lateral_error=abs(axis[0]*entry_delta[1]-axis[1]*entry_delta[0])
         position_ready=np.linalg.norm(entry_delta)<entry_tolerance and (ex.model_id!=305 or lateral_error<.025)
-        aligned=position_ready and math.hypot(r['vx'],r['vy'])<.8 and heading_error<.12
+        aligned=position_ready and math.hypot(r['vx'],r['vy'])<(.12 if ex.model_id==305 else .8) and heading_error<(.035 if ex.model_id==305 else .12)
         if 'launched' not in st:
-            stable=aligned and r['grounded'] and r['upright']>.95 and np.linalg.norm(r.get('angular_velocity',[0,0,0]))<1.
+            stable=aligned and r['grounded'] and r['upright']>.95 and np.linalg.norm(r.get('angular_velocity',[0,0,0]))<(.12 if ex.model_id==305 else 1.)
             st['align_hold']=st.get('align_hold',0.)+dt if stable else 0.
-            if aligned and (ex.model_id!=305 or st['align_hold']+1e-8>=.3):
+            if aligned and (ex.model_id!=305 or st['align_hold']+1e-8>=.5):
                 st['launched']=True;st['heading']=r['heading']
         if not st.get('launched'):
             phase='flight_align' if position_ready else 'flight_approach';goal=entry
@@ -122,7 +122,7 @@ def update(ex,obs,visible):
             if not r['grounded'] and in_gap:
                 phase='flight_air'
             beyond=(float(np.dot(p-crest,axis))> .65) if direction>0 else float(np.dot(p-lip,axis))> .2
-            landed=beyond and r['grounded'] and r['upright']>.9 and np.linalg.norm(p-goal)<.65 and math.hypot(r['vx'],r['vy'])<1.2
+            landed=beyond and r['grounded'] and r['upright']>.9 and np.linalg.norm(p-goal)<(.4 if ex.model_id==305 else .65) and math.hypot(r['vx'],r['vy'])<1.2
             st['landing_hold']=st.get('landing_hold',0.)+dt if landed else 0.
             if landed:phase='flight_land'
             if st.get('air_s',0.)+1e-8>=.1 and st['landing_hold']+1e-8>=c.landing_hold_s:
@@ -133,6 +133,12 @@ def update(ex,obs,visible):
     if target:
         identity=target['id'];hp=target['hp'];ex.damage+=max(0.,ex.last_hp.get(identity,hp)-hp);ex.last_hp[identity]=hp
         metrics['engagement_target_id']=identity
+    flight_override=None
+    if c.skill=='fly_slope':
+        from .flight_guidance import guidance
+        flight_override=guidance(ex,r,lane,goal,phase)
+        if flight_override is not None:phase,goal,_,_=flight_override
+        metrics['retry_phase']=st.get('flight_retry',{}).get('kind')
     goal=np.clip(goal,[r['radius'],r['radius']],[ex.arena['width']-r['radius'],ex.arena['height']-r['radius']])
     distance=float(np.linalg.norm(goal-p))
     if elapsed>=c.timeout_s:ex._end('failed','timeout')
@@ -140,7 +146,9 @@ def update(ex,obs,visible):
     moving=phase in ('navigate','escort_follow','patrol_move','flight_approach','flight_run')
     if moving and distance>c.radius_m and now-ex.last_motion>(25 if ex.model_id==305 else 8):ex._end('failed','blocked')
     planned=(0.,0.)
-    if c.skill=='fly_slope' and st.get('launched'):
+    if flight_override is not None:
+        _,_,planned,held=flight_override
+    elif c.skill=='fly_slope' and st.get('launched'):
         correction=goal-p;along=float(np.dot(correction,axis));lateral=correction-axis*along
         planned=axis+np.clip(lateral*1.5,-0.2,.2)
         if along<.9:planned=correction*1.5

@@ -36,7 +36,7 @@ def encode(executor,observation,policy_family=None):
                math.sin(robot['heading']),math.cos(robot['heading']),robot['hp']/max(1,robot['max_hp']),
                1. if navigation else robot['ammo']/200,0. if navigation else robot.get('heat',0)/max(1,robot.get('max_heat',40)),robot['upright'],float(robot['grounded']),
                float(hint[0]),float(hint[1]),delta[0]/5,delta[1]/5,(min(2.,plan['distance']) if navigation else plan['distance'])/10,
-               (2.5 if navigation else c.preferred_range_m)/8,c.radius_m/3,(region[0]-position[0])/10,(region[1]-position[1])/10,
+               (2.5 if navigation else c.preferred_range_m)/8,plan.get('arrival_radius',c.radius_m)/3,(region[0]-position[0])/10,(region[1]-position[1])/10,
                (3. if navigation else c.region_radius_m)/10,(8. if navigation else c.leash_radius_m)/35]
     values += [float(('navigate' if navigation else plan['phase'])==p) for p in ('navigate','approach','engage','search','hold')]
     values += [0. if navigation else float(plan['visible']),0. if navigation else plan['age']/max(.1,c.target_lost_timeout_s),target_delta[0]/10,target_delta[1]/10,
@@ -61,7 +61,7 @@ def decode(executor,observation,action,policy_family=None):
             'fire':False,'brake':True,'leg_height':[.18,.245,.31][int(a[5])],'jump':0.}
     if executor.command and (executor.command.skill=='navigate' or policy_family=='navigation'):
         result['leg_height']=max(.245,result['leg_height'])
-        if robot.get('model_slot')==305 and any(t['kind']=='bumps' and t['x']-.5<robot['x']<t['x']+t['w']+.5 and t['y']-.5<robot['y']<t['y']+t['h']+.5 for t in executor.arena['terrain']):result['leg_height']=max(.3,result['leg_height'])
+        if robot.get('model_slot')==305 and not executor.route_state.get('terrain_crossing') and any(t['kind']=='bumps' and t['x']-.5<robot['x']<t['x']+t['w']+.5 and t['y']-.5<robot['y']<t['y']+t['h']+.5 for t in executor.arena['terrain']):result['leg_height']=max(.3,result['leg_height'])
     if executor.status!='running':return {executor.slot:result}
     plan=executor.plan;hint=np.array(plan['hint']);length=np.linalg.norm(hint)
     if length<.001 and plan['target'] and plan['visible'] and policy_family!='navigation':
@@ -87,7 +87,7 @@ def decode(executor,observation,action,policy_family=None):
             course=math.atan2(hint[1],hint[0]);wrap=lambda angle:(angle+math.pi)%math.tau-math.pi
             result['heading']=min((course,course+math.pi),key=lambda h:abs(wrap(h-robot['heading']))) if plan.get('held_heading') is None else plan['held_heading']
         error=abs((result['heading']-robot['heading']+math.pi)%math.tau-math.pi)
-        if error>.35:result['move']=[0.,0.]
+        if error>.35 and not executor.route_state.get('terrain_crossing'):result['move']=[0.,0.]
     if robot.get('model_slot')==305 and (executor.command.skill=='navigate' or policy_family=='navigation') and plan['distance']>max(1.2,executor.command.radius_m+.6) and np.linalg.norm(result['move'])>0:
         if any(t['kind']=='bumps' and t['x']-.4<robot['x']<t['x']+t['w']+.4 and t['y']-.4<robot['y']<t['y']+t['h']+.4 for t in executor.arena['terrain']):
             move=np.asarray(result['move']);result['move']=(move/np.linalg.norm(move)).tolist()
@@ -98,5 +98,8 @@ def decode(executor,observation,action,policy_family=None):
         result['fire']=bool(a[4]) and policy_family!='navigation'
     elif executor.command.skill!='navigate':
         result['aim']=(robot['aim']+.5)%math.tau
+    if robot.get('model_slot')==305 and executor.route_state.get('terrain_crossing'):
+        result['power']=200. if a[4] else 100.
+        result['leg_height']=[.18,.245,.3][int(a[5])]
     result['jump']=float(a[6]) if executor.command.skill=='navigate' or policy_family=='navigation' else 0.
     return {executor.slot:result}

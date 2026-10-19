@@ -71,6 +71,8 @@ def decode(ex,obs,action):
         out['power']=(150. if r.get('model_slot')==305 and c.flight_direction=='reverse' else 200.) if a[4] else 100.
         out['lean']=(int(a[2])-1)*.12
         out['jump']=float(a[6]) if ex.skill_state.get('launched') else 0.
+        if ex.plan['phase'] in ('flight_approach','flight_align'):out['jump']=0.
+        if ex.extra.get('retry_phase') in ('backoff','gap_stage'):out['power']=100.;out['leg_height']=.245
         if r.get('model_slot')==305 and c.flight_direction=='forward':
             crest=np.asarray(lane['crest']);course=crest-np.asarray(lane['lip']);course/=np.linalg.norm(course)
             end=np.asarray(lane['landing'])-course*.75;p=xy(r)

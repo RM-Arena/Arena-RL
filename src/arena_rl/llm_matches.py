@@ -26,12 +26,15 @@ def public_context(session):
     safe={name:list(point) for name,point in candidates.items() if clear_point(point,robot,route_arena)}
     regions={f'{team}_{kind}':[value['x'],value['y']] for kind in ('base','outpost') for team,value in session.observe()[kind+'s'].items()}
     return {'season':session.batch.season,'robot_id':'red-3','controlled_model':session.bank.model_id,'match_duration_s':420,
-            'field':{'width':arena['width'],'height':arena['height']},'safe_waypoints':safe,'defense_regions':{**safe,**regions},
+            'field':{'width':arena['width'],'height':arena['height']},'safe_waypoints':safe,'defense_regions':{**regions,**{z['id']:[z['x'],z['y']] for z in arena['zones'] if z['kind']=='central'}},
             'supply_zones':[{k:z[k] for k in ('id','owner','x','y') if k in z} for z in arena['zones'] if z['kind']=='supply'],
             'terrain':[{k:t[k] for k in ('id','kind','x','y','w','h') if k in t} for t in arena['terrain']],
             'roster':session.batch.states[0]['observations']['red']['roster'],
             'base_protection':'full enemy outpost control protects its base',
-            'control_hz':10,'ballistic_assistance':True}
+            'control_hz':10,'ballistic_assistance':True,
+            'timeout_ranking':['control degree','attack damage','surviving ground robot HP sum'],
+            'control_scoring':'Holding both outpost positions earns 1 control degree per second; holding both base positions earns 3 per second. An outpost position has an outpost card and a central card. Capture requires actual RFID contact for 5 s; maintain occupation to keep temporary control.',
+            'control_cards':[{k:z[k] for k in ('id','owner','x','y','polygon')} for z in arena['zones'] if z['kind']=='central']}
 
 
 def planner_skills(session,scene):

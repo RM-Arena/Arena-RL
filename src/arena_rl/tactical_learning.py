@@ -112,6 +112,7 @@ def actions_for_baseline(batch,ids,kind,rng):
             r=own(batch.states[i]['observations']['red'])
             if any(t['kind']=='bumps' and t['x']-.5<r['x']<t['x']+t['w']+.5 and t['y']-.5<r['y']<t['y']+t['h']+.5 for t in ex.arena['terrain']):leg=2;speed=3
         if batch.model_id==305 and ex.route_state.get('escape_until',0)>ex.time:leg=2;speed=1
+        if ex.route_state.get('terrain_crossing'):speed=3;leg=1;interaction=1
         if ex.command.skill=='resupply':interaction=int(kind=='heuristic')
         if ex.command.skill=='fly_slope':
             from .executor import own
@@ -138,10 +139,13 @@ def actions_for_baseline(batch,ids,kind,rng):
                 if any(v.get('type')=='jump' and v.get('robot')=='red-3' for v in batch.states[i]['info'].get('events',[])):ex.skill_state['demo_jumped']=True
                 jump=int(.1<progress<1.2 and not ex.skill_state.get('demo_jumped'))
             if ex.skill_state.get('launched') and plan['distance']<1. and not (batch.model_id==305 and not reverse and in_gap and r['z']<lane['landing_height']+.3):speed=0
+            retry=ex.skill_state.get('flight_retry',{}).get('kind')
+            if retry in ('backoff','gap_stage'):speed=1;jump=0;leg=1
+            if retry=='gap_jump':speed=3;jump=int(r['grounded']);leg=1
         if ex.command.skill=='recover' or ex.plan['phase']=='recover':
             speed=0;interaction=0;jump=0
         if ex.command.skill=='retreat' and batch.model_id!=305:speed=1 if plan['distance']<1.2 else 2
-        threshold=.025 if ex.command.skill=='fly_slope' else ex.command.radius_m
+        threshold=.025 if ex.command.skill=='fly_slope' else plan.get('arrival_radius',ex.command.radius_m)
         actions.append([int(kind=='heuristic' and ex.plan['phase']!='recover' and plan['distance']>(.3 if ex.command.skill=='fly_slope' and ex.skill_state.get('launched') else threshold)),speed,1,1,interaction,leg,jump])
     return np.asarray(actions)
 

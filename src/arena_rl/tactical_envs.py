@@ -24,6 +24,9 @@ class Episode:
 
 
 def sample_episode(family,seed,model_id=3,curriculum='reference'):
+    if curriculum=='objectives':
+        from .objective_curricula import sample
+        return sample(family,seed)
     if curriculum=='refinement':
         if model_id!=305 or family not in ('navigation','flight'):raise ValueError('Refinement curriculum requires model 305 navigation or flight')
         from .refinement_curricula import sample
@@ -92,6 +95,11 @@ def scripted_actions(episode,state,team='blue'):
     for r in observation['robots']:
         spec=episode.behavior.get(r['id'])
         if not spec:continue
+        if spec['mode']=='shoot':
+            from rmuc_arena import sdk
+            target=next((e for e in observation['enemies'] if e['id']==spec['target_id'] and e['id'] in observation.get('vision',{}).get(str(r['slot']),{}).get('enemies',[])),None)
+            actions[str(r['slot'])]={'move':[0.,0.],'aim':sdk.aim_at(r,target) if target else r['aim']+.2,'pitch':sdk.aim_pitch(r,target) if target else r['pitch'],'fire':target is not None}
+            continue
         if spec['mode']=='weave':
             origin=spec['origin'];phase=state['info']['time']*.8
             target=np.array(origin)+np.array([math.sin(phase)*1.2,math.cos(phase)*.35])
@@ -109,7 +117,7 @@ class TacticalBatch:
         self.num_envs,self.family,self.next_seed=num_envs,family,seed
         if model_id not in (3,305):raise ValueError('Supported controlled models are 3 and 305')
         self.model_id=model_id
-        if curriculum not in ('reference','refinement') or curriculum=='refinement' and (model_id!=305 or family not in ('navigation','flight')):raise ValueError('Unsupported curriculum/model/family')
+        if curriculum not in ('reference','refinement','objectives') or curriculum=='refinement' and (model_id!=305 or family not in ('navigation','flight')) or curriculum=='objectives' and (model_id!=305 or family not in ('combat','defense')):raise ValueError('Unsupported curriculum/model/family')
         self.curriculum=curriculum
         self.legacy_flight=legacy_flight
         self.executors=[TacticalExecutor() for _ in range(num_envs)]
@@ -190,6 +198,7 @@ class TacticalBatch:
             damage=m['observed_damage']-old['observed_damage']
             locomotion=2.*movement if ex.command and ex.command.skill=='navigate' else .8*(old['range_error']-m['range_error'])
             reward=locomotion+damage*.2-.012-.08*max(0.,old['hp']-m['hp'])
+            if self.family=='defense':reward+=.08*float(ex.extra.get('control_contact',False))
             if self.family=='support':
                 reward+=.12*max(0,m['hp']-old['hp'])+.06*max(0,m['ammo']-old['ammo'])+3.*max(0,m['waypoints']-old['waypoints'])
                 if ex.command.skill=='escort':reward+=.08*float(ex.extra.get('coverage',0)>.7)

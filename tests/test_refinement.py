@@ -58,7 +58,7 @@ def test_launch_waits_for_stable_entry_support(flight_observation):
     r=own(obs);r.update(x=lane['lip'][0]+2.55,y=lane['lip'][1],heading=math.pi,upright=1.,grounded=True,vx=0.,vy=0.,angular_velocity=[0.,0.,0.])
     ex=TacticalExecutor();ex.submit({'id':'settle','skill':'fly_slope','lane_team':'blue'},obs)
     assert not ex.skill_state.get('launched')
-    for _ in range(3):obs=later(obs);ex.update(obs)
+    for _ in range(5):obs=later(obs);ex.update(obs)
     assert ex.skill_state['launched'] and ex.command.id=='settle'
 
 
@@ -116,3 +116,15 @@ def test_flight_control_is_invariant_to_unrelated_gimbal_and_economy(flight_obse
     changed['teams']['red']['resources']=5000.
     assert OBS_SPACE.contains(before) and len(before)==84
     np.testing.assert_array_equal(before,encode(ex,changed))
+
+
+def test_entry_waits_for_angular_velocity_to_settle(flight_observation):
+    from rmuc_arena import sdk
+    obs=copy.deepcopy(flight_observation);lane=sdk.fly_slope_lane(obs['arena'],'blue')
+    own(obs).update(x=lane['lip'][0]+2.55,y=lane['lip'][1],heading=math.pi,upright=1.,grounded=True,vx=0.,vy=0.,angular_velocity=[0.,0.,.3])
+    ex=TacticalExecutor();ex.submit({'id':'rotating','skill':'fly_slope','lane_team':'blue'},obs)
+    for _ in range(10):obs=later(obs);ex.update(obs)
+    assert not ex.skill_state.get('launched')
+    own(obs)['angular_velocity']=[0.,0.,0.]
+    for _ in range(5):obs=later(obs);ex.update(obs)
+    assert ex.skill_state['launched']
