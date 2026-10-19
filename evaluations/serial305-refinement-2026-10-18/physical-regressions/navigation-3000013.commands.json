@@ -1,0 +1,13 @@
+{
+  "protocol": "arena-tactics-v1",
+  "commands": [],
+  "policies": {
+    "navigation": "6c5301fa47eeb51a976853577902c575043437ffbf37d951f7f0cdff96b47717",
+    "combat": "b8f22113d09654381cbfd4b6648f9e19d5d15189e36a7cce4a0208a7021f9f33",
+    "defense": "415b1a233fd4f9eda69a58f5b97ba1cdcc0b37fc974a63e7b6a354c644a36612",
+    "support": "3ba1cf2c9ac9f4d56a6ea08763e0fa01212489a6bdc2bf546b4c869513453f60",
+    "flight": "e5c8d140857353a41d4a47d54a520446b292b4286c68be4f242a81eb0e2e7ba8",
+    "mobility": "377679e4136e82b88fe36af73b499d85e9a4f7224112a7d77f64b99bc6c9c175",
+    "navigation_transit": "ee81fe4289dd9010a0b05596b4c92011183a6c555685b1cf32decb22ca356172"
+  }
+}

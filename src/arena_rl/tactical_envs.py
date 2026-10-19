@@ -23,7 +23,12 @@ class Episode:
     max_steps:int=300
 
 
-def sample_episode(family,seed,model_id=3):
+def sample_episode(family,seed,model_id=3,curriculum='reference'):
+    if curriculum=='refinement':
+        if model_id!=305 or family not in ('navigation','flight'):raise ValueError('Refinement curriculum requires model 305 navigation or flight')
+        from .refinement_curricula import sample
+        return sample(family,seed)
+    if curriculum!='reference':raise ValueError('Unknown curriculum')
     if family=='mobility':
         from .mobility_curricula import sample
         return sample(seed)
@@ -98,12 +103,15 @@ def scripted_actions(episode,state,team='blue'):
 
 
 class TacticalBatch:
-    def __init__(self,num_envs=4,*,family='navigation',seed=7,arena_root=None,record=False,opponent=None,lineups=None,season=None,model_id=3):
+    def __init__(self,num_envs=4,*,family='navigation',seed=7,arena_root=None,record=False,opponent=None,lineups=None,season=None,model_id=3,curriculum='reference',legacy_flight=False):
         configure(arena_root)
         from rmuc_arena.vector_env import VectorArena
         self.num_envs,self.family,self.next_seed=num_envs,family,seed
         if model_id not in (3,305):raise ValueError('Supported controlled models are 3 and 305')
         self.model_id=model_id
+        if curriculum not in ('reference','refinement') or curriculum=='refinement' and (model_id!=305 or family not in ('navigation','flight')):raise ValueError('Unsupported curriculum/model/family')
+        self.curriculum=curriculum
+        self.legacy_flight=legacy_flight
         self.executors=[TacticalExecutor() for _ in range(num_envs)]
         self.episodes=[None]*num_envs;self.states=[None]*num_envs;self.previous=[None]*num_envs
         self.steps=np.zeros(num_envs,dtype=int);self.finished=np.ones(num_envs,dtype=bool)
@@ -126,7 +134,7 @@ class TacticalBatch:
         if seeds is None:
             seeds=list(range(self.next_seed,self.next_seed+len(ids)));self.next_seed+=len(ids)
         if len(seeds)!=len(ids):raise ValueError('One seed per selected actor required')
-        episodes=[sample_episode(self.family,int(s),self.model_id) for s in seeds] if episodes is None else list(episodes)
+        episodes=[sample_episode(self.family,int(s),self.model_id,self.curriculum) for s in seeds] if episodes is None else list(episodes)
         if len(episodes)!=len(ids):raise ValueError('One episode per selected actor required')
         states=self.engine.reset(seeds,env_ids=ids,scenarios=[e.scenario for e in episodes])
         arenas=[s['observations']['red']['arena'] for s in states]
@@ -139,7 +147,7 @@ class TacticalBatch:
             self.states[i]=state;self.episodes[i]=e;self.executors[i]=prepared[k] or TacticalExecutor();self.steps[i]=0;self.finished[i]=False
             self.executors[i].arena=arenas[k]
             self.executors[i].submit(e.command,state['observations']['red'])
-            self.previous[i]=self._metrics(i);observations.append(encode_observation(self.executors[i],state['observations']['red'],self.family))
+            self.previous[i]=self._metrics(i);observations.append(encode_observation(self.executors[i],state['observations']['red'],self.family,self.legacy_flight))
         return np.stack(observations)
 
     def command(self,env_id,value):
@@ -197,11 +205,11 @@ class TacticalBatch:
             elif term:reward-=4.
             if trunc and ex.status=='running':ex._end('failed','training_time_limit')
             self.finished[i]=bool(term or trunc);self.previous[i]=m
-            info={**ex.feedback(),'scenario_variant':getattr(self.episodes[i],'mobility_variant',None),'task':self.family,'is_success':success,'seed':self.episodes[i].seed,
+            info={**ex.feedback(),'curriculum':self.curriculum,'scenario_variant':getattr(self.episodes[i],'variant',getattr(self.episodes[i],'mobility_variant',None)),'task':self.family,'is_success':success,'seed':self.episodes[i].seed,
                   'target_damage':ex.damage,'target_kind':ex.plan['target'].get('role',ex.plan['target'].get('kind','unknown')) if ex.plan['target'] else None,
                   'steps':int(self.steps[i]),'engine_hash':state['info']['engine_hash'],
                   'rules_hash':state['info']['rules_hash']}
-            observations.append(encode_observation(ex,state['observations']['red'],self.family));rewards.append(reward);terms.append(term);truncs.append(trunc);infos.append(info)
+            observations.append(encode_observation(ex,state['observations']['red'],self.family,self.legacy_flight));rewards.append(reward);terms.append(term);truncs.append(trunc);infos.append(info)
         return np.stack(observations),np.array(rewards,dtype=np.float32),np.array(terms,dtype=bool),np.array(truncs,dtype=bool),infos
 
     def close(self):self.engine.close()
@@ -217,6 +225,8 @@ class TacticalVecEnv(VecEnv):
                 from .mobility_encoding import OBS_SPACE as space
             else:
                 from .extended_encoding import OBS_SPACE as space
+        if self.batch.family=='flight' and self.batch.model_id==305 and not self.batch.legacy_flight:
+            from .flight_encoding import OBS_SPACE as space
         super().__init__(num_envs,space,ACTION_SPACE)
     def reset(self):
         seeds=self._seeds if any(s is not None for s in self._seeds) else None
@@ -246,7 +256,10 @@ class TacticalVecEnv(VecEnv):
     def env_is_wrapped(self,wrapper_class,indices=None):return [False for _ in self._get_indices(indices)]
 
 
-def encode_observation(ex,obs,family):
+def encode_observation(ex,obs,family,legacy_flight=False):
+    if family=='flight' and ex.model_id==305 and not legacy_flight:
+        from .flight_encoding import encode as flight_encode
+        return flight_encode(ex,obs)
     if family=='mobility' or family=='navigation' and ex.model_id==305:
         from .mobility_encoding import encode as mobility_encode
         return mobility_encode(ex,obs)

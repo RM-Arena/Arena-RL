@@ -2,6 +2,8 @@
 
 The current single-robot agent controls **red slot 3, model 305**, an existing legal serial-leg infantry design. The earlier W3 model 3 has no complete self-righting mechanism. Following the user's choice, the active policy bank was retrained for 305; the old `checkpoints/tactics` and `checkpoints/w3` banks remain available as historical model-3 references. Arena physics, rules and robot specifications were not changed for this migration.
 
+The current correction update is **0.5.1**; see [refinement results](serial305-refinement-results.md) for navigation/flight regressions, expanded held-out tests and new full matches. The original 0.5.0 evidence remains [separately recorded](serial305-results.md).
+
 ## Run the current agent
 
 ```bash
@@ -36,8 +38,8 @@ DeepSeek uses its [strict function-call endpoint](https://api-docs.deepseek.com/
 | support | 305 | 32,768 | Successful demonstrations + PPO | 74 features |
 | defense | 305 | 32,768 | Successful demonstrations + PPO | 52 features |
 | mobility | 305 | 32,768 initial + 8,192 composed fine-tuning | 160 successful demonstrations, explicit parent initialization + PPO | `serial305-mobility-v1`, 64 features |
-| navigation | 305 | 16,384 | Explicit initialization from the trained mobility policy, then PPO | `serial305-navigation-v1`, 64 features |
-| flight | 305 | 16,384 | Successful demonstrations + PPO | 74 features, season 2026 |
+| navigation | 305 | 16,384 original + 16,384 local refinement | Original network retained for transit beyond 4 m; refined network for local approaches | `serial305-navigation-v1`, 64 features |
+| flight | 305 | 8,192 new | 183/192 successful demonstrations, then PPO at 5e-6 | `serial305-flight-v3`, 84 lane-relative features, season 2026 |
 
 All use four parallel actors. Metadata records model/season/schema, parent or demonstration provenance, PPO sample/update counts and weight hashes before and after PPO. Cross-family initialization requires matching controlled model and feature/action contract. The deployed bank rejects mixed model IDs and requires the trained mobility policy for 305. Explicit rosters are validated instead of silently rewritten.
 
@@ -68,6 +70,15 @@ Training used the recorded source snapshots/hashes and saved demonstration datas
 
 See the evaluation reports under `checkpoints/serial305` and [full-match evidence](serial305-results.md). Final held-out mobility testing uses seeds 7,000,200–7,000,263: 27 explicit recovery and 37 withdrawal objectives. Withdrawal includes the recovery-then-retreat composition. Physical regressions also preserve and deterministically verify representative native replays. Idle/random comparisons on the same seeds distinguish the existing firmware contribution from useful learned movement. A completed `recover` command can begin upright; `recoveries_completed` is an execution counter, not a count of real flips. Native `self_righting`/`self_righted` events and pose samples report physical events separately.
 
-Navigation across the entire field and 2026 gap flight still have held-out failures; these counts must be reported separately from the targeted recovery/withdrawal fixes. A serial chassis can still become mechanically wedged or exhaust its power budget. No global win-rate or universal recovery guarantee follows from a few matches. Flight migration uses its own 2026 curriculum and is unavailable as a dedicated map skill in the 2027 matches.
+The original 32-case navigation and 32-case flight regressions now pass. Wider perturbed courses still contain failures; the [refinement report](serial305-refinement-results.md) gives exact counts separately from these regression sets. A serial chassis can still become mechanically wedged or exhaust its power budget. No global win-rate or universal recovery guarantee follows from a few matches. Flight migration uses its own 2026 curriculum and is unavailable as a dedicated map skill in the 2027 matches.
 
 Arena-RL stays private. Arena-1's existing local simulator prerequisite remains unpushed, and this work does not commit, push or release Arena-1.
+
+
+## Refined fly-slope controller
+
+The 305 flight policy now has 84 inputs: versioned physical route features plus explicit approach/alignment/run/air/landing/recovery phase, launch state, gap occupancy, along-lane speed and landing-distance error. It uses a lane-relative frame and masks gimbal, ammunition and economy fields that should not change this motor skill. W3 and archived 305 `w3-flight-v1` policies retain their 74-input evaluation path. The unreleased intermediate phase-only prototypes are development runs, not shipped policies.
+
+Entry alignment checks lateral error below 25 mm, orientation and stable support before launch. Ground self-righting supervision does not interrupt ordinary airborne tilt; physical air time remains observed while recovery is active. Landing still requires a real airborne gap crossing, an upright grounded chassis and the original low-speed/hold conditions. Forward jumps use a bounded ordinary stroke, with full available stroke on the gap floor when the network requests another jump. The actor never sets body pose or HP. Successful demonstration collection includes physical gap-lip retry actions instead of discarding all such attempts.
+
+The refined navigation network is used within 4 m of its goal. An explicitly recorded frozen transit network preserves the previous long-distance behavior; recovery and local escape keep their existing supervision. Both networks share the model-305 64-input contract, and the full-match reports record both policy digests.

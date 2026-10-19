@@ -1,0 +1,84 @@
+{
+  "protocol": "arena-tactics-v1",
+  "commands": [
+    {
+      "op": "reset",
+      "seed": 9100030,
+      "scenario": {
+        "robots": {
+          "red-3": {
+            "x": 10.0,
+            "y": 14.4,
+            "heading": 0.0,
+            "ammo": 0
+          }
+        }
+      }
+    },
+    {
+      "op": "command",
+      "tick": 0,
+      "command": {
+        "id": "continuous-forward",
+        "skill": "fly_slope",
+        "radius_m": 0.4,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 18.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.0,
+        "max_staleness_s": 3.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "command",
+      "tick": 64,
+      "command": {
+        "id": "continuous-reverse",
+        "skill": "fly_slope",
+        "radius_m": 0.4,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 18.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.0,
+        "max_staleness_s": 3.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "reverse",
+        "landing_hold_s": 0.3
+      }
+    }
+  ],
+  "policies": {
+    "navigation": "6c5301fa47eeb51a976853577902c575043437ffbf37d951f7f0cdff96b47717",
+    "combat": "b8f22113d09654381cbfd4b6648f9e19d5d15189e36a7cce4a0208a7021f9f33",
+    "defense": "415b1a233fd4f9eda69a58f5b97ba1cdcc0b37fc974a63e7b6a354c644a36612",
+    "support": "3ba1cf2c9ac9f4d56a6ea08763e0fa01212489a6bdc2bf546b4c869513453f60",
+    "flight": "e5c8d140857353a41d4a47d54a520446b292b4286c68be4f242a81eb0e2e7ba8",
+    "mobility": "377679e4136e82b88fe36af73b499d85e9a4f7224112a7d77f64b99bc6c9c175",
+    "navigation_transit": "ee81fe4289dd9010a0b05596b4c92011183a6c555685b1cf32decb22ca356172"
+  }
+}

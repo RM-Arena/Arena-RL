@@ -88,7 +88,7 @@ def decode(executor,observation,action,policy_family=None):
             result['heading']=min((course,course+math.pi),key=lambda h:abs(wrap(h-robot['heading']))) if plan.get('held_heading') is None else plan['held_heading']
         error=abs((result['heading']-robot['heading']+math.pi)%math.tau-math.pi)
         if error>.35:result['move']=[0.,0.]
-    if robot.get('model_slot')==305 and (executor.command.skill=='navigate' or policy_family=='navigation') and np.linalg.norm(result['move'])>0:
+    if robot.get('model_slot')==305 and (executor.command.skill=='navigate' or policy_family=='navigation') and plan['distance']>max(1.2,executor.command.radius_m+.6) and np.linalg.norm(result['move'])>0:
         if any(t['kind']=='bumps' and t['x']-.4<robot['x']<t['x']+t['w']+.4 and t['y']-.4<robot['y']<t['y']+t['h']+.4 for t in executor.arena['terrain']):
             move=np.asarray(result['move']);result['move']=(move/np.linalg.norm(move)).tolist()
     target=plan['target']

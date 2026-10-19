@@ -116,12 +116,16 @@ class TacticalExecutor:
             self.plan={'phase':'idle','goal':position,'hint':np.zeros(2),'target':None,'visible':False,'distance':0.,'age':0.}
             return self.plan
         c=self.command
+        if c.skill=='fly_slope':
+            from .extended_skills import observe_flight
+            observe_flight(self,observation)
+        airborne_serial_flight=self.model_id==305 and c.skill=='fly_slope' and self.skill_state.get('launched') and not robot['grounded']
         if not robot['alive'] or not robot['powered']:self._end('failed','robot_unavailable')
-        if self.status=='running' and self.model_id==305 and (robot['upright']<.25 or robot.get('self_righting',False) or self.recovery or c.skill=='recover'):
+        if self.status=='running' and self.model_id==305 and (robot['upright']<.3 and not airborne_serial_flight or robot.get('self_righting',False) or self.recovery or c.skill=='recover'):
             from .mobility_skills import recovery_plan
             if recovery_plan(self,observation):return self.plan
             if self.status!='running':return self.plan
-        if robot['upright']<.3:self._end('failed','robot_unavailable')
+        if robot['upright']<.3 and not airborne_serial_flight:self._end('failed','robot_unavailable')
         elif c.skill not in ('resupply','retreat','recover') and robot['hp']/max(1,robot['max_hp'])<c.low_hp_fraction:self._end('failed','low_hp')
         if c.skill=='retreat':
             from .mobility_skills import retreat_plan

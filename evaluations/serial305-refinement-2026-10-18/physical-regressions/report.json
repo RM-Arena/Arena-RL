@@ -1,0 +1,270 @@
+{
+  "format": "serial305-refinement-regressions-v1",
+  "model_id": 305,
+  "policy_sha256": {
+    "navigation": "6c5301fa47eeb51a976853577902c575043437ffbf37d951f7f0cdff96b47717",
+    "combat": "b8f22113d09654381cbfd4b6648f9e19d5d15189e36a7cce4a0208a7021f9f33",
+    "defense": "415b1a233fd4f9eda69a58f5b97ba1cdcc0b37fc974a63e7b6a354c644a36612",
+    "support": "3ba1cf2c9ac9f4d56a6ea08763e0fa01212489a6bdc2bf546b4c869513453f60",
+    "flight": "e5c8d140857353a41d4a47d54a520446b292b4286c68be4f242a81eb0e2e7ba8",
+    "mobility": "377679e4136e82b88fe36af73b499d85e9a4f7224112a7d77f64b99bc6c9c175",
+    "navigation_transit": "ee81fe4289dd9010a0b05596b4c92011183a6c555685b1cf32decb22ca356172"
+  },
+  "script_sha256": "9f5401bd04434d65661ae950d3d71180f56b36e063bddff737cceb0ca634294b",
+  "results": [
+    {
+      "kind": "navigation",
+      "seed": 3000013,
+      "budget_s": 28.0,
+      "command_id": "episode-3000013",
+      "revision": 1,
+      "status": "succeeded",
+      "reason": "arrived",
+      "tick": 72,
+      "time": 3.6,
+      "elapsed_s": 3.6,
+      "skill": "navigate",
+      "phase": "navigate",
+      "execution_family": "navigation",
+      "target_id": null,
+      "target_visible": false,
+      "last_seen_age_s": 0.0,
+      "distance_m": 0.2638247653425252,
+      "observed_target_hp_loss": 0.0,
+      "recoveries_completed": 0,
+      "progress_m": 3.3755616604639114,
+      "details": {},
+      "replay": "navigation-3000013.json.gz",
+      "uncompressed_replay_sha256": "96b9c1eb29b05fe5e30d8e2623971c0a5171352b86c65d435ebaf736930b0125",
+      "verification": {
+        "verified_ticks": 72,
+        "digest": "5cdb4c4bace04a354db46cd76b22d5e7372ab55aeceed3f6f7c3b9c46f131402",
+        "winner": null
+      }
+    },
+    {
+      "kind": "flight",
+      "seed": 6000011,
+      "budget_s": 18.0,
+      "command_id": "flight-6000011",
+      "revision": 1,
+      "status": "succeeded",
+      "reason": "flight_landed",
+      "tick": 100,
+      "time": 5.0,
+      "elapsed_s": 3.7,
+      "skill": "fly_slope",
+      "phase": "flight_land",
+      "execution_family": "flight",
+      "target_id": null,
+      "target_visible": false,
+      "last_seen_age_s": 0.0,
+      "distance_m": 0.03800368256056854,
+      "observed_target_hp_loss": 0.0,
+      "recoveries_completed": 0,
+      "progress_m": 0.03505458905560408,
+      "details": {
+        "flight_direction": "forward",
+        "airborne_s": 0.20000000000000018,
+        "landing_hold_s": 0.30000000000000027,
+        "lane_team": "blue",
+        "launched": true
+      },
+      "replay": "flight-6000011.json.gz",
+      "uncompressed_replay_sha256": "672a85f370e3370620dee481cfa253c0236e48b59a360f80191d1e49c99c2798",
+      "verification": {
+        "verified_ticks": 100,
+        "digest": "0dc0a40a67df413cda00e145accd4ba253c4f392837a04485eaba1722f0c69b9",
+        "winner": null
+      }
+    },
+    {
+      "kind": "flight",
+      "seed": 6000016,
+      "budget_s": 18.0,
+      "command_id": "flight-6000016",
+      "revision": 1,
+      "status": "succeeded",
+      "reason": "flight_landed",
+      "tick": 100,
+      "time": 5.0,
+      "elapsed_s": 3.2,
+      "skill": "fly_slope",
+      "phase": "flight_land",
+      "execution_family": "flight",
+      "target_id": null,
+      "target_visible": false,
+      "last_seen_age_s": 0.0,
+      "distance_m": 0.062039553351398144,
+      "observed_target_hp_loss": 0.0,
+      "recoveries_completed": 0,
+      "progress_m": -0.03861747142863531,
+      "details": {
+        "flight_direction": "forward",
+        "airborne_s": 0.20000000000000018,
+        "landing_hold_s": 0.30000000000000027,
+        "lane_team": "blue",
+        "launched": true
+      },
+      "replay": "flight-6000016.json.gz",
+      "uncompressed_replay_sha256": "c03915dcc602bf134f4eab89fae72fb5d8941ab6be7c31a9577ae66e865a0fc9",
+      "verification": {
+        "verified_ticks": 100,
+        "digest": "d5b709fffc900060488016d378db35b5e2e7acc098f1e4591f468707c400da7b",
+        "winner": null
+      }
+    },
+    {
+      "kind": "flight",
+      "seed": 6000020,
+      "budget_s": 18.0,
+      "command_id": "flight-6000020",
+      "revision": 1,
+      "status": "succeeded",
+      "reason": "flight_landed",
+      "tick": 100,
+      "time": 5.0,
+      "elapsed_s": 5.0,
+      "skill": "fly_slope",
+      "phase": "flight_land",
+      "execution_family": "flight",
+      "target_id": null,
+      "target_visible": false,
+      "last_seen_age_s": 0.0,
+      "distance_m": 0.11735451161679036,
+      "observed_target_hp_loss": 0.0,
+      "recoveries_completed": 0,
+      "progress_m": -0.03346880329654807,
+      "details": {
+        "flight_direction": "forward",
+        "airborne_s": 0.2999999999999998,
+        "landing_hold_s": 0.2999999999999998,
+        "lane_team": "blue",
+        "launched": true
+      },
+      "replay": "flight-6000020.json.gz",
+      "uncompressed_replay_sha256": "61afae777b8fa45c07de0c6f97ae6a9bf164f8f437df253eba1491a21812bea6",
+      "verification": {
+        "verified_ticks": 100,
+        "digest": "eb889f7db05a09c703e274a4e073f4f833bb39f859cb78796ecf2012bcb2f329",
+        "winner": null
+      }
+    },
+    {
+      "kind": "flight",
+      "seed": 6000021,
+      "budget_s": 18.0,
+      "command_id": "flight-6000021",
+      "revision": 1,
+      "status": "succeeded",
+      "reason": "flight_landed",
+      "tick": 100,
+      "time": 5.0,
+      "elapsed_s": 3.2,
+      "skill": "fly_slope",
+      "phase": "flight_land",
+      "execution_family": "flight",
+      "target_id": null,
+      "target_visible": false,
+      "last_seen_age_s": 0.0,
+      "distance_m": 0.10737624642479775,
+      "observed_target_hp_loss": 0.0,
+      "recoveries_completed": 0,
+      "progress_m": 0.00650461627538991,
+      "details": {
+        "flight_direction": "forward",
+        "airborne_s": 0.30000000000000027,
+        "landing_hold_s": 0.30000000000000027,
+        "lane_team": "blue",
+        "launched": true
+      },
+      "replay": "flight-6000021.json.gz",
+      "uncompressed_replay_sha256": "68d89468040a2898dec3af701b9525c93fe3f6ccde101f4056df0fea7c078e58",
+      "verification": {
+        "verified_ticks": 100,
+        "digest": "5963c55b282d2c8196e1ffe45ae4b24f974fdd395c746089a5a854f9ee3d8b5e",
+        "winner": null
+      }
+    },
+    {
+      "kind": "full_2026",
+      "issuer": "scripted forward/reverse objectives, then stationary; blue raid opponents",
+      "initial_scenario": {
+        "robots": {
+          "red-3": {
+            "x": 10.0,
+            "y": 14.4,
+            "heading": 0.0,
+            "ammo": 0
+          }
+        }
+      },
+      "seed": 9100030,
+      "time_s": 420.0,
+      "completed_goals": [
+        {
+          "command_id": "continuous-forward",
+          "revision": 1,
+          "status": "succeeded",
+          "reason": "flight_landed",
+          "tick": 64,
+          "time": 3.2,
+          "elapsed_s": 3.2,
+          "skill": "fly_slope",
+          "phase": "flight_land",
+          "execution_family": "flight",
+          "target_id": null,
+          "target_visible": false,
+          "last_seen_age_s": 0.0,
+          "distance_m": 0.06205198589016854,
+          "observed_target_hp_loss": 0.0,
+          "recoveries_completed": 0,
+          "progress_m": -0.06205198589016854,
+          "details": {
+            "flight_direction": "forward",
+            "airborne_s": 0.20000000000000018,
+            "landing_hold_s": 0.30000000000000027,
+            "lane_team": "red",
+            "launched": true
+          }
+        },
+        {
+          "command_id": "continuous-reverse",
+          "revision": 2,
+          "status": "succeeded",
+          "reason": "flight_landed",
+          "tick": 176,
+          "time": 8.8,
+          "elapsed_s": 5.6000000000000005,
+          "skill": "fly_slope",
+          "phase": "flight_land",
+          "execution_family": "flight",
+          "target_id": null,
+          "target_visible": false,
+          "last_seen_age_s": 0.0,
+          "distance_m": 0.5250432103948961,
+          "observed_target_hp_loss": 0.0,
+          "recoveries_completed": 0,
+          "progress_m": -0.11708697851134048,
+          "details": {
+            "flight_direction": "reverse",
+            "airborne_s": 0.8999999999999995,
+            "landing_hold_s": 0.3000000000000007,
+            "lane_team": "red",
+            "launched": true
+          }
+        }
+      ],
+      "winner": "blue",
+      "replay": "full-2026.json.gz",
+      "uncompressed_replay_sha256": "5b2acc03ade933adca5a148d982e03053a6b3b1f16a89aad4918c57c9d64c0cf",
+      "verification": {
+        "verified_ticks": 8400,
+        "digest": "40411659233daf1f944b0f0253954e58a21a7d07a462f05b39a126ced4a4ff86",
+        "winner": "blue"
+      },
+      "local_replay": "runs/serial305-refinement/physical-canonical-final/full-2026.json.gz",
+      "replay_storage": "local ignored runs directory"
+    }
+  ]
+}

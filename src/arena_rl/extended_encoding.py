@@ -38,6 +38,9 @@ def encode(ex,obs):
 
 def decode(ex,obs,action):
     from rmuc_arena import sdk
+    if ex.model_id==305 and ex.plan and ex.plan['phase']=='recover':
+        from .mobility_encoding import decode as recover_decode
+        return recover_decode(ex,obs,action)
     actions=base_decode(ex,obs,action);out=actions[ex.slot]
     if ex.status!='running':return actions
     c=ex.command;r=own(obs,ex.slot);a=np.asarray(action)
@@ -58,10 +61,21 @@ def decode(ex,obs,action):
         if a[1]==2:out['move']=[v*.6/.7 for v in out['move']]
         lane=sdk.fly_slope_lane(ex.arena,c.lane_team);axis=np.array(lane['crest'])-lane['lip']
         if c.flight_direction=='reverse':axis=-axis
-        out['heading']=math.atan2(axis[1],axis[0])
+        # Before launch a two-wheel chassis must steer to correct lateral entry
+        # error; a fixed lane heading would ask it to strafe indefinitely.
+        steer=r.get('model_slot')==305 and ex.plan['phase']=='flight_approach'
+        if not steer:
+            out['heading']=math.atan2(axis[1],axis[0])
+        elif abs((out['heading']-r['heading']+math.pi)%math.tau-math.pi)>.35:
+            out['move']=[0.,0.]
         out['power']=(150. if r.get('model_slot')==305 and c.flight_direction=='reverse' else 200.) if a[4] else 100.
         out['lean']=(int(a[2])-1)*.12
         out['jump']=float(a[6]) if ex.skill_state.get('launched') else 0.
+        if r.get('model_slot')==305 and c.flight_direction=='forward':
+            crest=np.asarray(lane['crest']);course=crest-np.asarray(lane['lip']);course/=np.linalg.norm(course)
+            end=np.asarray(lane['landing'])-course*.75;p=xy(r)
+            gap_floor=np.dot(p-crest,course)>0 and np.dot(p-end,course)<0 and r['z']<lane['landing_height']+.03
+            out['jump']*=1. if gap_floor else .5
         if ex.plan['phase']=='flight_land':out['jump']=0.
         if ex.plan['phase']=='flight_align':out.update(move=[0.,0.],leg_height=.245,jump=0.,power=100.)
     return actions

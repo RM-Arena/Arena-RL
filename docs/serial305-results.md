@@ -1,5 +1,7 @@
 # Serial-leg 305 evaluation — 2026-10-18
 
+This records version 0.5.0. See [0.5.1 refinement results](serial305-refinement-results.md) for the current policy bank.
+
 Arena-RL 0.5.0 controls only **red-3, model 305**. It retains the existing Rust simulator and robot specifications. The current six-policy bank is frozen during matches; DeepSeek V4.1 Flash (`deepseek-flash`, thinking disabled) selects and switches objectives asynchronously.
 
 ## Held-out skill tests

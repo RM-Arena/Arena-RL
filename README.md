@@ -133,3 +133,5 @@ uv run arena-rl llm-matches --policies checkpoints/serial305 --matches 3 --max-c
 
 
 当前 305 的权重、撤退/恢复课程、安全坐标接口及完整对局记录见[训练说明](docs/serial305.md)和[评测结果](docs/serial305-results.md)。旧版 W3 的 32/32 导航成绩不适用于 305；当前模型的限制单独报告。
+
+0.5.1 修复版的导航/飞坡原始回归均为 32/32，并完成同一进程内的正向、返程和 420 秒 2026 对局验证。扩大扰动测试的限制及新的真实 LLM 对局见[修复评测](docs/serial305-refinement-results.md)。

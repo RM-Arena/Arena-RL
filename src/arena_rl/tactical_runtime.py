@@ -31,14 +31,23 @@ class PolicyBank:
         if len(ids)!=1:raise ValueError('All loaded policies must control the same model')
         self.model_id=ids.pop()
         if self.model_id==305 and 'mobility' not in self.models:raise ValueError('Serial 305 policy bank requires its trained mobility policy')
+        self.transit_model=None
+        if (Path(path)/'navigation/transit/metadata.json').is_file():
+            self.transit_model,meta=load_tactical_policy(Path(path)/'navigation/transit',root)
+            if self.model_id!=305 or meta['family']!='navigation' or meta['model_id']!=self.model_id:raise ValueError('Invalid navigation transit model')
+            self.metadata['navigation_transit']=meta
 
     def predict(self,batch,ids):
         result=np.tile([0,0,1,1,0,1,0],(len(ids),1))
         for family,model in self.models.items():
             positions=[k for k,i in enumerate(ids) if batch.executors[i].status=='running' and batch.executors[i].execution_family==family]
             if positions:
-                obs=np.stack([encode_observation(batch.executors[ids[k]],batch.states[ids[k]]['observations']['red'],family) for k in positions])
-                result[positions]=model.predict(obs,deterministic=True)[0]
+                transit=[k for k in positions if family=='navigation' and self.transit_model is not None and batch.executors[ids[k]].plan['distance']>4.]
+                local=[k for k in positions if k not in transit]
+                for selected,policy in [(local,model),(transit,self.transit_model)]:
+                    if selected:
+                        obs=np.stack([encode_observation(batch.executors[ids[k]],batch.states[ids[k]]['observations']['red'],family,legacy_flight=family=='flight' and self.metadata[family]['schema']=='w3-flight-v1') for k in selected])
+                        result[selected]=policy.predict(obs,deterministic=True)[0]
         return result
 
 

@@ -24,6 +24,20 @@ def reset(ex):
     ex.skill_state={};ex.extra={}
 
 
+def observe_flight(ex,obs):
+    """Record legal airborne telemetry even while recovery suspends flight control."""
+    from rmuc_arena import sdk
+    st=ex.skill_state;now=obs['time'];previous=st.get('flight_observed_at',now)
+    st['flight_observed_at']=now
+    if not st.get('launched'):return
+    r=own(obs,ex.slot);lane=sdk.fly_slope_lane(ex.arena,ex.command.lane_team)
+    crest=np.asarray(lane['crest']);axis=crest-np.asarray(lane['lip']);axis/=np.linalg.norm(axis)
+    end=np.asarray(lane['landing'])-axis*.75;p=xy(r)
+    if r['alive'] and not r['grounded'] and np.dot(p-crest,axis)>0 and np.dot(p-end,axis)<0:
+        st['air_s']=st.get('air_s',0.)+max(0.,now-previous)
+        st['max_z']=max(st.get('max_z',r['z']),r['z'])
+
+
 def _support_target(ex,c,obs,visible,center):
     if not c.engage_on_contact:return None
     candidates=[e for e in visible.values() if e['alive'] and e.get('targetable',True) and np.linalg.norm(xy(e)-center)<=c.region_radius_m]
@@ -89,17 +103,24 @@ def update(ex,obs,visible):
         desired_heading=math.atan2(axis[1],axis[0])
         heading_error=abs((r['heading']-desired_heading+math.pi)%math.tau-math.pi)
         entry_tolerance=.11 if direction>0 else .055
-        if 'launched' not in st and np.linalg.norm(p-entry)<entry_tolerance and math.hypot(r['vx'],r['vy'])<.8 and heading_error<.12:
-            st['launched']=True;st['heading']=r['heading']
+        entry_delta=p-entry
+        lateral_error=abs(axis[0]*entry_delta[1]-axis[1]*entry_delta[0])
+        position_ready=np.linalg.norm(entry_delta)<entry_tolerance and (ex.model_id!=305 or lateral_error<.025)
+        aligned=position_ready and math.hypot(r['vx'],r['vy'])<.8 and heading_error<.12
+        if 'launched' not in st:
+            stable=aligned and r['grounded'] and r['upright']>.95 and np.linalg.norm(r.get('angular_velocity',[0,0,0]))<1.
+            st['align_hold']=st.get('align_hold',0.)+dt if stable else 0.
+            if aligned and (ex.model_id!=305 or st['align_hold']+1e-8>=.3):
+                st['launched']=True;st['heading']=r['heading']
         if not st.get('launched'):
-            phase='flight_align' if np.linalg.norm(p-entry)<entry_tolerance else 'flight_approach';goal=entry
+            phase='flight_align' if position_ready else 'flight_approach';goal=entry
         else:
             phase='flight_run'
             gap_start=np.array(lane['crest']);lane_axis=(crest-lip)/np.linalg.norm(crest-lip)
             gap_end=landing-lane_axis*.75
             in_gap=np.dot(p-gap_start,lane_axis)>0 and np.dot(p-gap_end,lane_axis)<0
             if not r['grounded'] and in_gap:
-                st['air_s']=st.get('air_s',0.)+dt;st['max_z']=max(st.get('max_z',r['z']),r['z']);phase='flight_air'
+                phase='flight_air'
             beyond=(float(np.dot(p-crest,axis))> .65) if direction>0 else float(np.dot(p-lip,axis))> .2
             landed=beyond and r['grounded'] and r['upright']>.9 and np.linalg.norm(p-goal)<.65 and math.hypot(r['vx'],r['vy'])<1.2
             st['landing_hold']=st.get('landing_hold',0.)+dt if landed else 0.

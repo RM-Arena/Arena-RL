@@ -96,6 +96,10 @@ def test_contact_escape_policy_is_used_by_live_navigation():
         session.reset([7300000,7300001],[scenario,scenario])
         session.command({'id':'contact-nav','skill':'navigate','point':[4.6,13.6],'timeout_s':40.},0)
         session.command({'id':'contact-retreat','skill':'retreat','timeout_s':110.},1)
+        # Exercise the stall detector with actual idle motor commands. The local
+        # navigation policy can otherwise clear this contact without an escape.
+        for _ in range(16):
+            session.batch.step(np.tile([0,0,1,1,0,1,0],(2,1)),training=False)
         families=[set(),set()]
         for _ in range(1100):
             for i in range(2):families[i].add(session.batch.executors[i].execution_family)

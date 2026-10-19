@@ -9,6 +9,8 @@ def can_recover(robot):return robot.get('model_slot')==305
 
 def recovery_plan(ex,obs):
     robot=own(obs,ex.slot);state=ex.recovery;now=obs['time']
+    if now-ex.started>=ex.command.timeout_s:
+        ex._end('failed','timeout');return False
     state.setdefault('started',now)
     ex.skill_state['last_time']=now
     ex.skill_state['dwell']=0.;ex.skill_state['landing_hold']=0.
