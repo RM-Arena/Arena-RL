@@ -85,7 +85,7 @@ class TacticalSession:
     def capabilities(self):
         value=capabilities();season=self.batch.season
         value.update(season=season,robot_model=self.bank.model_id,available_families=list(self.bank.models),
-            available_skills=[s for s in SKILLS if Command('capability',s).policy_family in self.bank.models and season in value['skill_seasons'][s] and (s!='recover' or self.bank.model_id==305)])
+            available_skills=[s for s in SKILLS if Command('capability',s).policy_family in self.bank.models and season in value['skill_seasons'][s] and (s!='recover' or self.bank.model_id==305) and s!='install_launcher'])
         return value
 
     def command(self,value,env_id=0):

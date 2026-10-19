@@ -77,5 +77,5 @@ def test_old_and_extended_schemas_remain_separate():
     from arena_rl.commands import capabilities
     assert len(old)==52 and old_space.shape==(52,)
     assert FEATURES[:52]==old and OBS_SPACE.shape==(74,)
-    assert len(capabilities()['command_json_schema']['oneOf'])==11
+    assert len(capabilities()['command_json_schema']['oneOf'])==12
     assert capabilities()['skill_seasons']['fly_slope']==['2026']

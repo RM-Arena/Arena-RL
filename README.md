@@ -1,8 +1,16 @@
 # Arena-RL
 
-基于 [Arena-1](https://github.com/RM-Arena/Arena-1) 的单机器人强化学习训练库。复用 Arena 的 Rust 物理、规则、回放，以及 `ArenaEnv` / `VectorArena` 并行环境，不维护另一套模拟器。
+基于 [Arena-1](https://github.com/RM-Arena/Arena-1) 的强化学习训练库。复用 Arena 的 Rust 物理、规则、回放，以及 `ArenaEnv` / `VectorArena` 并行环境，不维护另一套模拟器。
 
-当前 LLM 对局使用 **2027 串联腿步兵 305，红方槽位 3**，检查点位于 `checkpoints/serial305`，支持低血量撤退和物理自扶正后的恢复。见[305 训练与接口说明](docs/serial305.md)。旧 W3 检查点保留为复现实验。
+**整队版本（0.6）**：顶层 LLM 为 2027 全队每台机器人选择高层目标（打前哨、守家、追击敌方重型/英雄、占堡垒、夺中央卡、推家、补给……），Harness 负责规则状态、可行性过滤和指令编译；低层由一套对 15 个 2027 地面型号通用、按机器人参数条件化的 PPO 策略执行，空中机库使用学习的俯冲时机策略。检查点位于 `checkpoints/ground`，说明、训练命令、Mac/CUDA 资源利用和评测见[整队 LLM + 通用 RL](docs/multi-robot.md)。
+
+```bash
+uv run arena-rl team-match --policies checkpoints/ground --commander llm --matches 2 --output runs/team-llm
+uv run arena-rl serve-team --policies checkpoints/ground --realtime   # 外部 LLM 客户端通过 JSONL 指挥整队
+sh examples/train_ground_all.sh runs/ground-v1 8 auto                  # 本机重新训练全部地面策略族
+```
+
+单机器人版本的 LLM 对局使用 **2027 串联腿步兵 305，红方槽位 3**，检查点位于 `checkpoints/serial305`，支持低血量撤退和物理自扶正后的恢复。见[305 训练与接口说明](docs/serial305.md)。旧 W3 检查点保留为复现实验。
 
 第一版选择 **2027 赛季 W3 双轮足步兵，型号 3，槽位 3**。每个进程只训练一台红方机器人；蓝方机器人按场景脚本运行。训练使用真实 PPO 更新网络权重。
 

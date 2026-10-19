@@ -7,7 +7,9 @@ PROTOCOL = "arena-tactics-v1"
 BASE_SKILLS = ("navigate", "attack_structure", "engage_target", "pursue_target", "defend_region")
 NEW_SKILLS = ("resupply", "escort", "patrol", "fly_slope")
 MOBILITY_SKILLS = ('retreat','recover')
-SKILLS = BASE_SKILLS + NEW_SKILLS + MOBILITY_SKILLS
+# Heavy-only logistics: dock at the own workbench, fit the modular 42 mm launcher, fire its confirmation shot.
+TEAM_SKILLS = ('install_launcher',)
+SKILLS = BASE_SKILLS + NEW_SKILLS + MOBILITY_SKILLS + TEAM_SKILLS
 
 
 def number(value, name, minimum, maximum):
@@ -98,14 +100,14 @@ class Command:
         if skill=='patrol' and len(value['waypoints'])<2:raise ValueError('patrol requires at least two waypoints')
         allowed={'navigate' :{'point'},'defend_region':{'center','priority_ids'},
                  'attack_structure':{'target_id'},'engage_target':{'target_id'},'pursue_target':{'target_id'},
-                 'resupply':{'point'},'escort':{'target_id','point','priority_ids'},'patrol':{'waypoints','priority_ids'},'fly_slope':set(),'retreat':{'point'},'recover':set()}[skill]
+                 'resupply':{'point'},'escort':{'target_id','point','priority_ids'},'patrol':{'waypoints','priority_ids'},'fly_slope':set(),'retreat':{'point'},'recover':set(),'install_launcher':set()}[skill]
         for field in ('point','center','target_id','priority_ids','waypoints'):
             if value.get(field) and field not in allowed:raise ValueError(f'{field} is not valid for {skill}')
         return cls(**value)
 
     @property
     def policy_family(self):
-        return 'mobility' if self.skill in MOBILITY_SKILLS else 'flight' if self.skill=='fly_slope' else 'support' if self.skill in ('resupply','escort','patrol') else 'navigation' if self.skill=='navigate' else 'defense' if self.skill=='defend_region' else 'combat'
+        return 'navigation' if self.skill=='install_launcher' else 'mobility' if self.skill in MOBILITY_SKILLS else 'flight' if self.skill=='fly_slope' else 'support' if self.skill in ('resupply','escort','patrol') else 'navigation' if self.skill=='navigate' else 'defense' if self.skill=='defend_region' else 'combat'
 
     def json(self):
         value={k:v for k,v in asdict(self).items() if v is not None}
@@ -166,7 +168,7 @@ def command_schema():
         elif skill=='patrol':
             properties['waypoints']={'type':'array','items':point,'minItems':2,'maxItems':32};required.append('waypoints')
             properties['priority_ids']={'type':'array','items':{'type':'string'},'maxItems':32,'uniqueItems':True}
-        elif skill in ('fly_slope','recover'):pass
+        elif skill in ('fly_slope','recover','install_launcher'):pass
         else:
             if skill=='escort':
                 properties['point']=point

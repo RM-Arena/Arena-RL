@@ -1,0 +1,386 @@
+{
+  "format": "arena-ground-evaluation-v1",
+  "family": "defense",
+  "checkpoint": "runs/ground-v1/defense-heavy",
+  "policy_sha256": "1f3254954304d5535aa9a4bee6ee4048e151e07528befe6ccaaeefd6f5275372",
+  "episodes_per_model": 8,
+  "seed": 7100000,
+  "models": {
+    "2711": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 0.125,
+        "mean_return": -1.6950251474300018,
+        "by_class": {
+          "heavy/mecanum": {
+            "episodes": 8,
+            "success_rate": 0.125
+          }
+        },
+        "by_variant": {
+          "base_defense": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "central_enemy": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "central_own": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "fortress_enemy": {
+            "episodes": 2,
+            "success_rate": 0.0
+          },
+          "fortress_own": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "outpost_guard": {
+            "episodes": 2,
+            "success_rate": 0.0
+          }
+        },
+        "reasons": {
+          "blocked": 1,
+          "control_card_not_reached": 1,
+          "defense_interval_complete": 1,
+          "robot_unavailable": 2,
+          "timeout": 3
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 0.125,
+        "mean_return": -1.9021358291174153,
+        "by_class": {
+          "heavy/mecanum": {
+            "episodes": 8,
+            "success_rate": 0.125
+          }
+        },
+        "by_variant": {
+          "base_defense": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "central_enemy": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "central_own": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "fortress_enemy": {
+            "episodes": 2,
+            "success_rate": 0.0
+          },
+          "fortress_own": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "outpost_guard": {
+            "episodes": 2,
+            "success_rate": 0.0
+          }
+        },
+        "reasons": {
+          "blocked": 1,
+          "control_card_not_reached": 1,
+          "defense_interval_complete": 1,
+          "robot_unavailable": 2,
+          "timeout": 3
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.0,
+        "mean_return": -8.374287938679231,
+        "by_class": {
+          "heavy/mecanum": {
+            "episodes": 8,
+            "success_rate": 0.0
+          }
+        },
+        "by_variant": {
+          "base_defense": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "central_enemy": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "central_own": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "fortress_enemy": {
+            "episodes": 2,
+            "success_rate": 0.0
+          },
+          "fortress_own": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "outpost_guard": {
+            "episodes": 2,
+            "success_rate": 0.0
+          }
+        },
+        "reasons": {
+          "blocked": 1,
+          "control_card_not_reached": 4,
+          "timeout": 3
+        }
+      }
+    },
+    "2712": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 0.5,
+        "mean_return": 6.968902709459979,
+        "by_class": {
+          "heavy/swerve": {
+            "episodes": 8,
+            "success_rate": 0.5
+          }
+        },
+        "by_variant": {
+          "base_defense": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "central_enemy": {
+            "episodes": 2,
+            "success_rate": 0.5
+          },
+          "central_own": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "fortress_enemy": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "fortress_own": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "outpost_guard": {
+            "episodes": 2,
+            "success_rate": 0.0
+          }
+        },
+        "reasons": {
+          "damage_goal_reached": 1,
+          "defense_interval_complete": 3,
+          "robot_unavailable": 2,
+          "timeout": 2
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 0.5,
+        "mean_return": 7.136124511117329,
+        "by_class": {
+          "heavy/swerve": {
+            "episodes": 8,
+            "success_rate": 0.5
+          }
+        },
+        "by_variant": {
+          "base_defense": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "central_enemy": {
+            "episodes": 2,
+            "success_rate": 0.5
+          },
+          "central_own": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "fortress_enemy": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "fortress_own": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "outpost_guard": {
+            "episodes": 2,
+            "success_rate": 0.0
+          }
+        },
+        "reasons": {
+          "damage_goal_reached": 1,
+          "defense_interval_complete": 3,
+          "robot_unavailable": 2,
+          "timeout": 2
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.25,
+        "mean_return": -4.454493454200362,
+        "by_class": {
+          "heavy/swerve": {
+            "episodes": 8,
+            "success_rate": 0.25
+          }
+        },
+        "by_variant": {
+          "base_defense": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "central_enemy": {
+            "episodes": 2,
+            "success_rate": 0.5
+          },
+          "central_own": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "fortress_enemy": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "fortress_own": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "outpost_guard": {
+            "episodes": 2,
+            "success_rate": 0.0
+          }
+        },
+        "reasons": {
+          "blocked": 1,
+          "control_card_not_reached": 3,
+          "damage_goal_reached": 1,
+          "defense_interval_complete": 1,
+          "timeout": 2
+        }
+      }
+    },
+    "2713": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 0.25,
+        "mean_return": -1.4533858913124371,
+        "by_class": {
+          "heavy/omni": {
+            "episodes": 8,
+            "success_rate": 0.25
+          }
+        },
+        "by_variant": {
+          "base_defense": {
+            "episodes": 3,
+            "success_rate": 0.3333333333333333
+          },
+          "fortress_enemy": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "fortress_own": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "outpost_guard": {
+            "episodes": 3,
+            "success_rate": 0.3333333333333333
+          }
+        },
+        "reasons": {
+          "control_card_not_reached": 1,
+          "damage_goal_reached": 2,
+          "region_contested": 1,
+          "timeout": 4
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 0.125,
+        "mean_return": -3.6078908243672503,
+        "by_class": {
+          "heavy/omni": {
+            "episodes": 8,
+            "success_rate": 0.125
+          }
+        },
+        "by_variant": {
+          "base_defense": {
+            "episodes": 3,
+            "success_rate": 0.3333333333333333
+          },
+          "fortress_enemy": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "fortress_own": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "outpost_guard": {
+            "episodes": 3,
+            "success_rate": 0.0
+          }
+        },
+        "reasons": {
+          "control_card_not_reached": 1,
+          "damage_goal_reached": 1,
+          "region_contested": 1,
+          "timeout": 5
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.125,
+        "mean_return": -9.939224064473864,
+        "by_class": {
+          "heavy/omni": {
+            "episodes": 8,
+            "success_rate": 0.125
+          }
+        },
+        "by_variant": {
+          "base_defense": {
+            "episodes": 3,
+            "success_rate": 0.0
+          },
+          "fortress_enemy": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "fortress_own": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "outpost_guard": {
+            "episodes": 3,
+            "success_rate": 0.3333333333333333
+          }
+        },
+        "reasons": {
+          "control_card_not_reached": 2,
+          "damage_goal_reached": 1,
+          "timeout": 5
+        }
+      }
+    }
+  },
+  "wall_seconds": 456.3638565829024,
+  "mean_success_rate": {
+    "policy": 0.2916666666666667,
+    "expert": 0.25,
+    "random": 0.125
+  }
+}

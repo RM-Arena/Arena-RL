@@ -1,0 +1,322 @@
+{
+  "format": "arena-ground-evaluation-v1",
+  "family": "combat",
+  "checkpoint": "runs/ground-v1/combat-heavy",
+  "policy_sha256": "07662e7663a6738263c4b46eb06f26ee49e2f60f9f1f376e8ba4dea9680f247a",
+  "episodes_per_model": 8,
+  "seed": 7100000,
+  "models": {
+    "2711": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 0.125,
+        "mean_return": -3.0522506790559225,
+        "by_class": {
+          "heavy/mecanum": {
+            "episodes": 8,
+            "success_rate": 0.125
+          }
+        },
+        "by_variant": {
+          "base": {
+            "episodes": 3,
+            "success_rate": 0.0
+          },
+          "engage": {
+            "episodes": 2,
+            "success_rate": 0.0
+          },
+          "outpost": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "pursue": {
+            "episodes": 2,
+            "success_rate": 0.5
+          }
+        },
+        "reasons": {
+          "blocked": 1,
+          "out_of_ammo": 1,
+          "target_destroyed": 1,
+          "target_lost": 2,
+          "timeout": 3
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 0.25,
+        "mean_return": -0.07020951082934479,
+        "by_class": {
+          "heavy/mecanum": {
+            "episodes": 8,
+            "success_rate": 0.25
+          }
+        },
+        "by_variant": {
+          "base": {
+            "episodes": 3,
+            "success_rate": 0.0
+          },
+          "engage": {
+            "episodes": 2,
+            "success_rate": 0.5
+          },
+          "outpost": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "pursue": {
+            "episodes": 2,
+            "success_rate": 0.5
+          }
+        },
+        "reasons": {
+          "blocked": 1,
+          "damage_goal_reached": 1,
+          "target_destroyed": 1,
+          "target_lost": 2,
+          "timeout": 3
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.25,
+        "mean_return": -7.6120327041312725,
+        "by_class": {
+          "heavy/mecanum": {
+            "episodes": 8,
+            "success_rate": 0.25
+          }
+        },
+        "by_variant": {
+          "base": {
+            "episodes": 3,
+            "success_rate": 0.0
+          },
+          "engage": {
+            "episodes": 2,
+            "success_rate": 0.5
+          },
+          "outpost": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "pursue": {
+            "episodes": 2,
+            "success_rate": 0.5
+          }
+        },
+        "reasons": {
+          "damage_goal_reached": 1,
+          "out_of_ammo": 4,
+          "target_destroyed": 1,
+          "target_lost": 2
+        }
+      }
+    },
+    "2712": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 0.375,
+        "mean_return": 3.81108233100265,
+        "by_class": {
+          "heavy/swerve": {
+            "episodes": 8,
+            "success_rate": 0.375
+          }
+        },
+        "by_variant": {
+          "base": {
+            "episodes": 2,
+            "success_rate": 0.0
+          },
+          "engage": {
+            "episodes": 2,
+            "success_rate": 0.5
+          },
+          "outpost": {
+            "episodes": 2,
+            "success_rate": 0.5
+          },
+          "pursue": {
+            "episodes": 2,
+            "success_rate": 0.5
+          }
+        },
+        "reasons": {
+          "damage_goal_reached": 1,
+          "robot_unavailable": 5,
+          "target_destroyed": 2
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 0.375,
+        "mean_return": 3.8764706594056078,
+        "by_class": {
+          "heavy/swerve": {
+            "episodes": 8,
+            "success_rate": 0.375
+          }
+        },
+        "by_variant": {
+          "base": {
+            "episodes": 2,
+            "success_rate": 0.0
+          },
+          "engage": {
+            "episodes": 2,
+            "success_rate": 0.5
+          },
+          "outpost": {
+            "episodes": 2,
+            "success_rate": 0.5
+          },
+          "pursue": {
+            "episodes": 2,
+            "success_rate": 0.5
+          }
+        },
+        "reasons": {
+          "damage_goal_reached": 1,
+          "robot_unavailable": 5,
+          "target_destroyed": 2
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.25,
+        "mean_return": -8.927935734344715,
+        "by_class": {
+          "heavy/swerve": {
+            "episodes": 8,
+            "success_rate": 0.25
+          }
+        },
+        "by_variant": {
+          "base": {
+            "episodes": 2,
+            "success_rate": 0.0
+          },
+          "engage": {
+            "episodes": 2,
+            "success_rate": 0.5
+          },
+          "outpost": {
+            "episodes": 2,
+            "success_rate": 0.0
+          },
+          "pursue": {
+            "episodes": 2,
+            "success_rate": 0.5
+          }
+        },
+        "reasons": {
+          "out_of_ammo": 5,
+          "target_destroyed": 2,
+          "target_lost": 1
+        }
+      }
+    },
+    "2713": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 0.25,
+        "mean_return": 1.941919704222493,
+        "by_class": {
+          "heavy/omni": {
+            "episodes": 8,
+            "success_rate": 0.25
+          }
+        },
+        "by_variant": {
+          "base": {
+            "episodes": 4,
+            "success_rate": 0.0
+          },
+          "outpost": {
+            "episodes": 3,
+            "success_rate": 0.6666666666666666
+          },
+          "pursue": {
+            "episodes": 1,
+            "success_rate": 0.0
+          }
+        },
+        "reasons": {
+          "damage_goal_reached": 2,
+          "target_lost": 1,
+          "timeout": 5
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 0.25,
+        "mean_return": 2.0928623547357876,
+        "by_class": {
+          "heavy/omni": {
+            "episodes": 8,
+            "success_rate": 0.25
+          }
+        },
+        "by_variant": {
+          "base": {
+            "episodes": 4,
+            "success_rate": 0.0
+          },
+          "outpost": {
+            "episodes": 3,
+            "success_rate": 0.6666666666666666
+          },
+          "pursue": {
+            "episodes": 1,
+            "success_rate": 0.0
+          }
+        },
+        "reasons": {
+          "damage_goal_reached": 2,
+          "target_lost": 1,
+          "timeout": 5
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.125,
+        "mean_return": -11.985478059505759,
+        "by_class": {
+          "heavy/omni": {
+            "episodes": 8,
+            "success_rate": 0.125
+          }
+        },
+        "by_variant": {
+          "base": {
+            "episodes": 4,
+            "success_rate": 0.0
+          },
+          "outpost": {
+            "episodes": 3,
+            "success_rate": 0.3333333333333333
+          },
+          "pursue": {
+            "episodes": 1,
+            "success_rate": 0.0
+          }
+        },
+        "reasons": {
+          "blocked": 1,
+          "damage_goal_reached": 1,
+          "out_of_ammo": 5,
+          "target_lost": 1
+        }
+      }
+    }
+  },
+  "wall_seconds": 637.7678478749003,
+  "mean_success_rate": {
+    "policy": 0.25,
+    "expert": 0.2916666666666667,
+    "random": 0.20833333333333334
+  }
+}

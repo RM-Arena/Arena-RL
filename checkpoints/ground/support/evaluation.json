@@ -1,0 +1,1330 @@
+{
+  "format": "arena-ground-evaluation-v1",
+  "family": "support",
+  "checkpoint": "runs/ground-v1/support",
+  "policy_sha256": "c6b2df18205ce6ee83066e570173eafa6e7f752d3fcc22c0d852fb9d49d530b3",
+  "episodes_per_model": 8,
+  "seed": 7100000,
+  "models": {
+    "3": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 0.875,
+        "mean_return": 13.005039507105941,
+        "by_class": {
+          "infantry/wheel_legged": {
+            "episodes": 8,
+            "success_rate": 0.875
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 2,
+            "success_rate": 1.0
+          },
+          "patrol": {
+            "episodes": 3,
+            "success_rate": 0.6666666666666666
+          },
+          "resupply": {
+            "episodes": 3,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "blocked": 1,
+          "escort_completed": 2,
+          "patrol_completed": 2,
+          "resupplied": 3
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 0.875,
+        "mean_return": 12.987482423676353,
+        "by_class": {
+          "infantry/wheel_legged": {
+            "episodes": 8,
+            "success_rate": 0.875
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 2,
+            "success_rate": 1.0
+          },
+          "patrol": {
+            "episodes": 3,
+            "success_rate": 0.6666666666666666
+          },
+          "resupply": {
+            "episodes": 3,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "blocked": 1,
+          "escort_completed": 2,
+          "patrol_completed": 2,
+          "resupplied": 3
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.0,
+        "mean_return": -8.087018209630893,
+        "by_class": {
+          "infantry/wheel_legged": {
+            "episodes": 8,
+            "success_rate": 0.0
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 2,
+            "success_rate": 0.0
+          },
+          "patrol": {
+            "episodes": 3,
+            "success_rate": 0.0
+          },
+          "resupply": {
+            "episodes": 3,
+            "success_rate": 0.0
+          }
+        },
+        "reasons": {
+          "timeout": 8
+        }
+      }
+    },
+    "4": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 1.0,
+        "mean_return": 15.675201248742258,
+        "by_class": {
+          "infantry/mecanum": {
+            "episodes": 8,
+            "success_rate": 1.0
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 4,
+            "success_rate": 1.0
+          },
+          "patrol": {
+            "episodes": 2,
+            "success_rate": 1.0
+          },
+          "resupply": {
+            "episodes": 2,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "escort_completed": 4,
+          "patrol_completed": 2,
+          "resupplied": 2
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 1.0,
+        "mean_return": 15.718534309097805,
+        "by_class": {
+          "infantry/mecanum": {
+            "episodes": 8,
+            "success_rate": 1.0
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 4,
+            "success_rate": 1.0
+          },
+          "patrol": {
+            "episodes": 2,
+            "success_rate": 1.0
+          },
+          "resupply": {
+            "episodes": 2,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "escort_completed": 4,
+          "patrol_completed": 2,
+          "resupplied": 2
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.0,
+        "mean_return": -8.700497494572268,
+        "by_class": {
+          "infantry/mecanum": {
+            "episodes": 8,
+            "success_rate": 0.0
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 4,
+            "success_rate": 0.0
+          },
+          "patrol": {
+            "episodes": 2,
+            "success_rate": 0.0
+          },
+          "resupply": {
+            "episodes": 2,
+            "success_rate": 0.0
+          }
+        },
+        "reasons": {
+          "blocked": 1,
+          "timeout": 7
+        }
+      }
+    },
+    "7": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 1.0,
+        "mean_return": 17.072468694293104,
+        "by_class": {
+          "infantry/mecanum": {
+            "episodes": 8,
+            "success_rate": 1.0
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "patrol": {
+            "episodes": 4,
+            "success_rate": 1.0
+          },
+          "resupply": {
+            "episodes": 3,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "escort_completed": 1,
+          "patrol_completed": 4,
+          "resupplied": 3
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 1.0,
+        "mean_return": 17.08222807334088,
+        "by_class": {
+          "infantry/mecanum": {
+            "episodes": 8,
+            "success_rate": 1.0
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "patrol": {
+            "episodes": 4,
+            "success_rate": 1.0
+          },
+          "resupply": {
+            "episodes": 3,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "escort_completed": 1,
+          "patrol_completed": 4,
+          "resupplied": 3
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.25,
+        "mean_return": -2.513606968780562,
+        "by_class": {
+          "infantry/mecanum": {
+            "episodes": 8,
+            "success_rate": 0.25
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "patrol": {
+            "episodes": 4,
+            "success_rate": 0.0
+          },
+          "resupply": {
+            "episodes": 3,
+            "success_rate": 0.6666666666666666
+          }
+        },
+        "reasons": {
+          "blocked": 1,
+          "resupplied": 2,
+          "timeout": 5
+        }
+      }
+    },
+    "301": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 1.0,
+        "mean_return": 15.103146483700854,
+        "by_class": {
+          "infantry/mecanum": {
+            "episodes": 8,
+            "success_rate": 1.0
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 4,
+            "success_rate": 1.0
+          },
+          "patrol": {
+            "episodes": 2,
+            "success_rate": 1.0
+          },
+          "resupply": {
+            "episodes": 2,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "escort_completed": 4,
+          "patrol_completed": 2,
+          "resupplied": 2
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 1.0,
+        "mean_return": 15.344627427163516,
+        "by_class": {
+          "infantry/mecanum": {
+            "episodes": 8,
+            "success_rate": 1.0
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 4,
+            "success_rate": 1.0
+          },
+          "patrol": {
+            "episodes": 2,
+            "success_rate": 1.0
+          },
+          "resupply": {
+            "episodes": 2,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "escort_completed": 4,
+          "patrol_completed": 2,
+          "resupplied": 2
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.125,
+        "mean_return": -5.3504878307542505,
+        "by_class": {
+          "infantry/mecanum": {
+            "episodes": 8,
+            "success_rate": 0.125
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 4,
+            "success_rate": 0.0
+          },
+          "patrol": {
+            "episodes": 2,
+            "success_rate": 0.0
+          },
+          "resupply": {
+            "episodes": 2,
+            "success_rate": 0.5
+          }
+        },
+        "reasons": {
+          "resupplied": 1,
+          "timeout": 7
+        }
+      }
+    },
+    "302": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 1.0,
+        "mean_return": 15.393303559075267,
+        "by_class": {
+          "infantry/swerve": {
+            "episodes": 8,
+            "success_rate": 1.0
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 3,
+            "success_rate": 1.0
+          },
+          "resupply": {
+            "episodes": 5,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "escort_completed": 3,
+          "resupplied": 5
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 1.0,
+        "mean_return": 15.434364745807855,
+        "by_class": {
+          "infantry/swerve": {
+            "episodes": 8,
+            "success_rate": 1.0
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 3,
+            "success_rate": 1.0
+          },
+          "resupply": {
+            "episodes": 5,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "escort_completed": 3,
+          "resupplied": 5
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.375,
+        "mean_return": 1.67328252701775,
+        "by_class": {
+          "infantry/swerve": {
+            "episodes": 8,
+            "success_rate": 0.375
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 3,
+            "success_rate": 0.0
+          },
+          "resupply": {
+            "episodes": 5,
+            "success_rate": 0.6
+          }
+        },
+        "reasons": {
+          "blocked": 1,
+          "resupplied": 3,
+          "timeout": 4
+        }
+      }
+    },
+    "303": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 1.0,
+        "mean_return": 17.01945442334247,
+        "by_class": {
+          "infantry/omni": {
+            "episodes": 8,
+            "success_rate": 1.0
+          }
+        },
+        "by_variant": {
+          "patrol": {
+            "episodes": 3,
+            "success_rate": 1.0
+          },
+          "resupply": {
+            "episodes": 5,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "patrol_completed": 3,
+          "resupplied": 5
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 1.0,
+        "mean_return": 16.997591142628103,
+        "by_class": {
+          "infantry/omni": {
+            "episodes": 8,
+            "success_rate": 1.0
+          }
+        },
+        "by_variant": {
+          "patrol": {
+            "episodes": 3,
+            "success_rate": 1.0
+          },
+          "resupply": {
+            "episodes": 5,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "patrol_completed": 3,
+          "resupplied": 5
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.5,
+        "mean_return": 1.9431264134599446,
+        "by_class": {
+          "infantry/omni": {
+            "episodes": 8,
+            "success_rate": 0.5
+          }
+        },
+        "by_variant": {
+          "patrol": {
+            "episodes": 3,
+            "success_rate": 0.0
+          },
+          "resupply": {
+            "episodes": 5,
+            "success_rate": 0.8
+          }
+        },
+        "reasons": {
+          "resupplied": 4,
+          "timeout": 4
+        }
+      }
+    },
+    "304": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 1.0,
+        "mean_return": 17.01715300429942,
+        "by_class": {
+          "infantry/wheel_legged": {
+            "episodes": 8,
+            "success_rate": 1.0
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "patrol": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "resupply": {
+            "episodes": 6,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "escort_completed": 1,
+          "patrol_completed": 1,
+          "resupplied": 6
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 1.0,
+        "mean_return": 17.012613666382286,
+        "by_class": {
+          "infantry/wheel_legged": {
+            "episodes": 8,
+            "success_rate": 1.0
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "patrol": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "resupply": {
+            "episodes": 6,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "escort_completed": 1,
+          "patrol_completed": 1,
+          "resupplied": 6
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.0,
+        "mean_return": -8.898034539863804,
+        "by_class": {
+          "infantry/wheel_legged": {
+            "episodes": 8,
+            "success_rate": 0.0
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "patrol": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "resupply": {
+            "episodes": 6,
+            "success_rate": 0.0
+          }
+        },
+        "reasons": {
+          "timeout": 8
+        }
+      }
+    },
+    "305": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 0.875,
+        "mean_return": 13.45270261080354,
+        "by_class": {
+          "infantry/wheel_legged": {
+            "episodes": 8,
+            "success_rate": 0.875
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 3,
+            "success_rate": 1.0
+          },
+          "patrol": {
+            "episodes": 2,
+            "success_rate": 0.5
+          },
+          "resupply": {
+            "episodes": 3,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "blocked": 1,
+          "escort_completed": 3,
+          "patrol_completed": 1,
+          "resupplied": 3
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 1.0,
+        "mean_return": 16.080397876137415,
+        "by_class": {
+          "infantry/wheel_legged": {
+            "episodes": 8,
+            "success_rate": 1.0
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 3,
+            "success_rate": 1.0
+          },
+          "patrol": {
+            "episodes": 2,
+            "success_rate": 1.0
+          },
+          "resupply": {
+            "episodes": 3,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "escort_completed": 3,
+          "patrol_completed": 2,
+          "resupplied": 3
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.0,
+        "mean_return": -7.728755543384441,
+        "by_class": {
+          "infantry/wheel_legged": {
+            "episodes": 8,
+            "success_rate": 0.0
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 3,
+            "success_rate": 0.0
+          },
+          "patrol": {
+            "episodes": 2,
+            "success_rate": 0.0
+          },
+          "resupply": {
+            "episodes": 3,
+            "success_rate": 0.0
+          }
+        },
+        "reasons": {
+          "timeout": 8
+        }
+      }
+    },
+    "2731": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 1.0,
+        "mean_return": 15.685361938412736,
+        "by_class": {
+          "infantry/wheel_legged": {
+            "episodes": 8,
+            "success_rate": 1.0
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "patrol": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "resupply": {
+            "episodes": 6,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "escort_completed": 1,
+          "patrol_completed": 1,
+          "resupplied": 6
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 1.0,
+        "mean_return": 15.668936620479315,
+        "by_class": {
+          "infantry/wheel_legged": {
+            "episodes": 8,
+            "success_rate": 1.0
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "patrol": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "resupply": {
+            "episodes": 6,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "escort_completed": 1,
+          "patrol_completed": 1,
+          "resupplied": 6
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.125,
+        "mean_return": -5.7772818223469296,
+        "by_class": {
+          "infantry/wheel_legged": {
+            "episodes": 8,
+            "success_rate": 0.125
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "patrol": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "resupply": {
+            "episodes": 6,
+            "success_rate": 0.16666666666666666
+          }
+        },
+        "reasons": {
+          "resupplied": 1,
+          "timeout": 7
+        }
+      }
+    },
+    "2732": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 1.0,
+        "mean_return": 15.41962239139068,
+        "by_class": {
+          "infantry/mecanum": {
+            "episodes": 8,
+            "success_rate": 1.0
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 2,
+            "success_rate": 1.0
+          },
+          "resupply": {
+            "episodes": 6,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "escort_completed": 2,
+          "resupplied": 6
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 1.0,
+        "mean_return": 15.454695127761312,
+        "by_class": {
+          "infantry/mecanum": {
+            "episodes": 8,
+            "success_rate": 1.0
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 2,
+            "success_rate": 1.0
+          },
+          "resupply": {
+            "episodes": 6,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "escort_completed": 2,
+          "resupplied": 6
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.375,
+        "mean_return": -0.5417317447212908,
+        "by_class": {
+          "infantry/mecanum": {
+            "episodes": 8,
+            "success_rate": 0.375
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 2,
+            "success_rate": 0.0
+          },
+          "resupply": {
+            "episodes": 6,
+            "success_rate": 0.5
+          }
+        },
+        "reasons": {
+          "blocked": 1,
+          "resupplied": 3,
+          "timeout": 4
+        }
+      }
+    },
+    "2711": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 1.0,
+        "mean_return": 15.073740632160614,
+        "by_class": {
+          "heavy/mecanum": {
+            "episodes": 8,
+            "success_rate": 1.0
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 2,
+            "success_rate": 1.0
+          },
+          "patrol": {
+            "episodes": 2,
+            "success_rate": 1.0
+          },
+          "resupply": {
+            "episodes": 4,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "escort_completed": 2,
+          "patrol_completed": 2,
+          "resupplied": 4
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 1.0,
+        "mean_return": 15.108420619930332,
+        "by_class": {
+          "heavy/mecanum": {
+            "episodes": 8,
+            "success_rate": 1.0
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 2,
+            "success_rate": 1.0
+          },
+          "patrol": {
+            "episodes": 2,
+            "success_rate": 1.0
+          },
+          "resupply": {
+            "episodes": 4,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "escort_completed": 2,
+          "patrol_completed": 2,
+          "resupplied": 4
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.125,
+        "mean_return": -4.915453413106956,
+        "by_class": {
+          "heavy/mecanum": {
+            "episodes": 8,
+            "success_rate": 0.125
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 2,
+            "success_rate": 0.0
+          },
+          "patrol": {
+            "episodes": 2,
+            "success_rate": 0.0
+          },
+          "resupply": {
+            "episodes": 4,
+            "success_rate": 0.25
+          }
+        },
+        "reasons": {
+          "blocked": 2,
+          "resupplied": 1,
+          "timeout": 5
+        }
+      }
+    },
+    "2712": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 1.0,
+        "mean_return": 14.162882046178495,
+        "by_class": {
+          "heavy/swerve": {
+            "episodes": 8,
+            "success_rate": 1.0
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 2,
+            "success_rate": 1.0
+          },
+          "patrol": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "resupply": {
+            "episodes": 5,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "escort_completed": 2,
+          "patrol_completed": 1,
+          "resupplied": 5
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 1.0,
+        "mean_return": 14.184473232714474,
+        "by_class": {
+          "heavy/swerve": {
+            "episodes": 8,
+            "success_rate": 1.0
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 2,
+            "success_rate": 1.0
+          },
+          "patrol": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "resupply": {
+            "episodes": 5,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "escort_completed": 2,
+          "patrol_completed": 1,
+          "resupplied": 5
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.125,
+        "mean_return": -5.359484620527969,
+        "by_class": {
+          "heavy/swerve": {
+            "episodes": 8,
+            "success_rate": 0.125
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 2,
+            "success_rate": 0.0
+          },
+          "patrol": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "resupply": {
+            "episodes": 5,
+            "success_rate": 0.2
+          }
+        },
+        "reasons": {
+          "blocked": 2,
+          "resupplied": 1,
+          "timeout": 5
+        }
+      }
+    },
+    "2713": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 1.0,
+        "mean_return": 14.15802800784284,
+        "by_class": {
+          "heavy/omni": {
+            "episodes": 8,
+            "success_rate": 1.0
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 3,
+            "success_rate": 1.0
+          },
+          "patrol": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "resupply": {
+            "episodes": 4,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "escort_completed": 3,
+          "patrol_completed": 1,
+          "resupplied": 4
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 1.0,
+        "mean_return": 14.218885879308733,
+        "by_class": {
+          "heavy/omni": {
+            "episodes": 8,
+            "success_rate": 1.0
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 3,
+            "success_rate": 1.0
+          },
+          "patrol": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "resupply": {
+            "episodes": 4,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "escort_completed": 3,
+          "patrol_completed": 1,
+          "resupplied": 4
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.25,
+        "mean_return": -3.137305887015868,
+        "by_class": {
+          "heavy/omni": {
+            "episodes": 8,
+            "success_rate": 0.25
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 3,
+            "success_rate": 0.0
+          },
+          "patrol": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "resupply": {
+            "episodes": 4,
+            "success_rate": 0.5
+          }
+        },
+        "reasons": {
+          "bump_tile": 1,
+          "resupplied": 2,
+          "timeout": 5
+        }
+      }
+    },
+    "2771": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 1.0,
+        "mean_return": 15.223227698713817,
+        "by_class": {
+          "sentry/omni": {
+            "episodes": 8,
+            "success_rate": 1.0
+          }
+        },
+        "by_variant": {
+          "patrol": {
+            "episodes": 2,
+            "success_rate": 1.0
+          },
+          "resupply": {
+            "episodes": 6,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "patrol_completed": 2,
+          "resupplied": 6
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 1.0,
+        "mean_return": 15.215305925025568,
+        "by_class": {
+          "sentry/omni": {
+            "episodes": 8,
+            "success_rate": 1.0
+          }
+        },
+        "by_variant": {
+          "patrol": {
+            "episodes": 2,
+            "success_rate": 1.0
+          },
+          "resupply": {
+            "episodes": 6,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "patrol_completed": 2,
+          "resupplied": 6
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.375,
+        "mean_return": -1.5869814237251787,
+        "by_class": {
+          "sentry/omni": {
+            "episodes": 8,
+            "success_rate": 0.375
+          }
+        },
+        "by_variant": {
+          "patrol": {
+            "episodes": 2,
+            "success_rate": 0.0
+          },
+          "resupply": {
+            "episodes": 6,
+            "success_rate": 0.5
+          }
+        },
+        "reasons": {
+          "resupplied": 3,
+          "timeout": 5
+        }
+      }
+    },
+    "2772": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 1.0,
+        "mean_return": 15.874254797560857,
+        "by_class": {
+          "sentry/wheel_legged": {
+            "episodes": 8,
+            "success_rate": 1.0
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 2,
+            "success_rate": 1.0
+          },
+          "patrol": {
+            "episodes": 5,
+            "success_rate": 1.0
+          },
+          "resupply": {
+            "episodes": 1,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "escort_completed": 2,
+          "patrol_completed": 5,
+          "resupplied": 1
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 1.0,
+        "mean_return": 15.759807822596555,
+        "by_class": {
+          "sentry/wheel_legged": {
+            "episodes": 8,
+            "success_rate": 1.0
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 2,
+            "success_rate": 1.0
+          },
+          "patrol": {
+            "episodes": 5,
+            "success_rate": 1.0
+          },
+          "resupply": {
+            "episodes": 1,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "escort_completed": 2,
+          "patrol_completed": 5,
+          "resupplied": 1
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.0,
+        "mean_return": -9.429672092896478,
+        "by_class": {
+          "sentry/wheel_legged": {
+            "episodes": 8,
+            "success_rate": 0.0
+          }
+        },
+        "by_variant": {
+          "escort": {
+            "episodes": 2,
+            "success_rate": 0.0
+          },
+          "patrol": {
+            "episodes": 5,
+            "success_rate": 0.0
+          },
+          "resupply": {
+            "episodes": 1,
+            "success_rate": 0.0
+          }
+        },
+        "reasons": {
+          "timeout": 8
+        }
+      }
+    }
+  },
+  "wall_seconds": 848.0360230840743,
+  "mean_success_rate": {
+    "policy": 0.9833333333333333,
+    "expert": 0.9916666666666667,
+    "random": 0.175
+  }
+}

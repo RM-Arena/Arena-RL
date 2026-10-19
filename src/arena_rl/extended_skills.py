@@ -53,16 +53,17 @@ def update(ex,obs,visible):
     if c.skill=='resupply':
         zone=next(z for z in ex.arena['zones'] if z['kind']=='supply' and z.get('owner')==obs['team'])
         goal=np.array(c.point or [zone['x'],zone['y']]);team=obs['teams'][obs['team']]
-        resources=team['resources'];purchased=team.get('purchased_17',0)
+        caliber='42mm' if r['role'] in ('heavy','hero') else '17mm'
+        resources=team['resources'];purchased=team.get('purchased_'+caliber[:2],0)
         st.setdefault('initial_purchased',purchased)
-        price=sdk.rules(obs)['economy']['ammo']['17mm'];unit_cost=price['local_cost']/price['local_batch']
+        price=sdk.rules(obs)['economy']['ammo'][caliber];unit_cost=price['local_cost']/price['local_batch']
         st['spent']=max(0,purchased-st['initial_purchased'])*unit_cost
         contact=f"{obs['team']}-{ex.slot}" in obs['zones'][zone['id']]['occupants']
         if contact:phase='supply_hold';goal=p.copy()
         ready=r['ammo']>=c.ammo_target and r['hp']/max(1,r['max_hp'])>=c.hp_target_fraction
         if ready:ex._end('succeeded','resupplied')
         # Income is provided by the ordinary referee; no invented training coins.
-        if contact and r['ammo']<c.ammo_target and (resources<10 or st['spent']+10>c.budget_limit) and now>1.1:
+        if contact and r['ammo']<c.ammo_target and (resources<unit_cost*price['local_batch'] or st['spent']+unit_cost*price['local_batch']>c.budget_limit) and now>1.1:
             ex._end('failed','insufficient_supply_budget')
         if contact and r['ammo']<c.ammo_target and purchased>=price['team_purchase_cap']:ex._end('failed','team_ammo_cap_reached')
         metrics={'supply_contact':contact,'ammo':r['ammo'],'ammo_target':c.ammo_target,'hp_fraction':r['hp']/max(1,r['max_hp']),
@@ -144,7 +145,7 @@ def update(ex,obs,visible):
     if elapsed>=c.timeout_s:ex._end('failed','timeout')
     if ex.last_position is None or np.linalg.norm(p-ex.last_position)>.25:ex.last_position=p;ex.last_motion=now
     moving=phase in ('navigate','escort_follow','patrol_move','flight_approach','flight_run')
-    if moving and distance>c.radius_m and now-ex.last_motion>(25 if ex.model_id==305 else 8):ex._end('failed','blocked')
+    if moving and distance>c.radius_m and now-ex.last_motion>(25 if ex.legged_planner else 8):ex._end('failed','blocked')
     planned=(0.,0.)
     if flight_override is not None:
         _,_,planned,held=flight_override
@@ -156,7 +157,7 @@ def update(ex,obs,visible):
     elif c.skill=='fly_slope':
         planned=(goal-p)*2.
     elif distance>c.radius_m:
-        if ex.model_id==305:
+        if ex.legged_planner or ex.profile is not None:
             from .navigation import plan_motion
             planned,held=plan_motion(ex,r,goal,now)
         else:planned=sdk.navigate(r,goal,ex.navigation_arena)

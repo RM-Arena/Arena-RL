@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "arena-rl"
-version = "0.5.1"
-description = "Single-robot skill and hierarchical reinforcement learning for Arena-1"
+version = "0.6.0"
+description = "Team LLM command with universal multi-robot RL execution for Arena-1"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {file = "LICENSE"}

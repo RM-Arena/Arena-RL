@@ -1,0 +1,1163 @@
+{
+  "format": "arena-ground-evaluation-v1",
+  "family": "navigation",
+  "checkpoint": "runs/ground-v1/navigation",
+  "policy_sha256": "25fbfc7818ceeac425c943cb1a3355aad3f86029cf017546af736ce01bd36cd4",
+  "episodes_per_model": 8,
+  "seed": 7100000,
+  "models": {
+    "3": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 0.875,
+        "mean_return": 22.49551095731013,
+        "by_class": {
+          "infantry/wheel_legged": {
+            "episodes": 8,
+            "success_rate": 0.875
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 4,
+            "success_rate": 0.75
+          },
+          "route": {
+            "episodes": 4,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "arrived": 7,
+          "timeout": 1
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 0.875,
+        "mean_return": 22.70476741151723,
+        "by_class": {
+          "infantry/wheel_legged": {
+            "episodes": 8,
+            "success_rate": 0.875
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 4,
+            "success_rate": 0.75
+          },
+          "route": {
+            "episodes": 4,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "arrived": 7,
+          "blocked": 1
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.0,
+        "mean_return": -9.394018102613778,
+        "by_class": {
+          "infantry/wheel_legged": {
+            "episodes": 8,
+            "success_rate": 0.0
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 4,
+            "success_rate": 0.0
+          },
+          "route": {
+            "episodes": 4,
+            "success_rate": 0.0
+          }
+        },
+        "reasons": {
+          "blocked": 1,
+          "robot_unavailable": 1,
+          "timeout": 6
+        }
+      }
+    },
+    "4": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 0.5,
+        "mean_return": 15.309919495280042,
+        "by_class": {
+          "infantry/mecanum": {
+            "episodes": 8,
+            "success_rate": 0.5
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 4,
+            "success_rate": 0.25
+          },
+          "route": {
+            "episodes": 4,
+            "success_rate": 0.75
+          }
+        },
+        "reasons": {
+          "arrived": 4,
+          "blocked": 4
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 0.625,
+        "mean_return": 20.946386567755724,
+        "by_class": {
+          "infantry/mecanum": {
+            "episodes": 8,
+            "success_rate": 0.625
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 4,
+            "success_rate": 0.5
+          },
+          "route": {
+            "episodes": 4,
+            "success_rate": 0.75
+          }
+        },
+        "reasons": {
+          "arrived": 5,
+          "blocked": 3
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.0,
+        "mean_return": -10.068663157973177,
+        "by_class": {
+          "infantry/mecanum": {
+            "episodes": 8,
+            "success_rate": 0.0
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 4,
+            "success_rate": 0.0
+          },
+          "route": {
+            "episodes": 4,
+            "success_rate": 0.0
+          }
+        },
+        "reasons": {
+          "blocked": 2,
+          "timeout": 6
+        }
+      }
+    },
+    "7": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 0.875,
+        "mean_return": 28.221700165810375,
+        "by_class": {
+          "infantry/mecanum": {
+            "episodes": 8,
+            "success_rate": 0.875
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 6,
+            "success_rate": 1.0
+          },
+          "route": {
+            "episodes": 2,
+            "success_rate": 0.5
+          }
+        },
+        "reasons": {
+          "arrived": 7,
+          "timeout": 1
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 0.875,
+        "mean_return": 28.252410121224038,
+        "by_class": {
+          "infantry/mecanum": {
+            "episodes": 8,
+            "success_rate": 0.875
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 6,
+            "success_rate": 1.0
+          },
+          "route": {
+            "episodes": 2,
+            "success_rate": 0.5
+          }
+        },
+        "reasons": {
+          "arrived": 7,
+          "timeout": 1
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.0,
+        "mean_return": -9.056601794077372,
+        "by_class": {
+          "infantry/mecanum": {
+            "episodes": 8,
+            "success_rate": 0.0
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 6,
+            "success_rate": 0.0
+          },
+          "route": {
+            "episodes": 2,
+            "success_rate": 0.0
+          }
+        },
+        "reasons": {
+          "timeout": 8
+        }
+      }
+    },
+    "301": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 0.375,
+        "mean_return": 21.14470444226464,
+        "by_class": {
+          "infantry/mecanum": {
+            "episodes": 8,
+            "success_rate": 0.375
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "route": {
+            "episodes": 7,
+            "success_rate": 0.2857142857142857
+          }
+        },
+        "reasons": {
+          "arrived": 3,
+          "blocked": 1,
+          "timeout": 4
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 0.375,
+        "mean_return": 21.223180288400144,
+        "by_class": {
+          "infantry/mecanum": {
+            "episodes": 8,
+            "success_rate": 0.375
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "route": {
+            "episodes": 7,
+            "success_rate": 0.2857142857142857
+          }
+        },
+        "reasons": {
+          "arrived": 3,
+          "blocked": 1,
+          "timeout": 4
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.0,
+        "mean_return": -12.5835840406175,
+        "by_class": {
+          "infantry/mecanum": {
+            "episodes": 8,
+            "success_rate": 0.0
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "route": {
+            "episodes": 7,
+            "success_rate": 0.0
+          }
+        },
+        "reasons": {
+          "timeout": 8
+        }
+      }
+    },
+    "302": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 0.5,
+        "mean_return": 24.849571189169325,
+        "by_class": {
+          "infantry/swerve": {
+            "episodes": 8,
+            "success_rate": 0.5
+          }
+        },
+        "by_variant": {
+          "route": {
+            "episodes": 8,
+            "success_rate": 0.5
+          }
+        },
+        "reasons": {
+          "arrived": 4,
+          "blocked": 2,
+          "timeout": 2
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 0.5,
+        "mean_return": 24.901744030554372,
+        "by_class": {
+          "infantry/swerve": {
+            "episodes": 8,
+            "success_rate": 0.5
+          }
+        },
+        "by_variant": {
+          "route": {
+            "episodes": 8,
+            "success_rate": 0.5
+          }
+        },
+        "reasons": {
+          "arrived": 4,
+          "blocked": 2,
+          "timeout": 2
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.0,
+        "mean_return": -11.529166302522047,
+        "by_class": {
+          "infantry/swerve": {
+            "episodes": 8,
+            "success_rate": 0.0
+          }
+        },
+        "by_variant": {
+          "route": {
+            "episodes": 8,
+            "success_rate": 0.0
+          }
+        },
+        "reasons": {
+          "timeout": 8
+        }
+      }
+    },
+    "303": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 0.375,
+        "mean_return": 22.20339698622313,
+        "by_class": {
+          "infantry/omni": {
+            "episodes": 8,
+            "success_rate": 0.375
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "route": {
+            "episodes": 7,
+            "success_rate": 0.2857142857142857
+          }
+        },
+        "reasons": {
+          "arrived": 3,
+          "blocked": 1,
+          "timeout": 4
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 0.375,
+        "mean_return": 22.23600085744055,
+        "by_class": {
+          "infantry/omni": {
+            "episodes": 8,
+            "success_rate": 0.375
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "route": {
+            "episodes": 7,
+            "success_rate": 0.2857142857142857
+          }
+        },
+        "reasons": {
+          "arrived": 3,
+          "blocked": 1,
+          "timeout": 4
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.0,
+        "mean_return": -8.547219790271942,
+        "by_class": {
+          "infantry/omni": {
+            "episodes": 8,
+            "success_rate": 0.0
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "route": {
+            "episodes": 7,
+            "success_rate": 0.0
+          }
+        },
+        "reasons": {
+          "timeout": 8
+        }
+      }
+    },
+    "304": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 0.875,
+        "mean_return": 19.870200849018637,
+        "by_class": {
+          "infantry/wheel_legged": {
+            "episodes": 8,
+            "success_rate": 0.875
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 2,
+            "success_rate": 1.0
+          },
+          "route": {
+            "episodes": 6,
+            "success_rate": 0.8333333333333334
+          }
+        },
+        "reasons": {
+          "arrived": 7,
+          "timeout": 1
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 0.875,
+        "mean_return": 19.896287356838183,
+        "by_class": {
+          "infantry/wheel_legged": {
+            "episodes": 8,
+            "success_rate": 0.875
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 2,
+            "success_rate": 1.0
+          },
+          "route": {
+            "episodes": 6,
+            "success_rate": 0.8333333333333334
+          }
+        },
+        "reasons": {
+          "arrived": 7,
+          "timeout": 1
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.0,
+        "mean_return": -6.895718147206801,
+        "by_class": {
+          "infantry/wheel_legged": {
+            "episodes": 8,
+            "success_rate": 0.0
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 2,
+            "success_rate": 0.0
+          },
+          "route": {
+            "episodes": 6,
+            "success_rate": 0.0
+          }
+        },
+        "reasons": {
+          "robot_unavailable": 7,
+          "timeout": 1
+        }
+      }
+    },
+    "305": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 0.875,
+        "mean_return": 17.354953014837292,
+        "by_class": {
+          "infantry/wheel_legged": {
+            "episodes": 8,
+            "success_rate": 0.875
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 4,
+            "success_rate": 1.0
+          },
+          "route": {
+            "episodes": 4,
+            "success_rate": 0.75
+          }
+        },
+        "reasons": {
+          "arrived": 7,
+          "timeout": 1
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 0.875,
+        "mean_return": 17.08311169689123,
+        "by_class": {
+          "infantry/wheel_legged": {
+            "episodes": 8,
+            "success_rate": 0.875
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 4,
+            "success_rate": 1.0
+          },
+          "route": {
+            "episodes": 4,
+            "success_rate": 0.75
+          }
+        },
+        "reasons": {
+          "arrived": 7,
+          "timeout": 1
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.0,
+        "mean_return": -10.65189025399524,
+        "by_class": {
+          "infantry/wheel_legged": {
+            "episodes": 8,
+            "success_rate": 0.0
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 4,
+            "success_rate": 0.0
+          },
+          "route": {
+            "episodes": 4,
+            "success_rate": 0.0
+          }
+        },
+        "reasons": {
+          "timeout": 8
+        }
+      }
+    },
+    "2731": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 0.875,
+        "mean_return": 19.85303088308708,
+        "by_class": {
+          "infantry/wheel_legged": {
+            "episodes": 8,
+            "success_rate": 0.875
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "route": {
+            "episodes": 7,
+            "success_rate": 0.8571428571428571
+          }
+        },
+        "reasons": {
+          "arrived": 7,
+          "timeout": 1
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 0.75,
+        "mean_return": 14.958445594393432,
+        "by_class": {
+          "infantry/wheel_legged": {
+            "episodes": 8,
+            "success_rate": 0.75
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "route": {
+            "episodes": 7,
+            "success_rate": 0.7142857142857143
+          }
+        },
+        "reasons": {
+          "arrived": 6,
+          "timeout": 2
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.0,
+        "mean_return": -6.6093780803201625,
+        "by_class": {
+          "infantry/wheel_legged": {
+            "episodes": 8,
+            "success_rate": 0.0
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "route": {
+            "episodes": 7,
+            "success_rate": 0.0
+          }
+        },
+        "reasons": {
+          "robot_unavailable": 8
+        }
+      }
+    },
+    "2732": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 0.75,
+        "mean_return": 26.136125243335712,
+        "by_class": {
+          "infantry/mecanum": {
+            "episodes": 8,
+            "success_rate": 0.75
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 4,
+            "success_rate": 1.0
+          },
+          "route": {
+            "episodes": 4,
+            "success_rate": 0.5
+          }
+        },
+        "reasons": {
+          "arrived": 6,
+          "blocked": 1,
+          "timeout": 1
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 0.75,
+        "mean_return": 28.5484087456084,
+        "by_class": {
+          "infantry/mecanum": {
+            "episodes": 8,
+            "success_rate": 0.75
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 4,
+            "success_rate": 1.0
+          },
+          "route": {
+            "episodes": 4,
+            "success_rate": 0.5
+          }
+        },
+        "reasons": {
+          "arrived": 6,
+          "timeout": 2
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.0,
+        "mean_return": -11.993263980642514,
+        "by_class": {
+          "infantry/mecanum": {
+            "episodes": 8,
+            "success_rate": 0.0
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 4,
+            "success_rate": 0.0
+          },
+          "route": {
+            "episodes": 4,
+            "success_rate": 0.0
+          }
+        },
+        "reasons": {
+          "timeout": 8
+        }
+      }
+    },
+    "2711": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 0.75,
+        "mean_return": 26.553904359117112,
+        "by_class": {
+          "heavy/mecanum": {
+            "episodes": 8,
+            "success_rate": 0.75
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 3,
+            "success_rate": 0.6666666666666666
+          },
+          "route": {
+            "episodes": 5,
+            "success_rate": 0.8
+          }
+        },
+        "reasons": {
+          "arrived": 6,
+          "robot_unavailable": 1,
+          "timeout": 1
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 0.75,
+        "mean_return": 26.93201162600061,
+        "by_class": {
+          "heavy/mecanum": {
+            "episodes": 8,
+            "success_rate": 0.75
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 3,
+            "success_rate": 0.6666666666666666
+          },
+          "route": {
+            "episodes": 5,
+            "success_rate": 0.8
+          }
+        },
+        "reasons": {
+          "arrived": 6,
+          "robot_unavailable": 1,
+          "timeout": 1
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.0,
+        "mean_return": -9.341575990573478,
+        "by_class": {
+          "heavy/mecanum": {
+            "episodes": 8,
+            "success_rate": 0.0
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 3,
+            "success_rate": 0.0
+          },
+          "route": {
+            "episodes": 5,
+            "success_rate": 0.0
+          }
+        },
+        "reasons": {
+          "timeout": 8
+        }
+      }
+    },
+    "2712": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 0.625,
+        "mean_return": 23.329600264912006,
+        "by_class": {
+          "heavy/swerve": {
+            "episodes": 8,
+            "success_rate": 0.625
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "route": {
+            "episodes": 7,
+            "success_rate": 0.7142857142857143
+          }
+        },
+        "reasons": {
+          "arrived": 5,
+          "blocked": 1,
+          "timeout": 2
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 0.625,
+        "mean_return": 23.55907285625898,
+        "by_class": {
+          "heavy/swerve": {
+            "episodes": 8,
+            "success_rate": 0.625
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "route": {
+            "episodes": 7,
+            "success_rate": 0.7142857142857143
+          }
+        },
+        "reasons": {
+          "arrived": 5,
+          "blocked": 1,
+          "timeout": 2
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.0,
+        "mean_return": -8.903295673442994,
+        "by_class": {
+          "heavy/swerve": {
+            "episodes": 8,
+            "success_rate": 0.0
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "route": {
+            "episodes": 7,
+            "success_rate": 0.0
+          }
+        },
+        "reasons": {
+          "blocked": 2,
+          "timeout": 6
+        }
+      }
+    },
+    "2713": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 0.75,
+        "mean_return": 19.340531061085702,
+        "by_class": {
+          "heavy/omni": {
+            "episodes": 8,
+            "success_rate": 0.75
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 3,
+            "success_rate": 1.0
+          },
+          "route": {
+            "episodes": 5,
+            "success_rate": 0.6
+          }
+        },
+        "reasons": {
+          "arrived": 6,
+          "blocked": 2
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 0.75,
+        "mean_return": 18.895436446310182,
+        "by_class": {
+          "heavy/omni": {
+            "episodes": 8,
+            "success_rate": 0.75
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 3,
+            "success_rate": 1.0
+          },
+          "route": {
+            "episodes": 5,
+            "success_rate": 0.6
+          }
+        },
+        "reasons": {
+          "arrived": 6,
+          "blocked": 2
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.0,
+        "mean_return": -8.364898984027075,
+        "by_class": {
+          "heavy/omni": {
+            "episodes": 8,
+            "success_rate": 0.0
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 3,
+            "success_rate": 0.0
+          },
+          "route": {
+            "episodes": 5,
+            "success_rate": 0.0
+          }
+        },
+        "reasons": {
+          "timeout": 8
+        }
+      }
+    },
+    "2771": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 0.75,
+        "mean_return": 20.36151982956881,
+        "by_class": {
+          "sentry/omni": {
+            "episodes": 8,
+            "success_rate": 0.75
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "route": {
+            "episodes": 7,
+            "success_rate": 0.7142857142857143
+          }
+        },
+        "reasons": {
+          "arrived": 6,
+          "blocked": 1,
+          "timeout": 1
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 0.75,
+        "mean_return": 20.877763994810717,
+        "by_class": {
+          "sentry/omni": {
+            "episodes": 8,
+            "success_rate": 0.75
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "route": {
+            "episodes": 7,
+            "success_rate": 0.7142857142857143
+          }
+        },
+        "reasons": {
+          "arrived": 6,
+          "blocked": 1,
+          "timeout": 1
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.0,
+        "mean_return": -9.87514942878022,
+        "by_class": {
+          "sentry/omni": {
+            "episodes": 8,
+            "success_rate": 0.0
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "route": {
+            "episodes": 7,
+            "success_rate": 0.0
+          }
+        },
+        "reasons": {
+          "blocked": 1,
+          "timeout": 7
+        }
+      }
+    },
+    "2772": {
+      "policy": {
+        "episodes": 8,
+        "success_rate": 0.875,
+        "mean_return": 26.33501961665824,
+        "by_class": {
+          "sentry/wheel_legged": {
+            "episodes": 8,
+            "success_rate": 0.875
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "route": {
+            "episodes": 7,
+            "success_rate": 1.0
+          }
+        },
+        "reasons": {
+          "arrived": 7,
+          "blocked": 1
+        }
+      },
+      "expert": {
+        "episodes": 8,
+        "success_rate": 0.875,
+        "mean_return": 23.721463195003246,
+        "by_class": {
+          "sentry/wheel_legged": {
+            "episodes": 8,
+            "success_rate": 0.875
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 1,
+            "success_rate": 1.0
+          },
+          "route": {
+            "episodes": 7,
+            "success_rate": 0.8571428571428571
+          }
+        },
+        "reasons": {
+          "arrived": 7,
+          "blocked": 1
+        }
+      },
+      "random": {
+        "episodes": 8,
+        "success_rate": 0.0,
+        "mean_return": -15.104923669243524,
+        "by_class": {
+          "sentry/wheel_legged": {
+            "episodes": 8,
+            "success_rate": 0.0
+          }
+        },
+        "by_variant": {
+          "retreat": {
+            "episodes": 1,
+            "success_rate": 0.0
+          },
+          "route": {
+            "episodes": 7,
+            "success_rate": 0.0
+          }
+        },
+        "reasons": {
+          "timeout": 8
+        }
+      }
+    }
+  },
+  "wall_seconds": 893.3056916249916,
+  "mean_success_rate": {
+    "policy": 0.7083333333333334,
+    "expert": 0.7083333333333334,
+    "random": 0.0
+  }
+}

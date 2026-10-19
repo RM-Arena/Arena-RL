@@ -5,6 +5,13 @@ from pathlib import Path
 from .bridge import configure,provenance
 
 
+def worker_count(value):
+    if value=='auto':
+        import os
+        return max(1,(os.cpu_count() or 4)-2)
+    return int(value)
+
+
 def main(argv=None):
     p=argparse.ArgumentParser(prog='arena-rl');p.add_argument('--arena-root')
     sub=p.add_subparsers(dest='command',required=True)
@@ -45,6 +52,37 @@ def main(argv=None):
     llm.add_argument('--no-verify',action='store_false',dest='verify',default=True)
     demo=sub.add_parser('mission');demo.add_argument('--policies',required=True);demo.add_argument('--seed',type=int,default=4000000)
     demo.add_argument('--output',required=True)
+    ground=sub.add_parser('train-ground',help='Train a universal policy shared by every 2027 ground robot')
+    ground.add_argument('--family',choices=['navigation','combat','defense','support'],required=True);ground.add_argument('--steps',type=int,default=262144)
+    ground.add_argument('--workers',type=worker_count,default=8,help='rollout processes, or auto (CPU cores - 2)');ground.add_argument('--seed',type=int,default=501);ground.add_argument('--output',required=True)
+    ground.add_argument('--models',type=int,nargs='+');ground.add_argument('--device',default='auto',help='auto (CUDA if present, else CPU), cpu, mps, cuda or cuda:N')
+    ground.add_argument('--n-steps',type=int,default=256,dest='n_steps');ground.add_argument('--expert-episodes',type=int,default=240,dest='expert_episodes')
+    ground.add_argument('--bc-epochs',type=int,default=40,dest='bc_epochs');ground.add_argument('--learning-rate',type=float,default=1e-4,dest='learning_rate')
+    ground.add_argument('--resume');ground.add_argument('--initialize-from',dest='initialize_from');ground.add_argument('--threads',type=int)
+    ground.add_argument('--demonstrations-from',dest='demonstrations_from',help='reuse demonstrations.npz from an earlier run directory')
+    gev=sub.add_parser('evaluate-ground',help='Per-model evaluation of a universal ground policy against expert/random baselines')
+    gev.add_argument('--checkpoint');gev.add_argument('--family',choices=['navigation','combat','defense','support'])
+    gev.add_argument('--models',type=int,nargs='+');gev.add_argument('--episodes-per-model',type=int,default=12,dest='episodes_per_model')
+    gev.add_argument('--workers',type=worker_count,default=8);gev.add_argument('--seed',type=int,default=7100000);gev.add_argument('--output');gev.add_argument('--replays')
+    gev.add_argument('--baselines',nargs='*',default=['expert','random'],choices=['expert','random','idle'])
+    team=sub.add_parser('team-match',help='Full 2027 matches: strategic commander (LLM or doctrine) + RL execution for every red robot')
+    team.add_argument('--policies',help='Directory of universal ground policies (navigation/combat/defense/support)');team.add_argument('--output',required=True)
+    team.add_argument('--matches',type=int,default=2);team.add_argument('--seed',type=int,default=9100000)
+    team.add_argument('--commander',choices=['llm','doctrine'],default='llm');team.add_argument('--model');team.add_argument('--base-url',dest='base_url')
+    team.add_argument('--api-key-env',dest='api_key_env',default='DEEPSEEK_API_KEY');team.add_argument('--timeout',type=float,default=12.)
+    team.add_argument('--plan-interval',type=float,default=6.,dest='plan_interval');team.add_argument('--max-age',type=float,default=8.,dest='max_age')
+    team.add_argument('--max-calls',type=int,default=100,dest='max_calls');team.add_argument('--speed',type=float,default=1.,help='simulated/real time; 0 runs unpaced')
+    team.add_argument('--low-level',choices=['policy','expert'],default='policy',dest='low_level');team.add_argument('--duration',type=int,default=420)
+    team.add_argument('--no-verify',action='store_false',dest='verify',default=True)
+    st=sub.add_parser('serve-team',help='JSONL service: an external LLM client commands the whole red team')
+    st.add_argument('--policies');st.add_argument('--low-level',choices=['policy','expert'],default='policy',dest='low_level')
+    st.add_argument('--seed',type=int,default=9200000);st.add_argument('--realtime',action='store_true');st.add_argument('--speed',type=float,default=1.)
+    st.add_argument('--duration',type=int,default=420);st.add_argument('--record',action='store_true')
+    air=sub.add_parser('train-aerial',help='Learn dive timing for aerial robots ramming outpost armor')
+    air.add_argument('--steps',type=int,default=204800);air.add_argument('--envs',type=int,default=8);air.add_argument('--seed',type=int,default=811)
+    air.add_argument('--output',required=True);air.add_argument('--device',default='auto');air.add_argument('--expert-episodes',type=int,default=96,dest='expert_episodes')
+    aev=sub.add_parser('evaluate-aerial');aev.add_argument('--checkpoint');aev.add_argument('--episodes',type=int,default=24)
+    aev.add_argument('--seed',type=int,default=7300000);aev.add_argument('--output')
     args=vars(p.parse_args(argv));command=args.pop('command')
     try:
         if command=='doctor':
@@ -76,6 +114,25 @@ def main(argv=None):
         elif command=='mission':
             from .tactical_runtime import run_mission
             return 0 if run_mission(**args)['success'] else 1
+        elif command=='train-ground':
+            from .ground_learning import train_ground
+            train_ground(**args)
+        elif command=='evaluate-ground':
+            from .ground_learning import evaluate_ground
+            evaluate_ground(**args)
+        elif command=='team-match':
+            from .team_matches import run_team_matches
+            report=run_team_matches(**args)
+            return 0 if all(r['reason'] for r in report['matches']) else 1
+        elif command=='serve-team':
+            from .team_matches import serve_team
+            serve_team(**args)
+        elif command=='train-aerial':
+            from .aerial_learning import train_aerial
+            train_aerial(**args)
+        elif command=='evaluate-aerial':
+            from .aerial_learning import evaluate_aerial
+            evaluate_aerial(**args)
         elif command=='suite':
             from .suite import run_suite
             run_suite(**args)

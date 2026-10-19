@@ -81,7 +81,7 @@ def test_tool_surface_has_no_actuator_or_episode_operations():
         f=t['function'];p=f['parameters']
         assert p['additionalProperties'] is False and set(p['required'])==set(p['properties'])
         assert not set(p['properties']) & {'slot','team','move','fire','ammo','hp','id','basis_tick','reset'}
-    assert len(tools)==13
+    assert len(tools)==14
     with pytest.raises(ValueError):strict_json('{"x":1,"x":2}')
 
 

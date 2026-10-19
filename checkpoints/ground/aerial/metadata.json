@@ -1,0 +1,90 @@
+{
+  "format": "arena-aerial-policy-v1",
+  "schema": "arena-aerial-v1",
+  "maneuvers": [
+    "hold",
+    "dive_radial",
+    "dive_plate",
+    "back_off",
+    "orbit_plus",
+    "orbit_minus",
+    "dock"
+  ],
+  "observation_dim": 48,
+  "models": [
+    2761,
+    2762,
+    2763
+  ],
+  "seed": 811,
+  "envs": 6,
+  "device": "cpu",
+  "actual_steps": 153600,
+  "ppo_updates": 600,
+  "learning_rate": 0.0001,
+  "weights_before": "7998fd92be0a16e7c90b931a42ddacb6193c41666d26383420cd407e064445dd",
+  "weights_before_ppo": "26b218866080f5e4bff3016d35cdeacdca75a1a29660426bab77109c2cca98de",
+  "weights_after": "d99cc673f35f5fcf1f3fd3a479c870a1b3decc210094864029a06ffbc2e18119",
+  "demonstrations": {
+    "episodes": null,
+    "reused_dataset": true,
+    "attempted": 0,
+    "samples": 27573,
+    "epochs": 40,
+    "initial_loss": 0.7749355053582173,
+    "final_loss": 0.06462221301510307,
+    "per_head_accuracy": [
+      0.974
+    ],
+    "full_action_accuracy": 0.973996300728974,
+    "dataset_sha256": "ef84dced81bcd3108c5b266d6b38577fbeafb6d45843bcc4a47e76c9dcdafbaf"
+  },
+  "arena": {
+    "root": "/Users/sn/draft/RMUC-Arena",
+    "repository": "https://github.com/RM-Arena/Arena-1",
+    "commit": "bbaa885b774e86582e8e537e5e01197f1c2bb1ea",
+    "dirty": true,
+    "files": {
+      "config/rules.json": "e06b299c174e00b507cc7a84af8871f31969cc39fedfa47aa11dc813592c2252",
+      "config/battle_settings.json": "354046c0eb520c44fd3714c40e7b6ad79f481391a15693c9be3247ea0dd37b5d",
+      "rmuc_arena/env.py": "15204442518666b19b2ec0d76390062327c5afd94cb00c2c83d4fdfc5f1c088e",
+      "rmuc_arena/vector_env.py": "6dd7697abb055af351f8e644bf22efe220c5dea42e5af2faeaa98fdae0a6b169",
+      "rmuc_arena/engine.py": "588075eff94c418272182dc8876dad43f5d589bb08ad608f3f643c2822acb002",
+      "rmuc_arena/action_protocol.py": "5ae00b9231340c01e3e476ce2e61b626bba0a9697873d78af9e983926602db6e",
+      "rmuc_arena/communication.py": "aaa96f9fd1ff60a2237fa3efad9663f7c75cde6fa0fec88b5f54bc318f9df46f",
+      "rmuc_arena/replays.py": "69a5bdac6a9d520356395818d78a4ebb148fc15c1f24daa8c694964983d06ebc",
+      "rmuc_arena/sdk.py": "6c7e3d69c4bcedcd98aa20bcdc3a1e19c9cd3e1f8215f9c3125cd9b3151daf3c",
+      "simulation/src/assembly_2027_regression_tests.rs": "f0b54c5e48baefca3380c10c1f777620947227a17ae6341260d5c2a15c5c7fe3",
+      "simulation/src/combat_2027_regression_tests.rs": "21985e7feaa7051b25454dfef7c62cee8949fef13f224d7ac33b7e5c176249a5",
+      "simulation/src/damage_tests.rs": "9460f909161cdc48e6b2fbbcf8688e1d4d2a6207470ac192e5a78157febf5dfa",
+      "simulation/src/deck_tests.rs": "47257e9b1b6e1a7bfc59d1ba1fddc2c18184d17337f669a6e125da8e9dfb35cd",
+      "simulation/src/field_2027_regression_tests.rs": "92b24a8cfce532e706888b7f8960df06d61e15292128862f0fcf5f0b7be7feb8",
+      "simulation/src/lib.rs": "1360fbddd719cc805265ab945bc83809c4f6ebcd5ff0dd2ef3dd57d4b6dac8f3",
+      "simulation/src/main.rs": "9f535f2d6fd15f094af1ec920026218bf4d7eca5629e8b5997d3a20fc47d9cd7",
+      "simulation/src/mechanism_tests.rs": "0e2031327f0d46e3cd603f3b7d18bd8e978e83640d951b1227ff272899b2942b",
+      "simulation/src/model_tests.rs": "b550ed330127bf5320ac1a405342802562589264f0e7f5a126e9919f0d5f3425",
+      "simulation/src/penalties.rs": "fe9d3235b3fb6cffa2326be03f334dc249e8982a348e738a4d4124f4acc5547f",
+      "simulation/src/physics.rs": "e4b05cb3e0af16dca7dc9287fc01af86f7d33ad4cd71f0f189a7d2201ac66d7c",
+      "simulation/src/pickup.rs": "c0c88a1981b5c17a2ac29fbb4102fe8865a47c7b40bb94dfff7c81390385aa29",
+      "simulation/src/realism_tests.rs": "6ba8b88149a7368eb9a795c12ae434fd5454aed2babb6733aec6f4285897fd5a",
+      "simulation/src/rule_audit_tests.rs": "129a42ee983c3a3a3f88d8352da8642f2eec5e3463f7d1cd258037c528a39dbe",
+      "simulation/src/rulebook.rs": "59df61ac77b4fecf0063facd8d751723392290d19eef6339ba46091b47cd9c9f",
+      "simulation/src/season2027.rs": "f85ae8529822b087095e2d3b6207b1a79e7cf3376665f6838ca526ce665a8e1b",
+      "simulation/src/season2027_tests.rs": "5b9addbbfcda0aafde578954b6976197fe7fb396d1d3fc24b9df85791185e07d",
+      "simulation/src/structures.rs": "c335e7b20fcc780f10ca5572b66f83b8086686d75ab3af69aa237cef22f29df8",
+      "simulation/src/tests.rs": "8939953f3c061d776d9361808125c244af8b79d22366e1e5e108ae9e72f1bb64",
+      "simulation/src/training_scenario.rs": "7e2af1a3783e33f8b4a186bfd52930f90763c5c1c7047851168c86c4d576801b",
+      "simulation/src/vision.rs": "ddbdca6cc7c6e77b2e9cbf96e7a6b758bca91b002892e64edfbc46cfa5bc881a",
+      "simulation/src/vision_tests.rs": "7414352c963496f740b1ec07a812d088e5b3fd2cdcb1e3e566780b25a248114f"
+    },
+    "engine_hash": "26730133541904118e36858b2c31e1d42b86ec00a6d65251e7bae9ae018e1045",
+    "rules_hash": "e06b299c174e00b507cc7a84af8871f31969cc39fedfa47aa11dc813592c2252",
+    "binary_sha256": "5f52b6cf9f492addee6219d6f93aa51cfec22de978a6243eb14c719481b0364f"
+  },
+  "wall_seconds": 2193.7697129999287,
+  "policy_sha256": "810c6c84b0113568cba2673bf9d14b0065bc7cc1e38fbbdf989341798dbdc116",
+  "versions": {
+    "torch": "2.14.1",
+    "numpy": "2.5.4"
+  }
+}

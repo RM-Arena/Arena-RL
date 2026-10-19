@@ -36,6 +36,8 @@ class TacticalExecutor:
         self.recovery={};self.recovery_count=0;self.route_state={};self.model_id=3
         self.flight_authorized=set();self.extra={};self.skill_state={}
         self.last_position=None;self.last_motion=0.;self.initial_distance=None;self.navigation_arena=None
+        # Universal ground policies set a public RobotProfile; legacy 305/W3 banks keep None.
+        self.profile=None
 
     def _end(self,status,reason):
         if self.status=='running':
@@ -75,7 +77,10 @@ class TacticalExecutor:
             target_team,slot=target.split('-')
             legal=roster.get(target_team,[]) if isinstance(roster,dict) else roster
             if target_team==team or int(slot) not in legal:raise ValueError('Invalid defense priority target')
-        if command.skill=='recover' and robot.get('model_slot')!=305:raise ValueError('Recovery requires the serial-leg 305 model')
+        if command.skill=='recover' and not (robot.get('model_slot')==305 or self.profile is not None and self.profile.self_righting):raise ValueError('Recovery requires a serial-leg self-righting chassis')
+        if command.skill=='install_launcher':
+            from .team_skills import validate_install
+            validate_install(self,command,observation)
         if command.skill in ('resupply','escort','patrol','fly_slope'):
             from .extended_skills import validate
             validate(self,command,observation,arena)
@@ -103,7 +108,7 @@ class TacticalExecutor:
         self.model_id=own(observation,self.slot).get('model_slot',3)
         if self.navigation_arena is None and self.arena is not None:
             from .navigation import navigation_arena
-            self.navigation_arena=navigation_arena(self.arena,self.model_id)
+            self.navigation_arena=navigation_arena(self.arena,305 if self.legged_planner else self.model_id,avoid_bumps=self.profile is not None and not self.legged_planner)
         if self.arena is None:raise ValueError('Arena geometry is required on first observation')
         robot=own(observation,self.slot);position=xy(robot);now=self.time
         visible={e['id']:e for e in visible_enemies(observation,self.slot)}
@@ -121,26 +126,31 @@ class TacticalExecutor:
             observe_flight(self,observation)
         airborne_serial_flight=self.model_id==305 and c.skill=='fly_slope' and self.skill_state.get('launched') and not robot['grounded']
         if not robot['alive'] or not robot['powered']:self._end('failed','robot_unavailable')
-        if self.status=='running' and self.model_id==305 and (robot['upright']<.3 and not airborne_serial_flight or robot.get('self_righting',False) or self.recovery or c.skill=='recover'):
+        if self.status=='running' and self.self_righting and (robot['upright']<.3 and not airborne_serial_flight or robot.get('self_righting',False) or self.recovery or c.skill=='recover'):
             from .mobility_skills import recovery_plan
             if recovery_plan(self,observation):return self.plan
             if self.status!='running':return self.plan
         if robot['upright']<.3 and not airborne_serial_flight:self._end('failed','robot_unavailable')
-        elif c.skill not in ('resupply','retreat','recover') and robot['hp']/max(1,robot['max_hp'])<c.low_hp_fraction:self._end('failed','low_hp')
+        elif c.skill not in ('resupply','retreat','recover','install_launcher') and robot['hp']/max(1,robot['max_hp'])<c.low_hp_fraction:self._end('failed','low_hp')
         if c.skill=='retreat':
             from .mobility_skills import retreat_plan
             return retreat_plan(self,observation)
         if c.skill=='recover':return self.plan
+        if c.skill=='install_launcher':
+            from .team_skills import install_plan
+            return install_plan(self,observation)
         if c.skill in ('resupply','escort','patrol','fly_slope'):
             from .extended_skills import update
             return update(self,observation,visible)
         elapsed=now-self.started
-        card=next((z for z in self.arena.get('zones',[]) if c.skill=='defend_region' and z['kind']=='central' and np.linalg.norm(np.asarray(c.center)-[z['x'],z['y']])<.1),None)
+        card=next((z for z in self.arena.get('zones',[]) if c.skill=='defend_region' and z['kind'] in self.card_kinds and np.linalg.norm(np.asarray(c.center)-[z['x'],z['y']])<.1),None)
         arrival_radius=.15 if card else c.radius_m
         if card:
             contact=f'{observation["team"]}-{self.slot}' in observation['zones'][card['id']]['occupants']
             self.extra.update(control_card=card['id'],control_contact=contact)
             self.skill_state['contact_seen']=self.skill_state.get('contact_seen',False) or contact
+            if card['kind']=='fortress' and card.get('owner')!=observation['team'] and observation['bases'][card['owner']].get('armor_open'):
+                self._end('succeeded','base_armor_opened')
         if elapsed>=c.timeout_s:
             defended=c.skill=='defend_region' and c.damage_goal is None
             contested=defended and any(e['alive'] and np.linalg.norm(xy(e)-self.anchor)<=c.region_radius_m for e in visible.values())
@@ -195,7 +205,7 @@ class TacticalExecutor:
                 intercept=np.array([target.get('vx',0),target.get('vy',0)])*min(1.,separation/4.)
                 target_xy=target_xy+intercept
             goal=target_xy+direction*c.preferred_range_m
-            if self.model_id==305 and c.skill=='attack_structure':
+            if (self.model_id==305 or self.profile is not None) and c.skill=='attack_structure':
                 from .navigation import firing_point
                 safe=firing_point(robot,target,c.preferred_range_m,self.navigation_arena)
                 if safe is not None:goal=np.asarray(safe)
@@ -207,16 +217,17 @@ class TacticalExecutor:
         elif c.skill!='navigate':phase='hold' if c.skill=='defend_region' else 'search'
         if card:goal=np.asarray(self.hold_point);phase='hold' if np.linalg.norm(goal-position)<=arrival_radius else 'approach'
         if c.skill in ('attack_structure','engage_target','pursue_target') and robot['ammo']==0:self._end('failed','out_of_ammo')
+        if c.skill in ('attack_structure','engage_target','pursue_target') and robot['role']=='heavy' and robot.get('launcher') not in ('fitted','installed'):self._end('failed','launcher_not_installed')
         goal=np.clip(goal,[robot['radius'],robot['radius']],[self.arena['width']-robot['radius'],self.arena['height']-robot['radius']])
         distance=float(np.linalg.norm(goal-position))
         if c.skill=='navigate' and distance<=c.radius_m and math.hypot(robot['vx'],robot['vy'])<.8:self._end('succeeded','arrived')
         if c.skill in ('engage_target','pursue_target') and np.linalg.norm(position-self.anchor)>c.leash_radius_m:self._end('failed','leash_exceeded')
         if self.last_position is None or np.linalg.norm(position-self.last_position)>.25:
             self.last_position=position;self.last_motion=now
-        if phase in ('navigate','approach','search') and distance>c.radius_m and now-self.last_motion>(25 if self.model_id==305 else 6):
+        if phase in ('navigate','approach','search') and distance>c.radius_m and now-self.last_motion>(25 if self.legged_planner else 6 if self.profile is None else 10):
             self._end('failed','blocked')
-        planned=sdk.navigate(robot,goal,self.navigation_arena) if distance>arrival_radius else (0.,0.)
-        if self.model_id==305 and distance>arrival_radius:
+        planned=sdk.navigate(robot,goal,self.navigation_arena) if distance>arrival_radius and self.profile is None else (0.,0.)
+        if (self.legged_planner or self.profile is not None) and distance>arrival_radius:
             from .navigation import plan_motion
             motion,held=plan_motion(self,robot,goal,now)
             planned=motion
@@ -232,8 +243,29 @@ class TacticalExecutor:
         return self.plan
 
     @property
+    def legged_planner(self):
+        """Two-wheel balancing chassis: turn before translating and use axle-aware routes."""
+        return self.model_id==305 if self.profile is None else self.profile.legged
+
+    @property
+    def self_righting(self):
+        return self.model_id==305 if self.profile is None else self.profile.self_righting
+
+    @property
+    def card_kinds(self):
+        # Universal executors also hold fortress and high-point cards through RFID contact.
+        return ('central',) if self.profile is None else ('central','fortress','high_point')
+
+    @property
     def execution_family(self):
         if self.command is None:return 'navigation'
+        if self.profile is not None:
+            if self.plan and self.plan['phase']=='recover':return 'recover'
+            if self.command.skill in ('retreat','install_launcher'):return 'navigation'
+            family=self.command.policy_family
+            if family not in ('navigation',) and self.plan and self.plan['distance']>1.2 and self.plan['phase'] in ('navigate','approach','search','hold','escort_follow','patrol_move','supply_approach'):
+                return 'navigation'
+            return family
         if self.model_id==305 and self.route_state.get('escape_until',0)>self.time:return 'mobility'
         if self.model_id==305 and self.plan and (self.plan['phase']=='recover' or self.command.skill in ('retreat','resupply') and self.plan['distance']>1.2):return 'mobility'
         family=self.command.policy_family

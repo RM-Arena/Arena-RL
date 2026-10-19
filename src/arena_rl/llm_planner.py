@@ -60,6 +60,7 @@ FIELDS={
  'escort':['target_id','point','follow_distance_m','required_coverage','escort_duration_s','leash_radius_m','engage_on_contact','timeout_s'],
  'patrol':['waypoints','patrol_loops','dwell_s','engage_on_contact','timeout_s'],
  'fly_slope':['lane_team','flight_direction','landing_hold_s','timeout_s'],
+ 'install_launcher':['timeout_s'],
 }
 DESCRIPTIONS={
  'retreat':'Withdraw to a safe field point or own supply if point is null; allowed at low HP, using learned mobility.',
@@ -73,6 +74,7 @@ DESCRIPTIONS={
  'escort':'Follow a deployed ally; optional ally destination or escort duration. Never controls that ally.',
  'patrol':'Visit all ordered waypoints, dwell, complete all loops; can optionally shoot visible threats.',
  'fly_slope':'Cross the real 2026 gap and settle. Reverse needs an earned forward crossing this episode.',
+ 'install_launcher':'Heavy only: dock at the own workbench, fit the unlocked modular 42 mm launcher and fire its confirmation shot.',
 }
 
 

@@ -4,7 +4,7 @@ import numpy as np
 
 
 def road_transfer(ex,robot,goal):
-    if ex.model_id!=305:return None
+    if not ex.legged_planner:return None
     p=np.array([robot['x'],robot['y']]);state=ex.route_state
     transfer=state.get('road_transfer')
     if transfer is None:

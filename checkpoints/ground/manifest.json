@@ -1,0 +1,124 @@
+{
+  "format": "arena-ground-bank-v1",
+  "families": {
+    "aerial": {
+      "policy_sha256": "810c6c84b0113568cba2673bf9d14b0065bc7cc1e38fbbdf989341798dbdc116",
+      "actual_steps": 153600,
+      "schema": "arena-aerial-v1",
+      "files": {
+        "policy.zip": "810c6c84b0113568cba2673bf9d14b0065bc7cc1e38fbbdf989341798dbdc116",
+        "metadata.json": "f239f0a779c2cf579ea87ff4c8ef56e9e8540383bf45d874d47ba0d662fb1147",
+        "metrics.jsonl": "d9207e8c946741f7a7a383be9544f82188ea9f0f7170864945182e6a87752aec",
+        "evaluation.json": "0c142007c7b28290a430a305486bff62a9ecb27992453ff9033d88d0adeb4605",
+        "demonstrations.npz": "ef84dced81bcd3108c5b266d6b38577fbeafb6d45843bcc4a47e76c9dcdafbaf"
+      },
+      "evaluation": {
+        "policy": 2.0277777777777777,
+        "expert": 1.3333333333333333,
+        "random": 0.7777777777777778
+      }
+    },
+    "combat": {
+      "policy_sha256": "0f37dc3d7412b29b1731b6b1f673f68f7d19057f6491badee3f0e9e4dbc67247",
+      "actual_steps": 307200,
+      "schema": "arena-ground-v1",
+      "files": {
+        "policy.zip": "0f37dc3d7412b29b1731b6b1f673f68f7d19057f6491badee3f0e9e4dbc67247",
+        "metadata.json": "fa0b6144cce517ed306394e3a82c27165936bc6f34b1cd5b89c1aff34f37f35f",
+        "metrics.jsonl": "cbe97f648eda79ade6a54a5b3e0f7f2db6725a7df638abb0edc854170b60a406",
+        "evaluation.json": "9542651720e1a6f6adf06130ac41e5de085613d5ea2a260b9ceebeb2b3e9772b",
+        "demonstrations.npz": "617f5535b1ab03be98640c9ac75d62eccde11c0b93fcd5b7143cea1b95590a73"
+      },
+      "evaluation": {
+        "policy": 0.7083333333333334,
+        "expert": 0.8020833333333334,
+        "random": 0.3125
+      }
+    },
+    "combat-heavy": {
+      "policy_sha256": "07662e7663a6738263c4b46eb06f26ee49e2f60f9f1f376e8ba4dea9680f247a",
+      "actual_steps": 122880,
+      "schema": "arena-ground-v1",
+      "files": {
+        "policy.zip": "07662e7663a6738263c4b46eb06f26ee49e2f60f9f1f376e8ba4dea9680f247a",
+        "metadata.json": "ed41160010f9c47fa652ce84ca222a1ca7343456160c4f4a38e2fa79ac72ee83",
+        "metrics.jsonl": "3900ab1cd827feb8cd28cfefd089181604e83576d33013f054e15c71749d8192",
+        "evaluation.json": "8d04816685e75cce533eee16a3f4babafd8afb1f88aa668d240ff625de3f67b8",
+        "demonstrations.npz": "d087f9c19481d4f4590ad55544d8ea477aefd4b4a3461bb7323b5a562f170470"
+      },
+      "evaluation": {
+        "policy": 0.25,
+        "expert": 0.2916666666666667,
+        "random": 0.20833333333333334
+      }
+    },
+    "defense": {
+      "policy_sha256": "479cee2f0194302876446011074652f4fc150fc87262eb16507b0fe24b3f353e",
+      "actual_steps": 409600,
+      "schema": "arena-ground-v1",
+      "files": {
+        "policy.zip": "479cee2f0194302876446011074652f4fc150fc87262eb16507b0fe24b3f353e",
+        "metadata.json": "c69ba9fe1459c481f7444596856c8e76dee66397921683affd9b7d4d3e607387",
+        "metrics.jsonl": "d45b4f6f23a384b091b815d2974a28accd44b45ff563e7ae61c291161d8bfb16",
+        "evaluation.json": "e1477ca87cab602d199adcb20640ddc4725572d3f2e0f68929b5b5ac18767603",
+        "demonstrations.npz": "45f784a0f92e62d4cab8187ebd48d54a80fbe75ff9f864c77041c1b48f189563"
+      },
+      "evaluation": {
+        "policy": 0.59375,
+        "expert": 0.59375,
+        "random": 0.2604166666666667
+      }
+    },
+    "defense-heavy": {
+      "policy_sha256": "1f3254954304d5535aa9a4bee6ee4048e151e07528befe6ccaaeefd6f5275372",
+      "actual_steps": 40960,
+      "schema": "arena-ground-v1",
+      "files": {
+        "policy.zip": "1f3254954304d5535aa9a4bee6ee4048e151e07528befe6ccaaeefd6f5275372",
+        "metadata.json": "98425f58e3bd4c4342b4d457af92eb5e1c45946175931ee92d792ae2a8071aa7",
+        "metrics.jsonl": "553f0bd79dddd0ebe52717d83a9322648da27ae6b13b9815955ad462c58f8e7b",
+        "evaluation.json": "fb6dc7177992cd9be056c60ccdabe00a71168b1f28dc0d18e3a70a3a96dce18c",
+        "demonstrations.npz": "28b46842e5a0f890685c067fa2f0bb6ebf11a7b1be5dd3c8ab7a8c880dc40085"
+      },
+      "evaluation": {
+        "policy": 0.2916666666666667,
+        "expert": 0.25,
+        "random": 0.125
+      }
+    },
+    "navigation": {
+      "policy_sha256": "25fbfc7818ceeac425c943cb1a3355aad3f86029cf017546af736ce01bd36cd4",
+      "actual_steps": 1228800,
+      "schema": "arena-ground-v1",
+      "files": {
+        "policy.zip": "25fbfc7818ceeac425c943cb1a3355aad3f86029cf017546af736ce01bd36cd4",
+        "metadata.json": "438a491674ae8fd3fd5cdc919061885ddc7f48147f44f06d94570fd95e295a7b",
+        "metrics.jsonl": "7b349fc732018f8657b3b5afbedb67e90331331ec062421b66d251b111f4430d",
+        "evaluation.json": "5dc186d92f9feef99efecb289e70cf0554aa5b5fac4cb24d738a24020728a75a",
+        "demonstrations.npz": "1d7b12a8fef1412b01786b31eedc44c1aa1d6b23b6c66173d8af1141686ee265"
+      },
+      "evaluation": {
+        "policy": 0.7083333333333334,
+        "expert": 0.7083333333333334,
+        "random": 0.0
+      }
+    },
+    "support": {
+      "policy_sha256": "c6b2df18205ce6ee83066e570173eafa6e7f752d3fcc22c0d852fb9d49d530b3",
+      "actual_steps": 204800,
+      "schema": "arena-ground-v1",
+      "files": {
+        "policy.zip": "c6b2df18205ce6ee83066e570173eafa6e7f752d3fcc22c0d852fb9d49d530b3",
+        "metadata.json": "ce68be2d5d417ed7cd1f993730e59c5a48390ba06edd6b2fcba4032f51e1296c",
+        "metrics.jsonl": "927366289cb89dd6343ff0b3452188ef6f6b5112b7134916d0f0f56dab958e0a",
+        "evaluation.json": "d14768126640512abc1c1c9a785be4376df15d5d168923c6093ff218e9e8da2e",
+        "demonstrations.npz": "c5c6be1fc800b2a2c98732cf07d9ac88fb9ce6d301f241b58c5959c21a615528"
+      },
+      "evaluation": {
+        "policy": 0.9833333333333333,
+        "expert": 0.9916666666666667,
+        "random": 0.175
+      }
+    }
+  }
+}

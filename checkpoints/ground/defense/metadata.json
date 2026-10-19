@@ -1,0 +1,391 @@
+{
+  "format": "arena-ground-policy-v1",
+  "schema": "arena-ground-v1",
+  "family": "defense",
+  "features": [
+    "skill_navigate",
+    "skill_attack_structure",
+    "skill_engage_target",
+    "skill_pursue_target",
+    "skill_defend_region",
+    "skill_resupply",
+    "skill_escort",
+    "skill_patrol",
+    "skill_retreat",
+    "skill_install_launcher",
+    "phase_navigate",
+    "phase_approach",
+    "phase_engage",
+    "phase_search",
+    "phase_hold",
+    "phase_supply",
+    "phase_follow",
+    "phase_patrol",
+    "phase_retreat",
+    "phase_install",
+    "robot_role_infantry",
+    "robot_role_heavy",
+    "robot_role_sentry",
+    "robot_drive_wheel_legged",
+    "robot_drive_mecanum",
+    "robot_drive_omni",
+    "robot_drive_swerve",
+    "robot_holonomic",
+    "robot_caliber_42",
+    "robot_can_jump",
+    "robot_self_righting",
+    "robot_tunnel",
+    "robot_step_climb",
+    "robot_speed_reference",
+    "robot_mass",
+    "robot_radius",
+    "robot_clearance",
+    "robot_turret_rate",
+    "robot_legs",
+    "x",
+    "y",
+    "z",
+    "vx_body",
+    "vy_body",
+    "vz",
+    "yaw_rate",
+    "hp",
+    "ammo",
+    "has_ammo",
+    "heat",
+    "fire_ready",
+    "upright",
+    "grounded",
+    "leg",
+    "weak",
+    "launcher_ready",
+    "supercap",
+    "hint_x",
+    "hint_y",
+    "hint_fwd",
+    "hint_left",
+    "hint_norm",
+    "held_sin",
+    "held_cos",
+    "goal_fwd",
+    "goal_left",
+    "distance",
+    "arrival_radius",
+    "terrain_crossing",
+    "stalled",
+    "preferred_range",
+    "range_error",
+    "target_visible",
+    "target_age",
+    "target_fwd",
+    "target_left",
+    "target_vfwd",
+    "target_vleft",
+    "target_hp",
+    "target_heavy",
+    "target_infantry",
+    "target_sentry",
+    "target_structure",
+    "aim_error",
+    "pitch_error",
+    "region_fwd",
+    "region_left",
+    "region_radius",
+    "leash",
+    "card_task",
+    "card_contact",
+    "threats",
+    "nearest_fwd",
+    "nearest_left",
+    "nearest_distance",
+    "recent_damage",
+    "supply_contact",
+    "ammo_goal",
+    "ally_fwd",
+    "ally_left",
+    "coverage",
+    "patrol_progress",
+    "install_progress",
+    "terrain_f",
+    "terrain_fl",
+    "terrain_l",
+    "terrain_bl",
+    "terrain_b",
+    "terrain_br",
+    "terrain_r",
+    "terrain_fr"
+  ],
+  "action_nvec": [
+    5,
+    4,
+    3,
+    3,
+    2,
+    3,
+    2
+  ],
+  "action_hz": 10,
+  "season": "2027",
+  "models": [
+    3,
+    4,
+    7,
+    301,
+    302,
+    303,
+    304,
+    305,
+    2731,
+    2732,
+    2771,
+    2772
+  ],
+  "seed": 603,
+  "workers": 8,
+  "n_steps": 256,
+  "device": "cpu",
+  "policy_kwargs": {
+    "net_arch": {
+      "pi": [
+        256,
+        256
+      ],
+      "vf": [
+        256,
+        256
+      ]
+    }
+  },
+  "learning_rate": 0.0001,
+  "actual_steps": 409600,
+  "additional_steps": 409600,
+  "ppo_updates": 1200,
+  "weights_before": "a4b2cbe6f4a90f23b2a6431049b55cb5b484a69c96ea76e0146609fa4a6d057b",
+  "weights_before_ppo": "1fac9bfc2b03a6b8b0d9bfcfe7964151f0bd2db3feb8433598a8a30617a015af",
+  "weights_after": "4622a39269783121c4064bcb8954c5fbd5779297ac0b149dbac543a176b66d8b",
+  "ppo_weights_changed": true,
+  "wall_seconds": 2154.833067208063,
+  "final_window": {
+    "episodes": 400,
+    "success_rate": 0.57,
+    "mean_return": 14.546694235644576,
+    "by_class": {
+      "infantry/mecanum": {
+        "episodes": 119,
+        "success_rate": 0.4789915966386555
+      },
+      "infantry/omni": {
+        "episodes": 45,
+        "success_rate": 0.5555555555555556
+      },
+      "infantry/swerve": {
+        "episodes": 37,
+        "success_rate": 0.6486486486486487
+      },
+      "infantry/wheel_legged": {
+        "episodes": 124,
+        "success_rate": 0.6693548387096774
+      },
+      "sentry/omni": {
+        "episodes": 34,
+        "success_rate": 0.3235294117647059
+      },
+      "sentry/wheel_legged": {
+        "episodes": 41,
+        "success_rate": 0.6829268292682927
+      }
+    },
+    "by_variant": {
+      "base_defense": {
+        "episodes": 87,
+        "success_rate": 0.7586206896551724
+      },
+      "central_enemy": {
+        "episodes": 98,
+        "success_rate": 0.3673469387755102
+      },
+      "central_own": {
+        "episodes": 73,
+        "success_rate": 0.3150684931506849
+      },
+      "fortress_enemy": {
+        "episodes": 40,
+        "success_rate": 0.925
+      },
+      "fortress_own": {
+        "episodes": 69,
+        "success_rate": 0.6956521739130435
+      },
+      "outpost_guard": {
+        "episodes": 33,
+        "success_rate": 0.5454545454545454
+      }
+    },
+    "by_model": {
+      "2731": {
+        "episodes": 26,
+        "success_rate": 0.6538461538461539
+      },
+      "2732": {
+        "episodes": 23,
+        "success_rate": 0.6521739130434783
+      },
+      "2771": {
+        "episodes": 34,
+        "success_rate": 0.3235294117647059
+      },
+      "2772": {
+        "episodes": 41,
+        "success_rate": 0.6829268292682927
+      },
+      "3": {
+        "episodes": 36,
+        "success_rate": 0.6388888888888888
+      },
+      "301": {
+        "episodes": 39,
+        "success_rate": 0.5641025641025641
+      },
+      "302": {
+        "episodes": 37,
+        "success_rate": 0.6486486486486487
+      },
+      "303": {
+        "episodes": 45,
+        "success_rate": 0.5555555555555556
+      },
+      "304": {
+        "episodes": 28,
+        "success_rate": 0.5357142857142857
+      },
+      "305": {
+        "episodes": 34,
+        "success_rate": 0.8235294117647058
+      },
+      "4": {
+        "episodes": 23,
+        "success_rate": 0.21739130434782608
+      },
+      "7": {
+        "episodes": 34,
+        "success_rate": 0.4411764705882353
+      }
+    }
+  },
+  "arena": {
+    "root": "/Users/sn/draft/RMUC-Arena",
+    "repository": "https://github.com/RM-Arena/Arena-1",
+    "commit": "bbaa885b774e86582e8e537e5e01197f1c2bb1ea",
+    "dirty": true,
+    "files": {
+      "config/rules.json": "e06b299c174e00b507cc7a84af8871f31969cc39fedfa47aa11dc813592c2252",
+      "config/battle_settings.json": "354046c0eb520c44fd3714c40e7b6ad79f481391a15693c9be3247ea0dd37b5d",
+      "rmuc_arena/env.py": "15204442518666b19b2ec0d76390062327c5afd94cb00c2c83d4fdfc5f1c088e",
+      "rmuc_arena/vector_env.py": "6dd7697abb055af351f8e644bf22efe220c5dea42e5af2faeaa98fdae0a6b169",
+      "rmuc_arena/engine.py": "588075eff94c418272182dc8876dad43f5d589bb08ad608f3f643c2822acb002",
+      "rmuc_arena/action_protocol.py": "5ae00b9231340c01e3e476ce2e61b626bba0a9697873d78af9e983926602db6e",
+      "rmuc_arena/communication.py": "aaa96f9fd1ff60a2237fa3efad9663f7c75cde6fa0fec88b5f54bc318f9df46f",
+      "rmuc_arena/replays.py": "69a5bdac6a9d520356395818d78a4ebb148fc15c1f24daa8c694964983d06ebc",
+      "rmuc_arena/sdk.py": "6c7e3d69c4bcedcd98aa20bcdc3a1e19c9cd3e1f8215f9c3125cd9b3151daf3c",
+      "simulation/src/assembly_2027_regression_tests.rs": "f0b54c5e48baefca3380c10c1f777620947227a17ae6341260d5c2a15c5c7fe3",
+      "simulation/src/combat_2027_regression_tests.rs": "21985e7feaa7051b25454dfef7c62cee8949fef13f224d7ac33b7e5c176249a5",
+      "simulation/src/damage_tests.rs": "9460f909161cdc48e6b2fbbcf8688e1d4d2a6207470ac192e5a78157febf5dfa",
+      "simulation/src/deck_tests.rs": "47257e9b1b6e1a7bfc59d1ba1fddc2c18184d17337f669a6e125da8e9dfb35cd",
+      "simulation/src/field_2027_regression_tests.rs": "92b24a8cfce532e706888b7f8960df06d61e15292128862f0fcf5f0b7be7feb8",
+      "simulation/src/lib.rs": "1360fbddd719cc805265ab945bc83809c4f6ebcd5ff0dd2ef3dd57d4b6dac8f3",
+      "simulation/src/main.rs": "9f535f2d6fd15f094af1ec920026218bf4d7eca5629e8b5997d3a20fc47d9cd7",
+      "simulation/src/mechanism_tests.rs": "0e2031327f0d46e3cd603f3b7d18bd8e978e83640d951b1227ff272899b2942b",
+      "simulation/src/model_tests.rs": "b550ed330127bf5320ac1a405342802562589264f0e7f5a126e9919f0d5f3425",
+      "simulation/src/penalties.rs": "fe9d3235b3fb6cffa2326be03f334dc249e8982a348e738a4d4124f4acc5547f",
+      "simulation/src/physics.rs": "e4b05cb3e0af16dca7dc9287fc01af86f7d33ad4cd71f0f189a7d2201ac66d7c",
+      "simulation/src/pickup.rs": "c0c88a1981b5c17a2ac29fbb4102fe8865a47c7b40bb94dfff7c81390385aa29",
+      "simulation/src/realism_tests.rs": "6ba8b88149a7368eb9a795c12ae434fd5454aed2babb6733aec6f4285897fd5a",
+      "simulation/src/rule_audit_tests.rs": "129a42ee983c3a3a3f88d8352da8642f2eec5e3463f7d1cd258037c528a39dbe",
+      "simulation/src/rulebook.rs": "59df61ac77b4fecf0063facd8d751723392290d19eef6339ba46091b47cd9c9f",
+      "simulation/src/season2027.rs": "f85ae8529822b087095e2d3b6207b1a79e7cf3376665f6838ca526ce665a8e1b",
+      "simulation/src/season2027_tests.rs": "5b9addbbfcda0aafde578954b6976197fe7fb396d1d3fc24b9df85791185e07d",
+      "simulation/src/structures.rs": "c335e7b20fcc780f10ca5572b66f83b8086686d75ab3af69aa237cef22f29df8",
+      "simulation/src/tests.rs": "8939953f3c061d776d9361808125c244af8b79d22366e1e5e108ae9e72f1bb64",
+      "simulation/src/training_scenario.rs": "7e2af1a3783e33f8b4a186bfd52930f90763c5c1c7047851168c86c4d576801b",
+      "simulation/src/vision.rs": "ddbdca6cc7c6e77b2e9cbf96e7a6b758bca91b002892e64edfbc46cfa5bc881a",
+      "simulation/src/vision_tests.rs": "7414352c963496f740b1ec07a812d088e5b3fd2cdcb1e3e566780b25a248114f"
+    },
+    "engine_hash": "26730133541904118e36858b2c31e1d42b86ec00a6d65251e7bae9ae018e1045",
+    "rules_hash": "e06b299c174e00b507cc7a84af8871f31969cc39fedfa47aa11dc813592c2252",
+    "binary_sha256": "5f52b6cf9f492addee6219d6f93aa51cfec22de978a6243eb14c719481b0364f"
+  },
+  "aim_mode": "SDK ballistic assistance with learned residuals",
+  "controlled_robots": "one learner per simulator; others declared scripted",
+  "policy_sha256": "479cee2f0194302876446011074652f4fc150fc87262eb16507b0fe24b3f353e",
+  "training_source_sha256": {
+    "__init__.py": "1c98cce0a8d51c5a056e0ca7e9681974d44a11a3256eefa53073beb400335ff3",
+    "__main__.py": "28de248c91c00642578a541827361af9b0e5e049e4c61dd6ec1f9dc78580c24e",
+    "aerial.py": "0a66c8b32716a693eb28cf3b0c114f82a624cc0674324d33df22b948040b1bb2",
+    "aerial_learning.py": "cc8a465e7ff30e1420fcc2289771b5a9a36d7721791bb7e6beb45680fbef0f9b",
+    "bridge.py": "542e385b34f9503f8e842795cd711b12fb1ba5c114c37d6dbac3ec7a44315f57",
+    "cli.py": "7c7aab81ffa13eaccd1f1467ce4ca52c1e10dd1c4dc090a0a199f7f8be6dbad2",
+    "commands.py": "6a9750be656edc719eb8f98a438c9ad2be6d5bcb5ef1f44697e847d5e4ff0085",
+    "demonstrations.py": "8a15c22bbc909578b49c7a78220258bba5d7e688a18721f09133b46b19ca3e44",
+    "encoding.py": "e90fb06d38217126bb144c35d796ca78beb05fb18d2aef566fec43212c2fd765",
+    "envs.py": "43d8940acb4f359c3e54335717ace19722de6637cdf320602c366a7ad4a12c42",
+    "executor.py": "b4126a24c29e66d59ce00cefbb2f4b1789bd750fe348349e832732f05a7926c3",
+    "extended_curricula.py": "e93cd0da3d204b897e981348e5816d66d3f30be7d9b1dbc3299d878e19818765",
+    "extended_encoding.py": "28ee497303eb6116bde3a0764613205eb3ad8d223a91c769822cfe9062dc86ec",
+    "extended_skills.py": "dec5455d0c0947ce6007a1b0ec6d56cb4f738fcb92d5483841138209989c57ad",
+    "flight_encoding.py": "d6a3d875b2db1d717cdc28b8885c8131490ed21563f2cd2ced7a3dfd5c6f74fe",
+    "flight_guidance.py": "6569a3c364a8c3a557ef2438a5c24007169be30fc7d929b09accfc9d3c592b49",
+    "ground_curricula.py": "c3310d067ffb477204fd1b8cbe5e64e1efb2fd15c75f09a37b879a3e587bcaae",
+    "ground_encoding.py": "369d650ce282eebcca6f6163a78c9cc4423a8c64a530b9320b1bf6c5d79ff4e2",
+    "ground_envs.py": "1ab920943e46d9ea52ceb811e2f51cbab067c9f2e553484d76e519d1004e7e25",
+    "ground_learning.py": "0764b692e3c7e3cb14051ab96ae1d5da2f0dcb8d67620caf62c0464464db5225",
+    "hierarchy.py": "efc59aaf008fede9f65b79b31f707650500c73c2a6e24c2e389c54f425e83463",
+    "learning.py": "8310f0bb35d3a25f4549796a0d303cb7750f6bab5373fc632c0861a560b85a61",
+    "llm_matches.py": "9f806327f8fc6ead7aceb2dfa399f6e5553abeba992fa9b71cab24ae0ba8422d",
+    "llm_planner.py": "89db293df1c9aad5925cc4092b4bd9407da6194253bdd352a610fa5461c9658c",
+    "match_opponents.py": "eca465b08b60c5c7b9d6cc87196f5c0234c29ab89b97a79badc3811c9720d2f3",
+    "mobility_curricula.py": "d2762df838485c93ef84deebd05721d21623865991d22138a5971d659b7990a6",
+    "mobility_encoding.py": "0ef02e8c0898714aea990a996afc75d2277cb44c755d0ce9d8d2a7c0a32e1695",
+    "mobility_skills.py": "acdbce7ed53cc7ecd8aecd853a0642aa7f7396e829c7c5c6e5ae0c3b30709663",
+    "navigation.py": "d28db4cf500d15a83a0637873d1f0534faa181939c32da4b06a9360b75dfb2f4",
+    "navigation_grid.py": "dd7badeacaf7efd691f50194cc6b16e104fe9099ddcedc91c8721eb98a190661",
+    "objective_curricula.py": "00cfe03f418435c0ac2a6b14c6b92ee0a11e79c64f1ffe0ecd3b04606dabba92",
+    "parallel.py": "2c6923410240fbfd0c89d03214352633b433bb10d084e05494b3abb41bc256a5",
+    "refinement_curricula.py": "7f4613dfe09976a97e0d9034efc934da515ca1533f7ee1a0d04fb257d4302bf3",
+    "robots.py": "cdb081bd1f8f25d8f5f00f627bb911876cb843dc15da633f75af6b3960b3fd0b",
+    "suite.py": "7e9ac78a0f41df39d227ba51a5e7c4d9278585ba8ae6a914df291a01180a30fe",
+    "tactical_encoding.py": "6dffb03d2f5f13cf6525e7d5b6ff591154536b3c65d373b712443b35ee663b6d",
+    "tactical_envs.py": "c6d20228b544186c07444fd30db26536bd92abcf2a49f06e5b67e6d91d4a08f2",
+    "tactical_learning.py": "54f4658543f2cb4dc51182a3104d382d7e044254fc3b303c124fd4ad73710817",
+    "tactical_runtime.py": "623bbba5f16ef90c3122c4b5970f50e55e52ad7bf7970c23925994099b564916",
+    "tasks.py": "aa51de3458a94b08bee282e64fece0f98235c51bb9f91bf831004f81a08c03b6",
+    "team_commander.py": "63c0525350f95ea9a87282a6ecff7998d03c96d0e0cff383ff19140ca8c6747f",
+    "team_matches.py": "b83f41ea686922646144cc8a9c5bd62f26b843de6ee5d36ebe4ddbf65adeaa92",
+    "team_planner.py": "0acc1894c7acb08c0860a08bc8f384a5c7796d420600e953c0adff3b36739f7a",
+    "team_runtime.py": "fd11905b463830c2ecf20ee7b0536485e12a0b601fe61c25a451dfa93e5a97e1",
+    "team_skills.py": "cd9b3fa084a4d6e3af5de95b0fb65f6c9bb0076d154dd3fd17d7f64840f69fd6",
+    "terrain_routes.py": "888e84c9f2fab0787392443c69a5021e31a2bf8e998c92ab44af43ebe8b22182"
+  },
+  "versions": {
+    "torch": "2.14.1",
+    "numpy": "2.5.4"
+  },
+  "demonstrations": {
+    "method": "behavior cloning of successful chassis-aware expert episodes (reused dataset), then PPO",
+    "samples": 52616,
+    "source": "runs/ground-v1/defense-aborted",
+    "dataset_sha256": "45f784a0f92e62d4cab8187ebd48d54a80fbe75ff9f864c77041c1b48f189563",
+    "epochs": 30,
+    "initial_loss": 1.621832221642225,
+    "final_loss": 0.23615209091048628,
+    "per_head_accuracy": [
+      0.9656,
+      0.9855,
+      1.0,
+      1.0,
+      0.9862,
+      0.9944,
+      0.9739
+    ],
+    "full_action_accuracy": 0.9371293902995287
+  }
+}

@@ -4,8 +4,12 @@ import hashlib
 import json
 
 
-def navigation_arena(arena,model_id=3):
+def navigation_arena(arena,model_id=3,avoid_bumps=False):
     """Avoid the assembly plinth unless a future skill explicitly handles it.
+
+    avoid_bumps routes flat wheeled chassis along the bump-free half of each road:
+    their wheel contacts on the hump tiles are slow to simulate and gain nothing.
+    Balancing chassis keep their deliberate axle-square crossings.
 
     Arena's SDK permits the bevel in its generic graph. W3 can get its wheel
     trapped against its edge while turning. Routing around its public footprint
@@ -16,6 +20,11 @@ def navigation_arena(arena,model_id=3):
         if t.get('id')=='assembly_plinth':
             result['obstacles'].append({'id':'tactical_avoid_'+t['id'],'x':t['x'],'y':t['y'],
                 'w':t['w'],'h':t['h'],'height':1.,'bottom':0.,'rotation':0.,'kind':'barrier'})
+    if avoid_bumps:
+        for t in arena.get('terrain',[]):
+            if t.get('kind')=='bumps':
+                result['obstacles'].append({'id':'tactical_avoid_'+t['id'],'x':t['x'],'y':t['y'],
+                    'w':t['w'],'h':t['h'],'height':1.,'bottom':0.,'rotation':0.,'kind':'barrier'})
     if model_id==305:
         import math
         nodes=result['navigation']['nodes']
@@ -106,6 +115,15 @@ def firing_point(robot,target,distance,arena):
     return min(candidates,key=lambda p:(p[0]-robot['x'])**2+(p[1]-robot['y'])**2) if candidates else None
 
 
+def step_ahead(arena,position,direction,reach=.6,threshold=.08):
+    """True when a height jump (step, rim, kerb) lies within reach along direction."""
+    import numpy as np
+    from rmuc_arena import sdk
+    u=np.asarray(direction,dtype=float);u=u/max(1e-6,np.linalg.norm(u));p=np.asarray(position,dtype=float)
+    heights=[sdk.terrain_height(arena,*(p+u*d)) for d in np.arange(0.,reach+1e-6,.1)]
+    return any(abs(b-a)>threshold for a,b in zip(heights,heights[1:]))
+
+
 def plan_motion(ex,robot,goal,now):
     import math
     import numpy as np
@@ -154,7 +172,7 @@ def plan_motion(ex,robot,goal,now):
         return forward*sign,held
     route_goal=np.asarray(goal);route_arena=ex.navigation_arena
     deck=next((t for t in ex.arena['terrain'] if t.get('id')=='central_highland'),None)
-    if ex.model_id==305 and deck is not None:
+    if (ex.legged_planner or ex.profile is not None) and deck is not None:
         inside=sdk.point_in_polygon(*p,deck['polygon']);destination=sdk.point_in_polygon(*route_goal,deck['polygon'])
         if inside or destination:
             if not hasattr(ex,'interior_arena'):ex.interior_arena=navigation_arena(ex.arena,3)
@@ -182,9 +200,16 @@ def plan_motion(ex,robot,goal,now):
                 if not hasattr(ex,'interior_arena'):ex.interior_arena=navigation_arena(ex.arena,3)
                 route_arena=ex.interior_arena
     planned=sdk.navigate(robot,route_goal,route_arena)
-    if ex.model_id==305 and (state.get('grid_active') or np.linalg.norm(planned)<.001) and np.linalg.norm(route_goal-p)>.4:
+    if ex.profile is not None and not ex.legged_planner and np.linalg.norm(planned)>.001 and step_ahead(ex.arena,p,planned):
+        # The generic SDK graph treats band steps and rims as passable; flat wheels wedge there.
         from .navigation_grid import hint
-        planned=hint(robot,route_goal,route_arena);state['grid_active']=True
+        grid=hint(robot,route_goal,route_arena)
+        if np.linalg.norm(grid)>.001:planned=grid
+    if (ex.legged_planner or ex.profile is not None) and (state.get('grid_active') or np.linalg.norm(planned)<.001) and np.linalg.norm(route_goal-p)>.4:
+        from .navigation_grid import hint
+        planned=hint(robot,route_goal,route_arena);state['grid_active']=ex.legged_planner
+        if ex.profile is not None and np.linalg.norm(planned)<.001:
+            delta=route_goal-p;planned=delta/max(.001,np.linalg.norm(delta))
     state['waypoint']=route_goal.tolist()
     corrected,heading=clearance_hint(robot,planned,ex.arena)
     return np.asarray(corrected),heading if heading is not None else getattr(planned,'heading',None)
