@@ -1,6 +1,6 @@
 # LLM tactical commands and learned execution
 
-The LLM chooses a single robot's objective. Five PPO policies execute nine parameterized commands at 10 Hz. The service is provider independent; it does not call an LLM API. Only W3 model 3 in red slot 3 is trained. The earlier two-choice PPO manager remains a baseline.
+The LLM chooses a single robot's objective. The current `checkpoints/serial305` bank contains six PPO families for eleven parameterized commands at 10 Hz, controlling serial-leg **model 305 in red slot 3**. The older `checkpoints/tactics` bank retains W3 model 3 and its nine-command benchmark. The service is provider independent; `serve-tactics` does not call an LLM API. The separate `llm-matches` host connects a real planner. The earlier two-choice PPO manager remains a baseline. See [305 training and recovery](serial305.md) for the current model, observations and evaluation limits.
 
 ## Commands and supported maps
 
@@ -15,10 +15,12 @@ The LLM chooses a single robot's objective. Five PPO policies execute nine param
 | `escort` | Allied `target_id`, optional destination `point` | Follow the moving ally; satisfy proximity coverage and destination/duration |
 | `patrol` | Ordered `waypoints`, `patrol_loops`, `dwell_s` | Visit every waypoint in order, dwell at low speed, complete every loop |
 | `fly_slope` | `lane_team`, `flight_direction`, `landing_hold_s` | Cross the actual 650 mm gap, record airborne time, land upright and settle |
+| `retreat` | Optional `point`, `radius_m`, `timeout_s` | Withdraw even at low HP or with zero ammunition; default destination is own supply |
+| `recover` | `timeout_s` | For 305: wait for physical self-righting and stable stance; can suspend and resume another goal |
 
-The first eight commands are trained/evaluated on 2027. Dedicated fly-slope geometry exists on **2026**, so use `--season 2026` for this skill. The 2027 road ramps are ground navigation terrain, not a dedicated airborne crossing. Season selection is an episode property: a command cannot change maps. `navigate` is also accepted on 2026 for staging; its full-map held-out benchmark is on 2027. Aerial control, arbitrary terrain jumps, other controlled robot models and full-match wins are outside the recorded coverage.
+The first eight commands are trained/evaluated on 2027. Dedicated fly-slope geometry exists on **2026**, so use `--season 2026` for this skill. The 2027 road ramps are ground navigation terrain, not a dedicated airborne crossing. Season selection is an episode property: a command cannot change maps. `navigate` is also accepted on 2026 for staging; its full-map held-out benchmark is on 2027. `retreat` and `recover` are trained on 2027; `recover` requires model 305. Aerial control, arbitrary terrain jumps and global win-rate claims are outside the recorded coverage.
 
-`ready` and `capabilities` include `available_skills`, filtered by loaded weights and the current season. Protocol-wide `skills`/`command_json_schema` describe all nine commands. An unavailable command is rejected before replacing the current objective.
+`ready` and `capabilities` include `available_skills`, filtered by loaded weights and the current season. Protocol-wide `skills`/`command_json_schema` describe all eleven commands. An unavailable command is rejected before replacing the current objective.
 
 ## JSON examples
 
@@ -44,22 +46,22 @@ IDs make identical retries idempotent within a 1,024-command cache. Reusing an I
 
 Robot attacks retain explicit target identity. Only slot 3's legal FPV enemies enter target memory; occluded targets are extrapolated from their last observed velocity for a bounded time, with no firing. Friendly attacks, absent roster IDs and protected structures are rejected/stopped. Attack completion uses target destruction or an optional positive `damage_goal`. HP loss is observed progress, not guaranteed shooter attribution when teammates also attack.
 
-Feedback includes status (`idle/running/succeeded/failed/cancelled`), reason, phase, elapsed simulated time, distance, target identity/visibility and `execution_family`. `details` adds supply contact/ammo/HP/spending, escort separation/coverage, patrol waypoint progress, or flight airborne/landing time. Failure reasons include blocked, timeout, lost target, leash exceeded, unavailable robot, low HP, no ammo, budget exhaustion and team purchase cap. Ordinary routes report blocked after six seconds without significant motion/damage; support/flight movement uses eight seconds. Terminal feedback retains the completion duration.
+Feedback includes status (`idle/running/succeeded/failed/cancelled`), reason, phase, elapsed simulated time, distance, target identity/visibility and `execution_family`. `details` adds supply contact/ammo/HP/spending, escort separation/coverage, patrol waypoint progress, or flight airborne/landing time. Failure reasons include blocked, timeout, lost target, leash exceeded, unavailable robot, low HP, no ammo, budget exhaustion and team purchase cap. Legacy model-3 routes report blocked after six seconds without significant motion/damage; model-305 routes allow 25 seconds for physical escape. Support/flight movement uses separate supervision. Terminal feedback retains the completion duration.
 
 The LLM scene exposes own robot and allied telemetry, own resources/purchase counters, own card contacts, visible enemies, age-marked last-seen enemies, public structures and control positions. Public map/roster arrive in `ready`. No opponent-own live observation is sent to the LLM or learned controller. Curriculum host controllers may use their own team's observations to move/shoot their scripted actors.
 
 ## Service and host integration
 
 ```bash
-uv run arena-rl serve-tactics --policies checkpoints/tactics --realtime --record
-uv run arena-rl serve-tactics --policies checkpoints/tactics --season 2026 --realtime --record
+uv run arena-rl serve-tactics --policies checkpoints/serial305 --realtime --record
+uv run arena-rl serve-tactics --policies checkpoints/serial305 --season 2026 --realtime --record
 ```
 
 Default real-time control advances 100 ms of simulation per 100 ms wall time; `--speed` changes this ratio. External LLM inference can proceed while RL continues the current objective. Periodic state messages arrive approximately once a wall second. Without `--realtime`, manual `{"op":"step","steps":10}` advances the simulation.
 
 Other operations are `observe`, `cancel`, `capabilities`, `reset`, `save_replay` and `close`. `env_id` selects one parallel actor. `reset` accepts per-actor seeds and optional declared initial training scenarios; only reset changes the episode. EOF/close/termination clean up simulator processes. Malformed or oversized (>64 KiB) messages return framed errors. `examples/tactical_client.py` illustrates a slow scripted planner, without paid inference.
 
-`--lineups path.json` accepts the Arena roster format, retaining red slot 3 as W3 model 3. The default 2027 roster includes red slot 4 for escort. Teammates stay idle in the service unless the match host supplies controllers; the library never silently drives an escort target. `--opponent` selects an existing whole-team Arena submission through Arena's sandbox. Without it, live enemies remain stationary and `ready` declares this mode.
+`--lineups path.json` accepts the Arena roster format, requiring red slot 3 to match the loaded policy bank's model. The default 2027 roster includes red slot 4 for escort. Teammates stay idle in the service unless the match host supplies controllers; the library never silently drives an escort target. `--opponent` selects an existing whole-team Arena submission through Arena's sandbox. Without it, live enemies remain stationary and `ready` declares this mode.
 
 Within an existing match host:
 

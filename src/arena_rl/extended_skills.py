@@ -104,7 +104,7 @@ def update(ex,obs,visible):
             landed=beyond and r['grounded'] and r['upright']>.9 and np.linalg.norm(p-goal)<.65 and math.hypot(r['vx'],r['vy'])<1.2
             st['landing_hold']=st.get('landing_hold',0.)+dt if landed else 0.
             if landed:phase='flight_land'
-            if st.get('air_s',0.)>=.1 and st['landing_hold']>=c.landing_hold_s:
+            if st.get('air_s',0.)+1e-8>=.1 and st['landing_hold']+1e-8>=c.landing_hold_s:
                 ex._end('succeeded','flight_landed')
                 if direction>0:ex.flight_authorized.add(c.lane_team)
         metrics={'flight_direction':c.flight_direction,'airborne_s':st.get('air_s',0.),'landing_hold_s':st.get('landing_hold',0.),
@@ -117,7 +117,7 @@ def update(ex,obs,visible):
     if elapsed>=c.timeout_s:ex._end('failed','timeout')
     if ex.last_position is None or np.linalg.norm(p-ex.last_position)>.25:ex.last_position=p;ex.last_motion=now
     moving=phase in ('navigate','escort_follow','patrol_move','flight_approach','flight_run')
-    if moving and distance>c.radius_m and now-ex.last_motion>8:ex._end('failed','blocked')
+    if moving and distance>c.radius_m and now-ex.last_motion>(25 if ex.model_id==305 else 8):ex._end('failed','blocked')
     planned=(0.,0.)
     if c.skill=='fly_slope' and st.get('launched'):
         correction=goal-p;along=float(np.dot(correction,axis));lateral=correction-axis*along
@@ -127,9 +127,12 @@ def update(ex,obs,visible):
     elif c.skill=='fly_slope':
         planned=(goal-p)*2.
     elif distance>c.radius_m:
-        planned=sdk.navigate(r,goal,ex.navigation_arena)
+        if ex.model_id==305:
+            from .navigation import plan_motion
+            planned,held=plan_motion(ex,r,goal,now)
+        else:planned=sdk.navigate(r,goal,ex.navigation_arena)
     ex.plan={'phase':phase,'goal':goal,'hint':np.array(planned),'target':target,'visible':bool(target),
-             'distance':distance,'age':0.,'held_heading':getattr(planned,'heading',None)}
+             'distance':distance,'age':0.,'held_heading':held if 'held' in locals() else getattr(planned,'heading',None)}
     ex.extra=metrics
     if ex.initial_distance is None:ex.initial_distance=distance
     if ex.status in ('succeeded','failed','cancelled'):ex.events.append(ex.feedback());ex.events=ex.events[-128:]

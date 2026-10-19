@@ -23,10 +23,14 @@ class PolicyBank:
     def __init__(self,path,root):
         self.models={};self.metadata={}
         for name in FAMILIES:
-            if name in ('support','flight') and not (Path(path)/name/'metadata.json').is_file():continue
+            if name in ('support','flight','mobility') and not (Path(path)/name/'metadata.json').is_file():continue
             model,meta=load_tactical_policy(Path(path)/name,root)
             if meta['family']!=name:raise ValueError('Policy family does not match its directory')
             self.models[name]=model;self.metadata[name]=meta
+        ids={m.get('model_id',3) for m in self.metadata.values()}
+        if len(ids)!=1:raise ValueError('All loaded policies must control the same model')
+        self.model_id=ids.pop()
+        if self.model_id==305 and 'mobility' not in self.models:raise ValueError('Serial 305 policy bank requires its trained mobility policy')
 
     def predict(self,batch,ids):
         result=np.tile([0,0,1,1,0,1,0],(len(ids),1))
@@ -41,10 +45,13 @@ class PolicyBank:
 class TacticalSession:
     def __init__(self,policies,envs=1,seed=207,arena_root=None,record=False,opponent=None,lineups=None,season='2027'):
         root=configure(arena_root);seed_everything(seed)
+        self.bank=PolicyBank(policies,root)
         if lineups is None:
+            import copy
             from .extended_curricula import SUPPORT_LINEUPS,FLIGHT_LINEUPS
-            lineups=SUPPORT_LINEUPS if season=='2027' else FLIGHT_LINEUPS
-        self.bank=PolicyBank(policies,root);self.batch=TacticalBatch(envs,seed=seed,arena_root=root,record=record,opponent=opponent,lineups=lineups,season=season)
+            lineups=copy.deepcopy(SUPPORT_LINEUPS if season=='2027' else FLIGHT_LINEUPS)
+            next(d for d in lineups['red'] if d['slot']==3)['model']=self.bank.model_id
+        self.batch=TacticalBatch(envs,seed=seed,arena_root=root,record=record,opponent=opponent,lineups=lineups,season=season,model_id=self.bank.model_id)
         self.batch.runtime_control=True
         self.envs=envs;self.seed=seed;self.logs=[[] for _ in range(envs)]
 
@@ -68,8 +75,8 @@ class TacticalSession:
 
     def capabilities(self):
         value=capabilities();season=self.batch.season
-        value.update(season=season,available_families=list(self.bank.models),
-            available_skills=[s for s in SKILLS if Command('capability',s).policy_family in self.bank.models and season in value['skill_seasons'][s]])
+        value.update(season=season,robot_model=self.bank.model_id,available_families=list(self.bank.models),
+            available_skills=[s for s in SKILLS if Command('capability',s).policy_family in self.bank.models and season in value['skill_seasons'][s] and (s!='recover' or self.bank.model_id==305)])
         return value
 
     def command(self,value,env_id=0):
@@ -98,7 +105,7 @@ class TacticalSession:
 
     def observe(self,env_id=0):
         self._index(env_id);state=self.batch.states[env_id];obs=state['observations']['red'];ex=self.batch.executors[env_id]
-        keys=('id','slot','role','model_slot','x','y','z','vx','vy','vz','hp','max_hp','ammo','heat','max_heat','alive','powered','heading','aim','upright')
+        keys=('id','slot','role','model_slot','x','y','z','vx','vy','vz','hp','max_hp','ammo','heat','max_heat','alive','powered','heading','aim','upright','radius','quaternion','angular_velocity','grounded','self_righting','tipped','weak','invulnerable')
         compact=lambda r:{k:r[k] for k in keys if k in r}
         return {'env_id':env_id,'tick':obs['tick'],'time':obs['time'],'episode_finished':bool(state['terminated'] or state['truncated']),
                 'robot':compact(own(obs)),'allies':[compact(r) for r in obs['robots'] if str(r['slot'])!='3'],'visible_enemies':[compact(e) for e in visible_enemies(obs)],

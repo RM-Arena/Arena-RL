@@ -1,0 +1,23 @@
+{
+  "0": {
+    "sample_count": 420,
+    "upset_samples": 0,
+    "alive_upset_samples": 0,
+    "physical_self_righting": 0,
+    "physical_self_righted": 0
+  },
+  "1": {
+    "sample_count": 420,
+    "upset_samples": 0,
+    "alive_upset_samples": 0,
+    "physical_self_righting": 0,
+    "physical_self_righted": 0
+  },
+  "2": {
+    "sample_count": 420,
+    "upset_samples": 2,
+    "alive_upset_samples": 1,
+    "physical_self_righting": 1,
+    "physical_self_righted": 1
+  }
+}

@@ -84,7 +84,7 @@ def test_reverse_permission_and_real_crossing():
             if not ids:break
             batch.step(actions_for_baseline(batch,ids,'heuristic',np.random.default_rng(1)),env_ids=ids)
         for ex in batch.executors:
-            assert ex.status=='succeeded' and ex.extra['airborne_s']>=.1 and ex.extra['landing_hold_s']>=.3
+            assert ex.status=='succeeded' and ex.extra['airborne_s']+1e-8>=.1 and ex.extra['landing_hold_s']+1e-8>=.3
         batch.reset([0],seeds=[102])
         ex=batch.executors[0];obs=batch.states[0]['observations']['red']
         assert not ex.flight_authorized

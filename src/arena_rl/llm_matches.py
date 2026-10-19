@@ -18,8 +18,15 @@ from .tactical_runtime import TacticalSession
 
 def public_context(session):
     arena=session.batch.executors[0].arena
-    return {'season':session.batch.season,'robot_id':'red-3','match_duration_s':420,
-            'field':{'width':arena['width'],'height':arena['height']},
+    from .navigation import clear_point
+    robot=session.batch.states[0]['observations']['red']['robots'][0]
+    candidates={'supply_red':[z['x'],z['y']] for z in arena['zones'] if z['kind']=='supply' and z.get('owner')=='red'}
+    candidates.update({f'nav_{i}':point for i,point in enumerate(arena['navigation']['nodes'])})
+    route_arena=session.batch.executors[0].navigation_arena
+    safe={name:list(point) for name,point in candidates.items() if clear_point(point,robot,route_arena)}
+    regions={f'{team}_{kind}':[value['x'],value['y']] for kind in ('base','outpost') for team,value in session.observe()[kind+'s'].items()}
+    return {'season':session.batch.season,'robot_id':'red-3','controlled_model':session.bank.model_id,'match_duration_s':420,
+            'field':{'width':arena['width'],'height':arena['height']},'safe_waypoints':safe,'defense_regions':{**safe,**regions},
             'supply_zones':[{k:z[k] for k in ('id','owner','x','y') if k in z} for z in arena['zones'] if z['kind']=='supply'],
             'terrain':[{k:t[k] for k in ('id','kind','x','y','w','h') if k in t} for t in arena['terrain']],
             'roster':session.batch.states[0]['observations']['red']['roster'],
@@ -57,7 +64,12 @@ def run_llm_matches(*,policies,matches=3,seed=9000000,output,model=MODEL,base_ur
     if (out/'report.json').exists() or (out/'decisions.jsonl').exists():raise ValueError('Match output already exists; use a new directory')
     root=configure(arena_root);client=planner or DeepSeekPlanner(model=model,base_url=base_url,api_key_env=api_key_env,timeout=timeout)
     out.mkdir(parents=True,exist_ok=True)
-    session=TacticalSession(policies,envs=matches,seed=seed,record=True,lineups=LINEUPS,arena_root=root)
+    import copy
+    deployments=copy.deepcopy(LINEUPS)
+    deployments['red'][0]['model']=json.loads((Path(policies)/'navigation'/'metadata.json').read_text()).get('model_id',3)
+    execution_source={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in Path(__file__).parent.glob('*.py')}
+    dump(out/'execution-source-at-start.json',execution_source)
+    session=TacticalSession(policies,envs=matches,seed=seed,record=True,lineups=deployments,arena_root=root)
     session.batch.opponent_controller=lambda i,obs,arena:opponent_actions(obs,arena,profiles[i%len(profiles)])
     pool=ThreadPoolExecutor(max_workers=matches,thread_name_prefix='tactical-llm')
     pending={};last_request=[-100.]*matches;last_feedback=[('idle',True)]*matches
@@ -74,7 +86,7 @@ def run_llm_matches(*,policies,matches=3,seed=9000000,output,model=MODEL,base_ur
         log({'type':'configuration','model':model,'endpoint_origin':urlsplit(base_url).hostname,
              'seed':seed,'matches':matches,'profiles':[profiles[i%len(profiles)] for i in range(matches)],
              'duration_s':420,'speed':speed,'plan_interval_s':plan_interval,'max_age_s':max_age,'max_calls':max_calls,
-             'controlled_robot':'red-3','lineups':LINEUPS,'scenario':None,'public_context':context,
+             'controlled_robot':'red-3','controlled_model':session.bank.model_id,'lineups':deployments,'scenario':None,'public_context':context,
              'policy_sha256':{k:m['policy_sha256'] for k,m in session.bank.metadata.items()}})
         while not all(scene['episode_finished'] for scene in scenes):
             for i,(future,basis,sent_tick,identity) in list(pending.items()):
@@ -153,6 +165,7 @@ def run_llm_matches(*,policies,matches=3,seed=9000000,output,model=MODEL,base_ur
             rows.append({'seed':seed+i,'opponent_profile':profiles[i%len(profiles)],'time_s':scene['time'],'final_tick':scene['tick'],
                 'finished':scene['episode_finished'],'terminated':bool(state['terminated']),'truncated':bool(state['truncated']),
                 'winner':info['winner'],'reason':info['reason'],'controlled_robot':'red-3','initial_scenario':None,
+                'controlled_model':session.bank.model_id,'recoveries_completed':session.batch.executors[i].recovery_count,
                 'command_continuity_passed':bool(continuity[i]),'planner_calls':calls[i],'actions':dict(counts[i]),
                 'errors':errors[i],'usage':dict(tokens[i]),'latency_s':{'median':float(np.median(latencies[i])) if latencies[i] else None,
                      'p95':float(np.percentile(latencies[i],95)) if latencies[i] else None,'max':max(latencies[i],default=None)},
@@ -167,8 +180,8 @@ def run_llm_matches(*,policies,matches=3,seed=9000000,output,model=MODEL,base_ur
                 'duration_s':420,'speed':speed,'simulated_action_hz':10,'missed_wall_deadlines':missed,
                 'matches':rows,'all_matches_completed':completed,'healthy_control':healthy,'fatal_error':fatal_error,
                 'arena':provenance(root),'policy_sha256':{k:m['policy_sha256'] for k,m in session.bank.metadata.items()},
-                'execution_source_sha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in Path(__file__).parent.glob('*.py')},
-                'results_scope':'one learned red W3 versus two declared scripted blue opponents; normal spawn, economy, ammo and 420-second referee',
+                'execution_source_sha256':execution_source,
+                'results_scope':'one learned red infantry versus two declared scripted blue opponents; normal spawn, economy, ammo and 420-second referee',
                 'decisions_sha256':hashlib.sha256((out/'decisions.jsonl').read_bytes()).hexdigest()}
         dump(out/'report.json',report);trace.close();telemetry.close();session.close()
     print(json.dumps({'type':'llm_matches_complete','completed':completed,'healthy_control':healthy,

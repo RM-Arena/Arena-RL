@@ -33,6 +33,7 @@ class TacticalExecutor:
         self.memory={};self.identities=OrderedDict();self.revision=0;self.last_basis_tick=-1
         self.tick=-1;self.time=0.;self.started=0.;self.completed_at=None;self.plan=None;self.target_id=None
         self.damage=0.;self.last_hp={};self.events=[];self.arena=None
+        self.recovery={};self.recovery_count=0;self.route_state={};self.model_id=3
         self.flight_authorized=set();self.extra={};self.skill_state={}
         self.last_position=None;self.last_motion=0.;self.initial_distance=None;self.navigation_arena=None
 
@@ -74,9 +75,11 @@ class TacticalExecutor:
             target_team,slot=target.split('-')
             legal=roster.get(target_team,[]) if isinstance(roster,dict) else roster
             if target_team==team or int(slot) not in legal:raise ValueError('Invalid defense priority target')
+        if command.skill=='recover' and robot.get('model_slot')!=305:raise ValueError('Recovery requires the serial-leg 305 model')
         if command.skill in ('resupply','escort','patrol','fly_slope'):
             from .extended_skills import validate
             validate(self,command,observation,arena)
+        if self.status!='running':self.recovery={}
         self.cancel('replaced_by_new_command')
         self.last_basis_tick=max(self.last_basis_tick,command.basis_tick if command.basis_tick is not None else observation['tick'])
         self.identities[command.id]=command.json()
@@ -85,7 +88,7 @@ class TacticalExecutor:
         self.started=now;self.completed_at=None;self.last_motion=now;self.last_position=xy(robot)
         self.anchor=np.array(command.center) if command.center else xy(robot)
         self.target_id=command.target_id;self.damage=0.;self.last_hp={};self.initial_distance=None;self.hold_point=None
-        self.tick=-1;self.plan=None
+        self.tick=-1;self.plan=None;self.route_state={}
         from .extended_skills import reset
         reset(self)
         self.update(observation)
@@ -97,9 +100,10 @@ class TacticalExecutor:
         if observation['tick']==self.tick:return self.plan
         self.tick=observation['tick'];self.time=observation['time']
         self.arena=observation.get('arena',self.arena)
+        self.model_id=own(observation,self.slot).get('model_slot',3)
         if self.navigation_arena is None and self.arena is not None:
             from .navigation import navigation_arena
-            self.navigation_arena=navigation_arena(self.arena)
+            self.navigation_arena=navigation_arena(self.arena,self.model_id)
         if self.arena is None:raise ValueError('Arena geometry is required on first observation')
         robot=own(observation,self.slot);position=xy(robot);now=self.time
         visible={e['id']:e for e in visible_enemies(observation,self.slot)}
@@ -112,8 +116,17 @@ class TacticalExecutor:
             self.plan={'phase':'idle','goal':position,'hint':np.zeros(2),'target':None,'visible':False,'distance':0.,'age':0.}
             return self.plan
         c=self.command
-        if not robot['alive'] or not robot['powered'] or robot['upright']<.3:self._end('failed','robot_unavailable')
-        elif c.skill!='resupply' and robot['hp']/max(1,robot['max_hp'])<c.low_hp_fraction:self._end('failed','low_hp')
+        if not robot['alive'] or not robot['powered']:self._end('failed','robot_unavailable')
+        if self.status=='running' and self.model_id==305 and (robot['upright']<.25 or robot.get('self_righting',False) or self.recovery or c.skill=='recover'):
+            from .mobility_skills import recovery_plan
+            if recovery_plan(self,observation):return self.plan
+            if self.status!='running':return self.plan
+        if robot['upright']<.3:self._end('failed','robot_unavailable')
+        elif c.skill not in ('resupply','retreat','recover') and robot['hp']/max(1,robot['max_hp'])<c.low_hp_fraction:self._end('failed','low_hp')
+        if c.skill=='retreat':
+            from .mobility_skills import retreat_plan
+            return retreat_plan(self,observation)
+        if c.skill=='recover':return self.plan
         if c.skill in ('resupply','escort','patrol','fly_slope'):
             from .extended_skills import update
             return update(self,observation,visible)
@@ -171,6 +184,10 @@ class TacticalExecutor:
                 intercept=np.array([target.get('vx',0),target.get('vy',0)])*min(1.,separation/4.)
                 target_xy=target_xy+intercept
             goal=target_xy+direction*c.preferred_range_m
+            if self.model_id==305 and c.skill=='attack_structure':
+                from .navigation import firing_point
+                safe=firing_point(robot,target,c.preferred_range_m,self.navigation_arena)
+                if safe is not None:goal=np.asarray(safe)
             if not is_visible:goal=target_xy;phase='search'
             elif abs(separation-c.preferred_range_m)<=.5:goal=position;phase='engage'
             else:phase='approach'
@@ -184,13 +201,18 @@ class TacticalExecutor:
         if c.skill in ('engage_target','pursue_target') and np.linalg.norm(position-self.anchor)>c.leash_radius_m:self._end('failed','leash_exceeded')
         if self.last_position is None or np.linalg.norm(position-self.last_position)>.25:
             self.last_position=position;self.last_motion=now
-        if phase in ('navigate','approach','search') and distance>c.radius_m and now-self.last_motion>6:
+        if phase in ('navigate','approach','search') and distance>c.radius_m and now-self.last_motion>(25 if self.model_id==305 else 6):
             self._end('failed','blocked')
         planned=sdk.navigate(robot,goal,self.navigation_arena) if distance>c.radius_m else (0.,0.)
+        if self.model_id==305 and distance>c.radius_m:
+            from .navigation import plan_motion
+            motion,held=plan_motion(self,robot,goal,now)
+            planned=motion
+        else:held=None
         from .navigation import clearance_hint
         corrected,clear_heading=clearance_hint(robot,planned,self.arena)
         hint=np.array(corrected)
-        held_heading=clear_heading if clear_heading is not None else getattr(planned,'heading',None)
+        held_heading=clear_heading if clear_heading is not None else held if held is not None else getattr(planned,'heading',None)
         self.plan={'phase':phase,'goal':goal,'hint':hint,'target':target,'visible':is_visible,'distance':distance,'age':age,'held_heading':held_heading}
         if self.initial_distance is None:self.initial_distance=distance
         if self.status in TERMINAL:
@@ -200,6 +222,8 @@ class TacticalExecutor:
     @property
     def execution_family(self):
         if self.command is None:return 'navigation'
+        if self.model_id==305 and self.route_state.get('escape_until',0)>self.time:return 'mobility'
+        if self.model_id==305 and self.plan and (self.plan['phase']=='recover' or self.command.skill in ('retreat','resupply') and self.plan['distance']>1.2):return 'mobility'
         family=self.command.policy_family
         if family!='navigation' and self.plan and self.plan['distance']>1.2 and self.plan['phase'] in ('navigate','approach','search','hold','escort_follow','patrol_move','flight_approach','supply_approach'):
             return 'navigation'
@@ -214,4 +238,5 @@ class TacticalExecutor:
                 'phase':plan.get('phase','idle'),'execution_family':self.execution_family,'target_id':self.target_id,
                 'target_visible':bool(plan.get('visible',False)),'last_seen_age_s':float(plan.get('age',0.)),
                 'distance_m':distance,'observed_target_hp_loss':self.damage,
+                'recoveries_completed':self.recovery_count,
                 'progress_m':(self.initial_distance-distance) if self.initial_distance is not None else 0.,'details':dict(self.extra)}

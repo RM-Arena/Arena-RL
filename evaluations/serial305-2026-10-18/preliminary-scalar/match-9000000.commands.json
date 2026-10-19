@@ -1,0 +1,1693 @@
+{
+  "protocol": "arena-tactics-v1",
+  "commands": [
+    {
+      "op": "reset",
+      "seed": 9000000,
+      "scenario": {
+        "robots": {}
+      }
+    },
+    {
+      "op": "command",
+      "tick": 34,
+      "command": {
+        "id": "llm-9000000-1",
+        "skill": "resupply",
+        "radius_m": 0.4,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 60.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.15,
+        "basis_tick": 0,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 1.0,
+        "budget_limit": 300.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "command",
+      "tick": 164,
+      "command": {
+        "id": "llm-9000000-3",
+        "skill": "navigate",
+        "point": [
+          10.5,
+          12.4
+        ],
+        "radius_m": 1.0,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 40.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 130,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "command",
+      "tick": 994,
+      "command": {
+        "id": "llm-9000000-12",
+        "skill": "navigate",
+        "point": [
+          12.5,
+          12.0
+        ],
+        "radius_m": 1.0,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 25.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 964,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "cancel",
+      "tick": 1390
+    },
+    {
+      "op": "command",
+      "tick": 1424,
+      "command": {
+        "id": "llm-9000000-17",
+        "skill": "navigate",
+        "point": [
+          12.6,
+          13.9
+        ],
+        "radius_m": 0.6,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 40.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 1392,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "cancel",
+      "tick": 1520
+    },
+    {
+      "op": "command",
+      "tick": 1550,
+      "command": {
+        "id": "llm-9000000-19",
+        "skill": "navigate",
+        "point": [
+          12.57,
+          13.875
+        ],
+        "radius_m": 0.8,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 40.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 1522,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "command",
+      "tick": 1654,
+      "command": {
+        "id": "llm-9000000-20",
+        "skill": "recover",
+        "radius_m": 0.4,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 15.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.15,
+        "basis_tick": 1622,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "command",
+      "tick": 1694,
+      "command": {
+        "id": "llm-9000000-21",
+        "skill": "navigate",
+        "point": [
+          7.5,
+          10.5
+        ],
+        "radius_m": 0.6,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 40.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 1664,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "command",
+      "tick": 1800,
+      "command": {
+        "id": "llm-9000000-22",
+        "skill": "navigate",
+        "point": [
+          13.3,
+          12.9
+        ],
+        "radius_m": 0.6,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 40.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 1764,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "cancel",
+      "tick": 1894
+    },
+    {
+      "op": "command",
+      "tick": 1930,
+      "command": {
+        "id": "llm-9000000-24",
+        "skill": "navigate",
+        "point": [
+          8.5,
+          11.2
+        ],
+        "radius_m": 1.0,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 40.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 1896,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "command",
+      "tick": 2066,
+      "command": {
+        "id": "llm-9000000-26",
+        "skill": "navigate",
+        "point": [
+          10.5,
+          12.4
+        ],
+        "radius_m": 0.6,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 20.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 2028,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "cancel",
+      "tick": 2250
+    },
+    {
+      "op": "command",
+      "tick": 2280,
+      "command": {
+        "id": "llm-9000000-29",
+        "skill": "navigate",
+        "point": [
+          9.0,
+          11.2
+        ],
+        "radius_m": 0.8,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 25.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 2252,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "cancel",
+      "tick": 2480
+    },
+    {
+      "op": "command",
+      "tick": 2516,
+      "command": {
+        "id": "llm-9000000-32",
+        "skill": "navigate",
+        "point": [
+          8.0,
+          11.2
+        ],
+        "radius_m": 0.8,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 25.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.35,
+        "basis_tick": 2482,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "cancel",
+      "tick": 2612
+    },
+    {
+      "op": "command",
+      "tick": 2644,
+      "command": {
+        "id": "llm-9000000-34",
+        "skill": "navigate",
+        "point": [
+          7.5,
+          11.2
+        ],
+        "radius_m": 1.0,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 40.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 2614,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "cancel",
+      "tick": 2850
+    },
+    {
+      "op": "command",
+      "tick": 2886,
+      "command": {
+        "id": "llm-9000000-37",
+        "skill": "navigate",
+        "point": [
+          7.5,
+          11.2
+        ],
+        "radius_m": 1.0,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 40.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 2852,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "cancel",
+      "tick": 2980
+    },
+    {
+      "op": "command",
+      "tick": 3006,
+      "command": {
+        "id": "llm-9000000-39",
+        "skill": "navigate",
+        "point": [
+          8.6,
+          11.2
+        ],
+        "radius_m": 1.0,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 40.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 2982,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "command",
+      "tick": 3108,
+      "command": {
+        "id": "llm-9000000-40",
+        "skill": "navigate",
+        "point": [
+          9.5,
+          10.5
+        ],
+        "radius_m": 0.6,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 20.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 3080,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "command",
+      "tick": 3208,
+      "command": {
+        "id": "llm-9000000-41",
+        "skill": "navigate",
+        "point": [
+          12.5,
+          10.5
+        ],
+        "radius_m": 0.6,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 40.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 3180,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "cancel",
+      "tick": 3314
+    },
+    {
+      "op": "command",
+      "tick": 3344,
+      "command": {
+        "id": "llm-9000000-43",
+        "skill": "navigate",
+        "point": [
+          8.5,
+          11.2
+        ],
+        "radius_m": 0.6,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 40.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 3316,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "command",
+      "tick": 3478,
+      "command": {
+        "id": "llm-9000000-45",
+        "skill": "navigate",
+        "point": [
+          12.6,
+          12.6
+        ],
+        "radius_m": 0.6,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 20.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 3444,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "cancel",
+      "tick": 3566
+    },
+    {
+      "op": "command",
+      "tick": 3604,
+      "command": {
+        "id": "llm-9000000-47",
+        "skill": "navigate",
+        "point": [
+          8.0,
+          11.0
+        ],
+        "radius_m": 0.6,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 25.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 3568,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "command",
+      "tick": 3730,
+      "command": {
+        "id": "llm-9000000-49",
+        "skill": "navigate",
+        "point": [
+          12.5,
+          12.9
+        ],
+        "radius_m": 0.6,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 20.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 3696,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "cancel",
+      "tick": 3820
+    },
+    {
+      "op": "command",
+      "tick": 3854,
+      "command": {
+        "id": "llm-9000000-51",
+        "skill": "navigate",
+        "point": [
+          8.5,
+          10.5
+        ],
+        "radius_m": 0.6,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 25.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 3822,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "command",
+      "tick": 3966,
+      "command": {
+        "id": "llm-9000000-53",
+        "skill": "navigate",
+        "point": [
+          13.3,
+          12.9
+        ],
+        "radius_m": 0.6,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 30.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 3942,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "cancel",
+      "tick": 4070
+    },
+    {
+      "op": "command",
+      "tick": 4114,
+      "command": {
+        "id": "llm-9000000-55",
+        "skill": "navigate",
+        "point": [
+          8.0,
+          10.6
+        ],
+        "radius_m": 0.6,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 40.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 4072,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "command",
+      "tick": 4236,
+      "command": {
+        "id": "llm-9000000-57",
+        "skill": "navigate",
+        "point": [
+          12.6,
+          12.9
+        ],
+        "radius_m": 0.6,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 25.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 4204,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "cancel",
+      "tick": 4330
+    },
+    {
+      "op": "command",
+      "tick": 4366,
+      "command": {
+        "id": "llm-9000000-59",
+        "skill": "navigate",
+        "point": [
+          8.0,
+          13.6
+        ],
+        "radius_m": 0.6,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 40.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 4332,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "command",
+      "tick": 4496,
+      "command": {
+        "id": "llm-9000000-61",
+        "skill": "navigate",
+        "point": [
+          13.3,
+          12.9
+        ],
+        "radius_m": 0.6,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 30.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 4462,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "command",
+      "tick": 4548,
+      "command": {
+        "id": "llm-9000000-62",
+        "skill": "recover",
+        "radius_m": 0.4,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 8.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.15,
+        "basis_tick": 4520,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "command",
+      "tick": 4588,
+      "command": {
+        "id": "llm-9000000-63",
+        "skill": "navigate",
+        "point": [
+          12.6,
+          13.9
+        ],
+        "radius_m": 0.6,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 25.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 4558,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "cancel",
+      "tick": 4686
+    },
+    {
+      "op": "command",
+      "tick": 4720,
+      "command": {
+        "id": "llm-9000000-65",
+        "skill": "navigate",
+        "point": [
+          8.5,
+          13.0
+        ],
+        "radius_m": 0.8,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 40.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 4688,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "cancel",
+      "tick": 4812
+    },
+    {
+      "op": "command",
+      "tick": 4846,
+      "command": {
+        "id": "llm-9000000-67",
+        "skill": "navigate",
+        "point": [
+          6.5,
+          11.0
+        ],
+        "radius_m": 1.0,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 40.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 4814,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "cancel",
+      "tick": 4940
+    },
+    {
+      "op": "command",
+      "tick": 4972,
+      "command": {
+        "id": "llm-9000000-69",
+        "skill": "navigate",
+        "point": [
+          6.5,
+          11.5
+        ],
+        "radius_m": 1.0,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 40.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 4942,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "cancel",
+      "tick": 5082
+    },
+    {
+      "op": "command",
+      "tick": 5118,
+      "command": {
+        "id": "llm-9000000-71",
+        "skill": "navigate",
+        "point": [
+          7.5,
+          11.2
+        ],
+        "radius_m": 1.0,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 40.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 5084,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "cancel",
+      "tick": 5218
+    },
+    {
+      "op": "command",
+      "tick": 5250,
+      "command": {
+        "id": "llm-9000000-73",
+        "skill": "navigate",
+        "point": [
+          6.5,
+          10.5
+        ],
+        "radius_m": 1.0,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 40.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 5220,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "cancel",
+      "tick": 5350
+    },
+    {
+      "op": "command",
+      "tick": 5390,
+      "command": {
+        "id": "llm-9000000-75",
+        "skill": "navigate",
+        "point": [
+          3.9,
+          11.0
+        ],
+        "radius_m": 0.6,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 25.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 5352,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "cancel",
+      "tick": 5476
+    },
+    {
+      "op": "command",
+      "tick": 5522,
+      "command": {
+        "id": "llm-9000000-77",
+        "skill": "patrol",
+        "radius_m": 0.4,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 40.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.15,
+        "priority_ids": [],
+        "basis_tick": 5478,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "waypoints": [
+          [
+            3.9,
+            13.4
+          ],
+          [
+            4.5,
+            12.0
+          ],
+          [
+            6.5,
+            11.5
+          ]
+        ],
+        "patrol_loops": 1,
+        "dwell_s": 1.0,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": true,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "cancel",
+      "tick": 5606
+    },
+    {
+      "op": "command",
+      "tick": 5642,
+      "command": {
+        "id": "llm-9000000-79",
+        "skill": "navigate",
+        "point": [
+          6.5,
+          10.5
+        ],
+        "radius_m": 0.6,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 30.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 5608,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "cancel",
+      "tick": 5746
+    },
+    {
+      "op": "command",
+      "tick": 5780,
+      "command": {
+        "id": "llm-9000000-81",
+        "skill": "navigate",
+        "point": [
+          4.5,
+          10.5
+        ],
+        "radius_m": 1.0,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 40.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 5748,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "cancel",
+      "tick": 5874
+    },
+    {
+      "op": "command",
+      "tick": 5900,
+      "command": {
+        "id": "llm-9000000-83",
+        "skill": "navigate",
+        "point": [
+          4.2,
+          10.6
+        ],
+        "radius_m": 0.8,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 25.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 5876,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "cancel",
+      "tick": 6004
+    },
+    {
+      "op": "command",
+      "tick": 6036,
+      "command": {
+        "id": "llm-9000000-85",
+        "skill": "navigate",
+        "point": [
+          3.9,
+          11.2
+        ],
+        "radius_m": 1.0,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 40.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 6006,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "command",
+      "tick": 6274,
+      "command": {
+        "id": "llm-9000000-88",
+        "skill": "navigate",
+        "point": [
+          8.5,
+          11.2
+        ],
+        "radius_m": 0.8,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 40.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 6238,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "command",
+      "tick": 6382,
+      "command": {
+        "id": "llm-9000000-89",
+        "skill": "navigate",
+        "point": [
+          13.0,
+          11.0
+        ],
+        "radius_m": 0.8,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 40.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 6338,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "cancel",
+      "tick": 6566
+    },
+    {
+      "op": "command",
+      "tick": 6602,
+      "command": {
+        "id": "llm-9000000-92",
+        "skill": "navigate",
+        "point": [
+          9.5,
+          12.6
+        ],
+        "radius_m": 0.8,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 40.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 6568,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "command",
+      "tick": 6834,
+      "command": {
+        "id": "llm-9000000-95",
+        "skill": "navigate",
+        "point": [
+          13.0,
+          12.9
+        ],
+        "radius_m": 0.6,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 30.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 6800,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "command",
+      "tick": 6928,
+      "command": {
+        "id": "llm-9000000-96",
+        "skill": "navigate",
+        "point": [
+          13.5,
+          13.0
+        ],
+        "radius_m": 0.6,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 40.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 6900,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "command",
+      "tick": 7170,
+      "command": {
+        "id": "llm-9000000-99",
+        "skill": "recover",
+        "radius_m": 0.4,
+        "preferred_range_m": 2.5,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 6.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.15,
+        "basis_tick": 7140,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "command",
+      "tick": 7216,
+      "command": {
+        "id": "llm-9000000-100",
+        "skill": "attack_structure",
+        "target_id": "blue_outpost",
+        "radius_m": 0.4,
+        "preferred_range_m": 3.0,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 60.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 7180,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    },
+    {
+      "op": "command",
+      "tick": 8394,
+      "command": {
+        "id": "llm-9000000-112",
+        "skill": "attack_structure",
+        "target_id": "blue_base",
+        "radius_m": 0.4,
+        "preferred_range_m": 3.0,
+        "region_radius_m": 3.0,
+        "leash_radius_m": 8.0,
+        "timeout_s": 2.0,
+        "target_lost_timeout_s": 2.0,
+        "low_hp_fraction": 0.3,
+        "basis_tick": 8362,
+        "max_staleness_s": 5.0,
+        "ammo_target": 100,
+        "hp_target_fraction": 0.9,
+        "budget_limit": 500.0,
+        "patrol_loops": 1,
+        "dwell_s": 0.4,
+        "follow_distance_m": 1.2,
+        "escort_duration_s": 10.0,
+        "required_coverage": 0.75,
+        "engage_on_contact": false,
+        "lane_team": "red",
+        "flight_direction": "forward",
+        "landing_hold_s": 0.3
+      }
+    }
+  ],
+  "policies": {
+    "navigation": "ee81fe4289dd9010a0b05596b4c92011183a6c555685b1cf32decb22ca356172",
+    "combat": "b8f22113d09654381cbfd4b6648f9e19d5d15189e36a7cce4a0208a7021f9f33",
+    "defense": "415b1a233fd4f9eda69a58f5b97ba1cdcc0b37fc974a63e7b6a354c644a36612",
+    "support": "3ba1cf2c9ac9f4d56a6ea08763e0fa01212489a6bdc2bf546b4c869513453f60",
+    "flight": "21d308291438b50ca8abcab5eef8aefbc294bd9af04c0c5d095a81728b5e2409",
+    "mobility": "b5317355a6e7a5c8ae16f42e282af39aa4b84af93c38a733c88307c3526a9436"
+  }
+}

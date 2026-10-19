@@ -2,6 +2,8 @@
 
 基于 [Arena-1](https://github.com/RM-Arena/Arena-1) 的单机器人强化学习训练库。复用 Arena 的 Rust 物理、规则、回放，以及 `ArenaEnv` / `VectorArena` 并行环境，不维护另一套模拟器。
 
+当前 LLM 对局使用 **2027 串联腿步兵 305，红方槽位 3**，检查点位于 `checkpoints/serial305`，支持低血量撤退和物理自扶正后的恢复。见[305 训练与接口说明](docs/serial305.md)。旧 W3 检查点保留为复现实验。
+
 第一版选择 **2027 赛季 W3 双轮足步兵，型号 3，槽位 3**。每个进程只训练一台红方机器人；蓝方机器人按场景脚本运行。训练使用真实 PPO 更新网络权重。
 
 ## 安装
@@ -97,17 +99,17 @@ uv run pytest -q
 
 ## LLM 顶层指令与 RL 执行
 
-新增[战术接口](docs/llm-tactics.md)：支持导航、指定建筑攻击、指定机器人接战/追击、区域防守，以及补给、护送、巡逻和专用飞坡。顶层 LLM 通过带参数的 JSON 指令调度，低层 PPO 按 10 Hz 持续执行；换令保留同一模拟进程、位置和弹量。支持显式目标锁定、短时目标记忆、追击边界、指令时效校验和执行反馈。
+新增[战术接口](docs/llm-tactics.md)：支持导航、指定建筑攻击、指定机器人接战/追击、区域防守、补给、护送、巡逻、专用飞坡，以及 305 的撤退和恢复。顶层 LLM 通过带参数的 JSON 指令调度，低层 PPO 按 10 Hz 持续执行；换令保留同一模拟进程、位置和弹量。支持显式目标锁定、短时目标记忆、追击边界、指令时效校验和执行反馈。
 
 ```bash
 uv run arena-rl serve-tactics --policies checkpoints/tactics --realtime --record
 uv run arena-rl mission --policies checkpoints/tactics --output runs/continuous-mission
 ```
 
-LLM 推理发生在外部客户端。仓库提供接口、JSON Schema 和异步客户端示例，不绑定模型或调用付费推理服务。旧版二选一 PPO 高层仍可作为对照。
+通用服务由外部客户端提供 LLM 推理；仓库另提供 `llm-matches`，按显式命令调用 DeepSeek 付费 API。旧版二选一 PPO 高层仍可作为对照。
 
 
-## 新增补给、护送、巡逻和飞坡
+## W3 历史评测：补给、护送、巡逻和飞坡
 
 `checkpoints/tactics` 现含五组策略。补给、护送、巡逻共用 2027 `support` 策略；专用飞坡使用 2026 `flight` 策略，包含真实 650 mm 间隙的正向跨越、返程跳跃和落地稳定。2027 地图没有这个专用飞坡，服务通过 `--season 2026` 选择对应地图。
 
@@ -124,7 +126,10 @@ uv run arena-rl serve-tactics --policies checkpoints/tactics --season 2026 --rea
 现提供真实的 DeepSeek V4.1 Flash 顶层调度：函数调用选择技能，冻结的 PPO 策略只执行红方槽位 3。LLM 请求异步运行，等待期间继续当前技能；超时或非法输出会保留当前执行并记录错误。使用现有 shell 中的 `DEEPSEEK_API_KEY`（也兼容 `DeepSeek_API_Key`）：
 
 ```bash
-uv run arena-rl llm-matches --policies checkpoints/tactics --matches 3 --max-calls 150 --output runs/deepseek-full
+uv run arena-rl llm-matches --policies checkpoints/serial305 --matches 3 --max-calls 150 --output runs/serial305-full
 ```
 
-默认并行运行三场正常 420 秒的 2027 对局，对手为明确标记的脚本英雄和步兵，红方只有一台 W3。它验证真实 LLM 调度、技能切换与完整对局链路；这不是标准满编队伍比赛。决策日志、推理延迟、失败原因、比赛结果和原生回放均保存。参数、权限边界和记录解释见 [LLM 接入说明](docs/llm-agent.md)与[三场真实 API 对局结果](docs/llm-match-results.md)。
+默认并行运行三场正常 420 秒的 2027 对局，对手为明确标记的脚本英雄和步兵，红方只有一台 305。它验证真实 LLM 调度、技能切换与完整对局链路；这不是标准满编队伍比赛。决策日志、推理延迟、失败原因、比赛结果和原生回放均保存。参数、权限边界和记录解释见 [LLM 接入说明](docs/llm-agent.md)与[早期 W3 对局记录](docs/llm-match-results.md)。
+
+
+当前 305 的权重、撤退/恢复课程、安全坐标接口及完整对局记录见[训练说明](docs/serial305.md)和[评测结果](docs/serial305-results.md)。旧版 W3 的 32/32 导航成绩不适用于 305；当前模型的限制单独报告。

@@ -93,7 +93,7 @@ def test_capabilities_filter_map_and_loaded_models():
         session=TacticalSession(POLICIES,arena_root=ROOT,season=season)
         try:
             session.reset();cap=session.capabilities()
-            assert len(cap['skills'])==9 and 'navigate' in cap['available_skills']
+            assert len(cap['skills'])==11 and 'navigate' in cap['available_skills']
             assert ('fly_slope' in cap['available_skills'])==(season=='2026')
             assert ('resupply' in cap['available_skills'])==(season=='2027')
             assert 'resources' in session.observe()['economy']

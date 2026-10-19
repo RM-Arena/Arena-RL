@@ -54,11 +54,12 @@ def decode(ex,obs,action):
         if ex.extra.get('supply_contact'):out['leg_height']=min(.245,out['leg_height'])
     elif c.skill=='fly_slope':
         out['fire']=False
+        if r.get('model_slot')==305:out['leg_height']=([.18,.245,.3] if c.flight_direction=='reverse' else [.22,.3,.34])[int(a[5])]
         if a[1]==2:out['move']=[v*.6/.7 for v in out['move']]
         lane=sdk.fly_slope_lane(ex.arena,c.lane_team);axis=np.array(lane['crest'])-lane['lip']
         if c.flight_direction=='reverse':axis=-axis
         out['heading']=math.atan2(axis[1],axis[0])
-        out['power']=200. if a[4] else 100.
+        out['power']=(150. if r.get('model_slot')==305 and c.flight_direction=='reverse' else 200.) if a[4] else 100.
         out['lean']=(int(a[2])-1)*.12
         out['jump']=float(a[6]) if ex.skill_state.get('launched') else 0.
         if ex.plan['phase']=='flight_land':out['jump']=0.

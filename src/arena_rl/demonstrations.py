@@ -5,9 +5,9 @@ import torch
 from .tactical_envs import TacticalBatch
 
 
-def initialize_from_demonstrations(model, *, family, episodes, seed, arena_root, output):
+def initialize_from_demonstrations(model, *, family, episodes, seed, arena_root, output,model_id=3):
     from .tactical_learning import actions_for_baseline
-    batch=TacticalBatch(min(4,episodes),family=family,seed=seed,arena_root=arena_root)
+    batch=TacticalBatch(min(4,episodes),family=family,seed=seed,arena_root=arena_root,model_id=model_id)
     rng=np.random.default_rng(seed);observations=[];actions=[];accepted=[];rejected=[]
     try:
         obs=batch.reset();active=list(range(batch.num_envs));next_seed=seed+batch.num_envs

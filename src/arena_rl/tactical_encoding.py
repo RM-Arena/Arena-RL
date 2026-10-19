@@ -61,6 +61,7 @@ def decode(executor,observation,action,policy_family=None):
             'fire':False,'brake':True,'leg_height':[.18,.245,.31][int(a[5])],'jump':0.}
     if executor.command and (executor.command.skill=='navigate' or policy_family=='navigation'):
         result['leg_height']=max(.245,result['leg_height'])
+        if robot.get('model_slot')==305 and any(t['kind']=='bumps' and t['x']-.5<robot['x']<t['x']+t['w']+.5 and t['y']-.5<robot['y']<t['y']+t['h']+.5 for t in executor.arena['terrain']):result['leg_height']=max(.3,result['leg_height'])
     if executor.status!='running':return {executor.slot:result}
     plan=executor.plan;hint=np.array(plan['hint']);length=np.linalg.norm(hint)
     if length<.001 and plan['target'] and plan['visible'] and policy_family!='navigation':
@@ -73,7 +74,23 @@ def decode(executor,observation,action,policy_family=None):
         # Respect the public planner's very small command when turning before bumps.
         if length<.05:move*=length/.05
         result['move']=move.tolist()
-        if np.linalg.norm(move):result['heading']=plan.get('held_heading') if plan.get('held_heading') is not None else math.atan2(move[1],move[0])
+        if np.linalg.norm(move):
+            result['heading']=plan.get('held_heading') if plan.get('held_heading') is not None else math.atan2(move[1],move[0])
+            if robot.get('model_slot')==305 and plan.get('held_heading') is None:
+                wrap=lambda angle:(angle+math.pi)%math.tau-math.pi
+                reverse=result['heading']+math.pi
+                if abs(wrap(reverse-robot['heading']))<abs(wrap(result['heading']-robot['heading'])):result['heading']=reverse
+    if robot.get('model_slot')==305 and executor.command.skill!='fly_slope' and length>.001:
+        # A nonholonomic chassis must finish a sharp turn before translating into
+        # a kerb. Even a learned stop retains a useful steering target.
+        if int(a[0])==0:
+            course=math.atan2(hint[1],hint[0]);wrap=lambda angle:(angle+math.pi)%math.tau-math.pi
+            result['heading']=min((course,course+math.pi),key=lambda h:abs(wrap(h-robot['heading']))) if plan.get('held_heading') is None else plan['held_heading']
+        error=abs((result['heading']-robot['heading']+math.pi)%math.tau-math.pi)
+        if error>.35:result['move']=[0.,0.]
+    if robot.get('model_slot')==305 and (executor.command.skill=='navigate' or policy_family=='navigation') and np.linalg.norm(result['move'])>0:
+        if any(t['kind']=='bumps' and t['x']-.4<robot['x']<t['x']+t['w']+.4 and t['y']-.4<robot['y']<t['y']+t['h']+.4 for t in executor.arena['terrain']):
+            move=np.asarray(result['move']);result['move']=(move/np.linalg.norm(move)).tolist()
     target=plan['target']
     if target and plan['visible'] and target.get('alive',target.get('hp',0)>0):
         result['aim']=sdk.aim_at(robot,target)+(int(a[2])-1)*.025

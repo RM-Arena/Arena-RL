@@ -8,7 +8,7 @@ from .commands import Command
 from .executor import TacticalExecutor,own,xy
 from .tactical_encoding import OBS_SPACE,ACTION_SPACE,encode,decode
 
-FAMILIES=('navigation','combat','defense','support','flight')
+FAMILIES=('navigation','combat','defense','support','flight','mobility')
 LINEUPS={'red':[{'slot':3,'model':3}],
          'blue':[{'slot':1,'model':2711},{'slot':3,'model':3},{'slot':4,'model':4}]}
 
@@ -23,7 +23,10 @@ class Episode:
     max_steps:int=300
 
 
-def sample_episode(family,seed):
+def sample_episode(family,seed,model_id=3):
+    if family=='mobility':
+        from .mobility_curricula import sample
+        return sample(seed)
     if family in ('support','flight'):
         from .extended_curricula import sample
         return sample(family,seed)
@@ -95,20 +98,26 @@ def scripted_actions(episode,state,team='blue'):
 
 
 class TacticalBatch:
-    def __init__(self,num_envs=4,*,family='navigation',seed=7,arena_root=None,record=False,opponent=None,lineups=None,season=None):
+    def __init__(self,num_envs=4,*,family='navigation',seed=7,arena_root=None,record=False,opponent=None,lineups=None,season=None,model_id=3):
         configure(arena_root)
         from rmuc_arena.vector_env import VectorArena
         self.num_envs,self.family,self.next_seed=num_envs,family,seed
+        if model_id not in (3,305):raise ValueError('Supported controlled models are 3 and 305')
+        self.model_id=model_id
         self.executors=[TacticalExecutor() for _ in range(num_envs)]
         self.episodes=[None]*num_envs;self.states=[None]*num_envs;self.previous=[None]*num_envs
         self.steps=np.zeros(num_envs,dtype=int);self.finished=np.ones(num_envs,dtype=bool)
         self.season=season or ('2026' if family=='flight' else '2027')
+        custom_lineups=lineups is not None
         if lineups is None and family in ('support','flight'):
             from .extended_curricula import SUPPORT_LINEUPS,FLIGHT_LINEUPS
             lineups=FLIGHT_LINEUPS if family=='flight' else SUPPORT_LINEUPS
-        lineups=LINEUPS if lineups is None else lineups
-        if not any(d.get('slot')==3 and d.get('model')==3 for d in lineups.get('red',[])):
-            raise ValueError('Tactical policies require red slot 3 using W3 model 3')
+        import copy
+        lineups=copy.deepcopy(LINEUPS if lineups is None else lineups)
+        for deployment in lineups['red']:
+            if deployment['slot']==3 and not custom_lineups:deployment['model']=model_id
+        if not any(d.get('slot')==3 and d.get('model')==model_id for d in lineups.get('red',[])):
+            raise ValueError('Tactical policies require configured infantry in red slot 3')
         self.engine=VectorArena(num_envs,season=self.season,duration=420,lineups=lineups,compact=True,record=record,opponent=opponent)
         self.opponent=opponent;self.runtime_control=False;self.opponent_controller=None
 
@@ -117,11 +126,13 @@ class TacticalBatch:
         if seeds is None:
             seeds=list(range(self.next_seed,self.next_seed+len(ids)));self.next_seed+=len(ids)
         if len(seeds)!=len(ids):raise ValueError('One seed per selected actor required')
-        episodes=[sample_episode(self.family,int(s)) for s in seeds] if episodes is None else list(episodes)
+        episodes=[sample_episode(self.family,int(s),self.model_id) for s in seeds] if episodes is None else list(episodes)
         if len(episodes)!=len(ids):raise ValueError('One episode per selected actor required')
         states=self.engine.reset(seeds,env_ids=ids,scenarios=[e.scenario for e in episodes])
         arenas=[s['observations']['red']['arena'] for s in states]
         from .extended_curricula import warmup
+        if self.family=='mobility':
+            from .mobility_curricula import warmup
         states,prepared=warmup(self.engine,ids,states,episodes) if any(getattr(e,'warmup',None) for e in episodes) else (states,[None]*len(ids))
         observations=[]
         for k,(i,e,state) in enumerate(zip(ids,episodes,states)):
@@ -143,7 +154,7 @@ class TacticalBatch:
         return {'position':xy(r),'hp':r['hp'],'heat':r.get('heat',0),'distance':plan['distance'],
                 'observed_damage':ex.damage,'hint':plan['hint'].copy(),
                 'fire_ready':bool(plan['target'] and plan['visible']),
-                'ammo':r['ammo'],'waypoints':ex.extra.get('waypoint_index',0),'coverage':ex.extra.get('coverage',0),
+                'ammo':r['ammo'],'upright':r['upright'],'waypoints':ex.extra.get('waypoint_index',0),'coverage':ex.extra.get('coverage',0),
                 'range_error':abs(float(np.linalg.norm(xy(plan['target'])-xy(r)))-ex.command.preferred_range_m) if plan['target'] and ex.command else 0.}
 
     def step(self,actions,env_ids=None,training=True):
@@ -154,6 +165,7 @@ class TacticalBatch:
         for i,action in zip(ids,actions):
             family=self.executors[i].execution_family if self.runtime_control else self.family
             red=decode_action(self.executors[i],self.states[i]['observations']['red'],action,family)
+            if np.linalg.norm(red['3']['move'])>.01:self.executors[i].last_drive=np.asarray(red['3']['move']).copy()
             if set(red)!={'3'}:raise ValueError('Learned controller must own only red slot 3')
             red.update({slot:a for slot,a in scripted_actions(self.episodes[i],self.states[i],team='red').items() if slot!='3'})
             blue={} if self.opponent else scripted_actions(self.episodes[i],self.states[i])
@@ -173,6 +185,9 @@ class TacticalBatch:
             if self.family=='support':
                 reward+=.12*max(0,m['hp']-old['hp'])+.06*max(0,m['ammo']-old['ammo'])+3.*max(0,m['waypoints']-old['waypoints'])
                 if ex.command.skill=='escort':reward+=.08*float(ex.extra.get('coverage',0)>.7)
+            if self.family=='mobility':
+                reward+=2.*movement+.4*max(0.,r['upright']-old['upright'])+.03*float(r['upright']>.9)
+                reward-=.01*float(abs(float(actions[ids.index(i)][6]))>0)
             if self.family=='flight':
                 reward+=.15*float(ex.plan['phase']=='flight_air')+.1*max(0,r['upright']-.8)
             reward-=.015*max(0.,m['heat']-r.get('max_heat',40)*.85)
@@ -182,7 +197,7 @@ class TacticalBatch:
             elif term:reward-=4.
             if trunc and ex.status=='running':ex._end('failed','training_time_limit')
             self.finished[i]=bool(term or trunc);self.previous[i]=m
-            info={**ex.feedback(),'task':self.family,'is_success':success,'seed':self.episodes[i].seed,
+            info={**ex.feedback(),'scenario_variant':getattr(self.episodes[i],'mobility_variant',None),'task':self.family,'is_success':success,'seed':self.episodes[i].seed,
                   'target_damage':ex.damage,'target_kind':ex.plan['target'].get('role',ex.plan['target'].get('kind','unknown')) if ex.plan['target'] else None,
                   'steps':int(self.steps[i]),'engine_hash':state['info']['engine_hash'],
                   'rules_hash':state['info']['rules_hash']}
@@ -197,8 +212,11 @@ class TacticalVecEnv(VecEnv):
         self.batch=TacticalBatch(num_envs,**options);self.pending=None
         self.returns=np.zeros(num_envs);self.lengths=np.zeros(num_envs,dtype=int)
         space=OBS_SPACE
-        if self.batch.family in ('support','flight'):
-            from .extended_encoding import OBS_SPACE as space
+        if self.batch.family in ('support','flight','mobility') or self.batch.model_id==305 and self.batch.family=='navigation':
+            if self.batch.family=='mobility' or self.batch.model_id==305 and self.batch.family=='navigation':
+                from .mobility_encoding import OBS_SPACE as space
+            else:
+                from .extended_encoding import OBS_SPACE as space
         super().__init__(num_envs,space,ACTION_SPACE)
     def reset(self):
         seeds=self._seeds if any(s is not None for s in self._seeds) else None
@@ -229,6 +247,9 @@ class TacticalVecEnv(VecEnv):
 
 
 def encode_observation(ex,obs,family):
+    if family=='mobility' or family=='navigation' and ex.model_id==305:
+        from .mobility_encoding import encode as mobility_encode
+        return mobility_encode(ex,obs)
     if family in ('support','flight'):
         from .extended_encoding import encode as extended_encode
         return extended_encode(ex,obs)
@@ -236,6 +257,9 @@ def encode_observation(ex,obs,family):
 
 
 def decode_action(ex,obs,action,family):
+    if family=='mobility' or family=='navigation' and ex.model_id==305:
+        from .mobility_encoding import decode as mobility_decode
+        return mobility_decode(ex,obs,action)
     if family in ('support','flight'):
         from .extended_encoding import decode as extended_decode
         return extended_decode(ex,obs,action)

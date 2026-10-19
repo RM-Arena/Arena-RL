@@ -73,11 +73,11 @@ def warmup(engine,ids,states,episodes):
                 r=own(states[k]['observations']['red']);lane=sdk.fly_slope_lane(ex.arena,e.command['lane_team'])
                 lip=np.array(lane['lip']);crest=np.array(lane['crest']);axis=(crest-lip)/np.linalg.norm(crest-lip);landing=np.array(lane['landing'])
                 progress=np.dot(np.array([r['x'],r['y']])-crest,axis)
-                speed=1. if progress<.6 else float(np.clip(np.dot(landing-[r['x'],r['y']],axis)*.8,-.4,.4))
+                speed=1. if progress<(1.05 if r.get('model_slot')==305 else .6) else float(np.clip(np.dot(landing-[r['x'],r['y']],axis)*.8,-.4,.4))
                 if ex.plan['phase']=='flight_land':speed=0.
                 move=axis*speed;move[1]+=float(np.clip((lip[1]-r['y'])*1.5,-.2,.2))
                 commands.append({'red':{'3':{'move':move.tolist(),
-                     'heading':math.atan2(axis[1],axis[0]),'power':200.,'leg_height':.245,'brake':True}}})
+                     'heading':math.atan2(axis[1],axis[0]),'power':200.,'jump':float(r.get('model_slot')==305 and -.2<progress<.35),'leg_height':.3 if r.get('model_slot')==305 else .245,'brake':True}}})
             else:continue
             active.append(ids[k]);positions.append(k)
         if not active:break

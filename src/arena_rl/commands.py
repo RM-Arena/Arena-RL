@@ -6,7 +6,8 @@ import re
 PROTOCOL = "arena-tactics-v1"
 BASE_SKILLS = ("navigate", "attack_structure", "engage_target", "pursue_target", "defend_region")
 NEW_SKILLS = ("resupply", "escort", "patrol", "fly_slope")
-SKILLS = BASE_SKILLS + NEW_SKILLS
+MOBILITY_SKILLS = ('retreat','recover')
+SKILLS = BASE_SKILLS + NEW_SKILLS + MOBILITY_SKILLS
 
 
 def number(value, name, minimum, maximum):
@@ -97,14 +98,14 @@ class Command:
         if skill=='patrol' and len(value['waypoints'])<2:raise ValueError('patrol requires at least two waypoints')
         allowed={'navigate' :{'point'},'defend_region':{'center','priority_ids'},
                  'attack_structure':{'target_id'},'engage_target':{'target_id'},'pursue_target':{'target_id'},
-                 'resupply':{'point'},'escort':{'target_id','point','priority_ids'},'patrol':{'waypoints','priority_ids'},'fly_slope':set()}[skill]
+                 'resupply':{'point'},'escort':{'target_id','point','priority_ids'},'patrol':{'waypoints','priority_ids'},'fly_slope':set(),'retreat':{'point'},'recover':set()}[skill]
         for field in ('point','center','target_id','priority_ids','waypoints'):
             if value.get(field) and field not in allowed:raise ValueError(f'{field} is not valid for {skill}')
         return cls(**value)
 
     @property
     def policy_family(self):
-        return 'flight' if self.skill=='fly_slope' else 'support' if self.skill in ('resupply','escort','patrol') else 'navigation' if self.skill=='navigate' else 'defense' if self.skill=='defend_region' else 'combat'
+        return 'mobility' if self.skill in MOBILITY_SKILLS else 'flight' if self.skill=='fly_slope' else 'support' if self.skill in ('resupply','escort','patrol') else 'navigation' if self.skill=='navigate' else 'defense' if self.skill=='defend_region' else 'combat'
 
     def json(self):
         value={k:v for k,v in asdict(self).items() if v is not None}
@@ -118,7 +119,7 @@ class Command:
 
 def capabilities():
     return {'protocol':PROTOCOL,'robot_model':3,'skills':list(SKILLS),'command_json_schema':command_schema(),
-            'policy_families':['navigation','combat','defense','support','flight'],'action_hz':10,
+            'policy_families':['navigation','combat','defense','support','flight','mobility'],'action_hz':10,
             'target_selection':'explicit robot id; defense accepts ordered priority_ids',
             'aim_mode':'SDK ballistic assistance with learned residuals',
             'trained_profiles':{'combat_range_m':[2.,3.5],'defense_radius_m':2.5,'season':'2027',
@@ -161,11 +162,11 @@ def command_schema():
         elif skill=='defend_region':
             properties['center']=point;required.append('center')
             properties['priority_ids']={'type':'array','items':{'type':'string','pattern':'^(red|blue)-[1-9][0-9]*$'},'maxItems':32,'uniqueItems':True}
-        elif skill=='resupply':properties['point']=point
+        elif skill in ('resupply','retreat'):properties['point']=point
         elif skill=='patrol':
             properties['waypoints']={'type':'array','items':point,'minItems':2,'maxItems':32};required.append('waypoints')
             properties['priority_ids']={'type':'array','items':{'type':'string'},'maxItems':32,'uniqueItems':True}
-        elif skill=='fly_slope':pass
+        elif skill in ('fly_slope','recover'):pass
         else:
             if skill=='escort':
                 properties['point']=point

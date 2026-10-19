@@ -11,8 +11,8 @@ import urllib.request
 from .commands import Command,command_schema
 
 MODEL='deepseek-flash'
-BASE_URL='https://api.deepseek.com'
-SYSTEM_PROMPT='''You are the tactical planner of ONE red W3 infantry robot (red-3) in Arena.
+BASE_URL='https://api.deepseek.com/beta'
+SYSTEM_PROMPT='''You are the tactical planner of ONE red infantry robot (red-3) in Arena.
 Call exactly one supplied function. The frozen RL controller executes at 10 Hz while you think.
 Optimize the real match outcome: preserve our base, exploit enemy exposure, attack enemy outpost
 and then unprotected base when feasible. Use current battlefield state, not a fixed action cycle.
@@ -21,6 +21,9 @@ Use continue_current while a useful running skill makes progress; replacing it r
 Replan on danger, goal completion/failure or changed objectives. Do not repeatedly restart a blocked goal:
 choose another waypoint, defend a reachable region or resupply. Only attack visible or recently seen
 robot IDs; blue-1 is heavy/hero when deployed. Don't invent enemies or use hidden state.
+The controlled model is stated in context. Model 305 has full-turn serial hips with mechanical self-righting.
+If upset, recover and wait for stable stance before moving. A recovery subphase can temporarily suspend the current goal.
+When low on HP, use retreat to a reachable safe point or resupply; ordinary navigate stops at its low-HP threshold.
 Normal 2027 infantry starts with zero ammo: resupply locally before combat and after ammunition runs out.
 Ammo purchase/healing uses actual contact, coins and team caps. Budget is shared with teammates.
 Ammunition team caps do not reset on death. When capped and empty, patrol/defend without firing.
@@ -33,10 +36,16 @@ another deployed mobile ally. Fly-slope is only on 2026; reverse requires a comp
 crossing this episode. The current tools already filter unavailable seasons/rosters/policies.
 Changing commands never restores health, ammunition or position. Do not end/reset the match.
 The intent field is one short action label, not a reasoning transcript. Use null for optional defaults.
+Prefer integrated objectives: attack_structure, defend_region, pursue_target and resupply already include approach/navigation.
+Do not split every objective into repeated short navigate/cancel calls. When waypoint catalogs are supplied,
+choose only the supplied IDs; the host resolves them to safe public coordinates. Keep useful goals running
+while traversing a ramp or detouring, even when straight-line distance temporarily increases.
 Your recent decisions and execution feedback identify failures and changes; don't claim success yourself.'''
 
 FIELDS={
- 'navigate':['point','radius_m','timeout_s'],
+ 'navigate':['point','radius_m','timeout_s','low_hp_fraction'],
+ 'retreat':['point','radius_m','timeout_s'],
+ 'recover':['timeout_s'],
  'attack_structure':['target_id','preferred_range_m','timeout_s','low_hp_fraction'],
  'engage_target':['target_id','preferred_range_m','leash_radius_m','timeout_s','target_lost_timeout_s'],
  'pursue_target':['target_id','preferred_range_m','leash_radius_m','timeout_s','target_lost_timeout_s'],
@@ -47,6 +56,8 @@ FIELDS={
  'fly_slope':['lane_team','flight_direction','landing_hold_s','timeout_s'],
 }
 DESCRIPTIONS={
+ 'retreat':'Withdraw to a safe field point or own supply if point is null; allowed at low HP, using learned mobility.',
+ 'recover':'Settle and self-right the serial-leg 305 using its physical hip firmware and learned stabilization; no teleport.',
  'navigate':'Move to a field point; arrive slowly. Full-map route guidance is available.',
  'attack_structure':'Attack specified enemy outpost/base until destroyed or timeout. Protected bases cannot be attacked.',
  'engage_target':'Engage a specified visible enemy robot ID at local range.',
@@ -59,22 +70,33 @@ DESCRIPTIONS={
 }
 
 
-def tools_for(skills):
+def tools_for(skills,field=None,waypoints=None,regions=None):
     variants={v['properties']['skill']['const']:v for v in command_schema()['oneOf']}
     tools=[]
+    field=field or {'width':100.,'height':100.,'margin':0.}
+    def coordinate():
+        return {'type':'object','properties':{'x':{'type':'number','minimum':field.get('margin',0.),'maximum':field['width']-field.get('margin',0.)},'y':{'type':'number','minimum':field.get('margin',0.),'maximum':field['height']-field.get('margin',0.)}},'required':['x','y'],'additionalProperties':False}
+    def supported(value):
+        if isinstance(value,dict):return {k:supported(v) for k,v in value.items() if k not in ('minItems','maxItems','minLength','maxLength','uniqueItems')}
+        if isinstance(value,list):return [supported(v) for v in value]
+        return value
     for skill in skills:
         if skill not in FIELDS:raise ValueError('Unsupported planner tool')
         variant=variants[skill];properties={}
         for name in FIELDS[skill]:
             schema=copy.deepcopy(variant['properties'][name])
+            if name in ('point','center'):
+                catalog=regions if name=='center' else waypoints
+                schema={'type':'string','enum':list(catalog)} if catalog else coordinate()
+            if name=='waypoints':schema={'type':'array','items':{'type':'string','enum':list(waypoints)} if waypoints else coordinate()}
             if name not in variant['required']:
                 schema={'anyOf':[schema,{'type':'null'}]}
             properties[name]=schema
-        properties['intent']={'type':'string','maxLength':160}
-        tools.append({'type':'function','function':{'name':skill,'description':DESCRIPTIONS[skill],
-            'parameters':{'type':'object','properties':properties,'required':list(properties),'additionalProperties':False}}})
-    tools.extend({'type':'function','function':{'name':name,'description':description,
-        'parameters':{'type':'object','properties':{'intent':{'type':'string','maxLength':160}},'required':['intent'],'additionalProperties':False}}}
+        properties['intent']={'type':'string','pattern':'^.{0,160}$'}
+        tools.append({'type':'function','function':{'name':skill,'strict':True,'description':DESCRIPTIONS[skill],
+            'parameters':supported({'type':'object','properties':properties,'required':list(properties),'additionalProperties':False})}})
+    tools.extend({'type':'function','function':{'name':name,'strict':True,'description':description,
+        'parameters':{'type':'object','properties':{'intent':{'type':'string','pattern':'^.{0,160}$'}},'required':['intent'],'additionalProperties':False}}}
         for name,description in [('continue_current','Keep executing current RL skill; if idle/dead, wait for a future decision.'),
                                  ('cancel_current','Stop the current robot skill and wait at rest.')])
     return tools
@@ -112,10 +134,20 @@ class Decision:
     latency_s:float
     basis_tick:int
     call_id:str
+    coordinates:dict|None=None
 
     def command(self,identity,max_age=5.):
         if self.tool in ('continue_current','cancel_current'):return None
         args={k:v for k,v in self.arguments.items() if k!='intent' and v is not None}
+        for name in ('point','center'):
+            if isinstance(args.get(name),str):
+                if not self.coordinates or args[name] not in self.coordinates:raise ValueError('Unknown waypoint ID')
+                args[name]=self.coordinates[args[name]]
+            if name in args and isinstance(args[name],dict):
+                if set(args[name])!={'x','y'}:raise ValueError('Coordinate needs x and y')
+                args[name]=[args[name]['x'],args[name]['y']]
+        if 'waypoints' in args:
+            args['waypoints']=[self.coordinates[p] if isinstance(p,str) and self.coordinates and p in self.coordinates else [p['x'],p['y']] if isinstance(p,dict) and set(p)=={'x','y'} else p for p in args['waypoints']]
         return Command.parse(dict(args,id=identity,skill=self.tool,basis_tick=self.basis_tick,max_staleness_s=max_age)).json()
 
 
@@ -133,7 +165,9 @@ class DeepSeekPlanner:
         self.opener=urllib.request.build_opener(NoRedirect())
 
     def decide(self,scene,skills,context,history=()):
-        tools=tools_for(skills)
+        field={**context.get('field',{'width':100.,'height':100.}),'margin':scene.get('robot',{}).get('radius',.35) if 'field' in context else 0.}
+        waypoints=context.get('safe_waypoints');regions=context.get('defense_regions')
+        tools=tools_for(skills,field,waypoints,regions)
         body={'model':self.model,'messages':[{'role':'system','content':SYSTEM_PROMPT+'\nPublic context:\n'+json.dumps(context,separators=(',',':'))},
              {'role':'user','content':json.dumps({'scene':scene,'recent_decisions':list(history)[-8:]},separators=(',',':'),allow_nan=False)}],
               'tools':tools,'tool_choice':'required','parallel_tool_calls':False,'thinking':{'type':'disabled'},
@@ -160,8 +194,18 @@ class DeepSeekPlanner:
             if not isinstance(arguments,dict) or set(arguments)!=expected:raise ValueError('Tool argument shape mismatch')
             if not isinstance(arguments['intent'],str) or len(arguments['intent'])>160:raise ValueError('Invalid intent label')
             decision=Decision(name,arguments,self.model,result.get('model',''),result['id'],result.get('usage',{}),
-                time.monotonic()-start,scene['tick'],call['id'])
-            decision.command('validated')  # Validate numeric limits/targets before returning.
+                time.monotonic()-start,scene['tick'],call['id'],{**(waypoints or {}),**(regions or {})} or None)
+            command=decision.command('validated')
+            for key in ('point','center'):
+                value=arguments.get(key)
+                if value is not None:
+                    catalog=regions if key=='center' else waypoints
+                    if catalog:
+                        if not isinstance(value,str) or value not in catalog:raise ValueError('Unknown or unsafe waypoint ID')
+                    elif not isinstance(value,dict) or set(value)!={'x','y'}:raise ValueError('Wire coordinate must have exactly x and y')
+            if command:
+                for point in [command.get('point'),command.get('center'),*command.get('waypoints',[])]:
+                    if point and not (field['margin']<=point[0]<=field['width']-field['margin'] and field['margin']<=point[1]<=field['height']-field['margin']):raise ValueError('Coordinate outside current robot field bounds')
             return decision
         except (KeyError,IndexError,TypeError,ValueError,StopIteration) as error:
             raise PlannerError('invalid_tool_call',True,details={'validation_error':str(error)[:240]}) from None
@@ -170,7 +214,7 @@ class DeepSeekPlanner:
 def apply_decision(session,decision,env_id,identity,max_age=5.):
     scene=session.observe(env_id)
     age=(scene['tick']-decision.basis_tick)*.05
-    if age<0 or age>max_age:raise ValueError('Stale planner decision')
+    if age<0 or age>max_age or decision.basis_tick<getattr(session.batch.executors[env_id],'last_basis_tick',-1):raise ValueError('Stale planner decision')
     if decision.tool=='continue_current':return {'action':'continued','feedback':scene['feedback']}
     if decision.tool=='cancel_current':return {'action':'cancelled','feedback':session.cancel(env_id)}
     command=decision.command(identity,max_age)

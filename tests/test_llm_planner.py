@@ -51,7 +51,7 @@ def test_invalid_model_calls_are_rejected(provider,corruption):
     elif corruption=='nan':call['function']['arguments']='{"ammo_target":NaN}'
     elif corruption=='incomplete':message['finish_reason']='length'
     else:
-        call['function']={'name':'navigate','arguments':json.dumps({'point':None,'radius_m':None,'timeout_s':None,'intent':'move'})}
+        call['function']={'name':'navigate','arguments':json.dumps({'point':None,'radius_m':None,'timeout_s':None,'low_hp_fraction':None,'intent':'move'})}
     with pytest.raises(PlannerError,match='invalid_tool_call'):
         DeepSeekPlanner(base_url=provider['url']).decide({'tick':0},['resupply','navigate'],{})
 
@@ -81,7 +81,7 @@ def test_tool_surface_has_no_actuator_or_episode_operations():
         f=t['function'];p=f['parameters']
         assert p['additionalProperties'] is False and set(p['required'])==set(p['properties'])
         assert not set(p['properties']) & {'slot','team','move','fire','ammo','hp','id','basis_tick','reset'}
-    assert len(tools)==11
+    assert len(tools)==13
     with pytest.raises(ValueError):strict_json('{"x":1,"x":2}')
 
 
@@ -103,3 +103,34 @@ def test_stale_and_identical_decisions_preserve_running_goal():
     assert session.calls==0
     d.basis_tick=101
     with pytest.raises(ValueError,match='Stale'):apply_decision(session,d,0,'future')
+
+
+def test_coordinate_tools_use_bounded_scalars_and_strict_provider_schema():
+    tool=tools_for(['navigate'],{'width':28.,'height':15.,'margin':.3})[0]['function']
+    assert tool['strict'] is True
+    point=tool['parameters']['properties']['point']
+    assert point['type']=='object' and set(point['required'])=={'x','y'} and point['additionalProperties'] is False
+    assert point['properties']['x']['maximum']==27.7 and point['properties']['y']['minimum']==.3
+
+
+def test_provider_scalar_coordinate_roundtrip(provider):
+    call=provider['response']['choices'][0]['message']['tool_calls'][0]
+    call['function']={'name':'navigate','arguments':json.dumps({'point':{'x':4.5,'y':5.15},'radius_m':None,'timeout_s':None,'low_hp_fraction':0.,'intent':'withdraw'})}
+    decision=DeepSeekPlanner(base_url=provider['url']).decide({'tick':0,'robot':{'radius':.3}},['navigate'],{'field':{'width':28.,'height':15.}})
+    assert decision.command('scalar')['point']==[4.5,5.15]
+    call['function']['arguments']=json.dumps({'point':{'x':29.,'y':5.},'radius_m':None,'timeout_s':None,'low_hp_fraction':0.,'intent':'bad point'})
+    with pytest.raises(PlannerError,match='invalid_tool_call'):
+        DeepSeekPlanner(base_url=provider['url']).decide({'tick':0},['navigate'],{'field':{'width':28.,'height':15.}})
+
+
+def test_catalog_point_is_resolved_and_unknown_id_is_rejected(provider):
+    call=provider['response']['choices'][0]['message']['tool_calls'][0]
+    args={'point':'staging','radius_m':None,'timeout_s':None,'low_hp_fraction':None,'intent':'stage'}
+    call['function']={'name':'navigate','arguments':json.dumps(args)}
+    context={'field':{'width':28.,'height':15.},'safe_waypoints':{'staging':[4.5,5.15]}}
+    d=DeepSeekPlanner(base_url=provider['url']).decide({'tick':0},['navigate'],context)
+    assert d.command('catalog')['point']==[4.5,5.15]
+    schema=provider['requests'][-1]['tools'][0]['function']['parameters']['properties']['point']
+    assert schema=={'type':'string','enum':['staging']}
+    args['point']='unregistered';call['function']['arguments']=json.dumps(args)
+    with pytest.raises(PlannerError):DeepSeekPlanner(base_url=provider['url']).decide({'tick':0},['navigate'],context)
